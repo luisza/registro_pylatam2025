@@ -2,7 +2,8 @@ from django.contrib import admin
 
 # Register your models here.
 from ecsl.models import Inscription, Gustos, PaymentOption, Payment, Becas
-from ecsl.csv_export import export_payment, export_afiliation
+from ecsl.csv_export import export_payment, export_afiliation,\
+    export_stats_afiliation
 
 def action_export_payment(modeladmin, request, queryset):
     return export_payment(request, queryset)
@@ -10,8 +11,12 @@ def action_export_payment(modeladmin, request, queryset):
 def action_export_afiliation(modeladmin, request, queryset):
     return export_afiliation(request, queryset)
 
+def action_export_stats_afiliation(modeladmin, request, queryset):
+    return export_stats_afiliation(request, queryset)
+
 action_export_payment.short_description = "Exportar pagos"
 action_export_afiliation.short_description = "Exportar registros"
+action_export_stats_afiliation.short_description = "Estadísticas de registros"
 
 @admin.register(Inscription)
 class InscripcionAdmin(admin.ModelAdmin):
@@ -21,7 +26,7 @@ class InscripcionAdmin(admin.ModelAdmin):
             'user__first_name',
             'user__last_name',
         )
-    actions = [action_export_afiliation]
+    actions = [action_export_afiliation, action_export_stats_afiliation]
 
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
