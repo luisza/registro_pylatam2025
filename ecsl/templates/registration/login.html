@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% load bootstrap %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+<div>
+  <h1>Login</h1>
+</div>
+
+
+    <form method="post" action="{% url 'auth_login' %}">
+      {% csrf_token %}
+      {{ form|bootstrap  }}
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary">Enviar</button>
+    </div>
+    
+      <input type="hidden" name="next" value="{{ next }}" />
+      <a href="{% url 'registration_register' %}"> or register here</a>
+    </form>
+    <div>
+      <a href="{% url 'auth_password_reset' %}">Forgot your password?</a>
+    </div>
+  </div>
+{% endblock %}

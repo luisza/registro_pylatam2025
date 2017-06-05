@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load bootstrap static %}
+{% load i18n %}
+
+{% block content %}
+
+<div class="row">
+
+<div class="col-md-6 ">
+
+<div class="well">
+<h1>Distribución de personas aceptando dinero</h1>
+<p>
+<b>Guatemala, Panamá y Belize:</b> José Daniel Jenkins Pérez<br>
+<b>El Salvador y Honduras:</b> Luis Enrique Zárate Montero<br>
+<b>Nicaragua:</b> Leonardo Jiménez Quijano y Diego Gonzalo Chacón Rojas <br>
+</p>
+<p><b>Western Union cualquier país</b>Diego Gonzalo Chacón Rojas</p>
+<p>
+Los Depositos bancarios a Dialogía de Información y Comunicación S.C. 
+no tiene restricción por país
+</p>
+<p>
+<b>El Id de transacción es necesario para retirar los dineros en MoneyGram y Western Union, para depositos bancarios, por favor poner le código de transacción</b></p>
+
+</div>
+<br><br>
+<div class="well">
+<h1>Información bancaria detallada</h1>
+<p><b>Nombre del banco:</b> Banco Nacional de Costa Rica</p>
+<p>Dialogía de Información y Comunicación S.C.<br>
+
+    <b>Cuenta IBAN (Internacional):</b> CR38015109620020034632<br>
+    <b>Cuenta Banco Nacional (CR):</b> 200-02-096-003463-0<br>
+    <b>Cuenta Cliente (CR):</b> 15109620020034632<br>
+    <b>Cédula jurídica:</b> 3-106-562299<br>
+</p>
+<p><b>Cuenta a nombre de:</b> Dialogía de Información y Comunicación SC</p>
+<p><b>Dirección postal de la oficina principal del banco:</b> Avenidas 1 y 3, calle 3. San José, Costa Rica.</p>
+<p><b>SWIFT bic:</b> BNCRCRSJ</p>
+<p>Datos del banco corresponsal o intermediario en USA</p>
+<p><b>Nombre del Banco corresponsal:</b> Citibank</p>
+<p><b>Dirección del banco corresponsal:</b> New York 339 Park Avenue New York, NY 10022. USA</p>
+<p><b>Código ABA del corresponsal:</b> CITIUS33</p>
+</div>
+
+
+</div>
+
+
+  <div class="col-md-6">  	<div>
+  <h1>Pago de inscripción</h1>
+</div>
+
+<div class="row">
+  <form method="post" action="" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form|bootstrap  }}
+
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary">Registrarme</button>
+    </div>
+  </form>
+</div>
+
+  </div>
+</div>
+{% endblock %}
+

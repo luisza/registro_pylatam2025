@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+
+{% block js %}
+{{ block.super }}
+
+<script>
+	$("input").addClass("form-control");
+	$("textarea").addClass("form-control");
+	$("select").addClass("form-control");
+</script>
+
+<style>
+button{
+	margin-top: 20px;
+}
+</style>
+{% endblock %}

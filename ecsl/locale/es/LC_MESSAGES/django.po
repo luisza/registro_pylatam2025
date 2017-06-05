@@ -1,0 +1,559 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ECSL V1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-06-04 22:40+0000\n"
+"PO-Revision-Date: 2017-06-04 17:12-0600\n"
+"Last-Translator: Luis Zárate <luis.zarate@solvosoft.com>\n"
+"Language-Team: ES <ES@li.org>\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#: ecsl/forms.py:12
+msgid "First name"
+msgstr "Nombre"
+
+#: ecsl/forms.py:13
+msgid "Last name"
+msgstr "Apellidos"
+
+#: ecsl/models.py:8 ecsl/models.py:17 ecsl/models.py:23 ecsl/models.py:132
+msgid "Nombre"
+msgstr "Nombre"
+
+#: ecsl/models.py:9
+msgid "Identificación"
+msgstr "Identificación"
+
+#: ecsl/models.py:10
+msgid "Opción de envío"
+msgstr "Opción de envío"
+
+#: ecsl/models.py:61 ecsl/models.py:104
+msgid "Usuario"
+msgstr "Usuario"
+
+#: ecsl/models.py:63
+msgid "Identificación en su país"
+msgstr "Identificación en su país"
+
+#: ecsl/models.py:64
+msgid "Fecha de Nacimiento"
+msgstr "Fecha de Nacimiento"
+
+#: ecsl/models.py:65
+msgid "Institución"
+msgstr "Institución"
+
+#: ecsl/models.py:66
+msgid "Género"
+msgstr "Género"
+
+#: ecsl/models.py:67
+msgid "Nacionalidad"
+msgstr "Nacionalidad"
+
+#: ecsl/models.py:69
+msgid "Si marcó otro indique el país de procedencia"
+msgstr "Si marcó otro indique el país de procedencia"
+
+#: ecsl/models.py:72
+msgid "Encuentros anteriores en los que ha participado"
+msgstr "Encuentros anteriores en los que ha participado"
+
+#: ecsl/models.py:74
+msgid ""
+"¿Tiene alguna necesidad específica de alimentación y hospedaje o alguna "
+"condición de salud especial?."
+msgstr ""
+"¿Tiene alguna necesidad específica de alimentación y hospedaje o alguna "
+"condición de salud especial?."
+
+#: ecsl/models.py:76
+msgid "Condiciones de Salud"
+msgstr "Condiciones de Salud"
+
+#: ecsl/models.py:82
+msgid "Alguna otra observación sobre sus gustos, usos, costumbres y manías."
+msgstr "Alguna otra observación sobre sus gustos, usos, costumbres y manías."
+
+#: ecsl/models.py:86
+msgid ""
+"Si tiene algún comentario y/o si quiere colaborar con la organización del 9° "
+"ECSL por favor comente en este espacio."
+msgstr ""
+"Si tiene algún comentario y/o si quiere colaborar con la organización del 9° "
+"ECSL por favor comente en este espacio."
+
+#: ecsl/models.py:106
+msgid "Opción de pago"
+msgstr "Opción de pago"
+
+#: ecsl/models.py:107
+msgid "Id de transacción"
+msgstr "Id de transacción"
+
+#: ecsl/models.py:133
+msgid "Web"
+msgstr "Web"
+
+#: ecsl/models.py:134
+msgid "logo"
+msgstr "Logo"
+
+#: ecsl/templates/base.html:35
+msgid "Subscribe"
+msgstr "Inscribirme"
+
+#: ecsl/templates/base.html:39
+msgid "Register"
+msgstr "Registro"
+
+#: ecsl/templates/base.html:47
+msgid "User:"
+msgstr "Usuario:"
+
+#: ecsl/templates/base.html:52
+msgid "Profile"
+msgstr "Perfil"
+
+#: ecsl/templates/base.html:53
+msgid "Log out"
+msgstr "Salir"
+
+#: ecsl/templates/base.html:55
+msgid "Log in"
+msgstr "Iniciar sesión"
+
+#: ecsl/templates/ecsl/inscription_form.html:10
+msgid "My profile"
+msgstr "Mi perfil"
+
+#: ecsl/templates/ecsl/inscription_form.html:19
+#: proposal/templates/speech/speech_form.html:11
+msgid "Save"
+msgstr "Guardar"
+
+#: ecsl/templates/registration/activation_complete.html:4
+#: ecsl/templates/registration/activation_complete_admin_pending.html:4
+msgid "Account Activated"
+msgstr "Cuenta activa"
+
+#: ecsl/templates/registration/activation_complete.html:7
+#: ecsl/templates/registration/activation_complete_admin_pending.html:8
+msgid "Your account is now activated."
+msgstr "Su cuenta ahora está activa"
+
+#: ecsl/templates/registration/activation_complete.html:9
+msgid "You can log in."
+msgstr "Usted puede iniciar sesión"
+
+#: ecsl/templates/registration/activation_complete_admin_pending.html:10
+msgid "Once a site administrator activates your account you can login."
+msgstr "Un administrador avaló su cuenta y ya puede loguearse"
+
+#: ecsl/templates/registration/activation_email.html:6
+#: ecsl/templates/registration/admin_approve_email.html:6
+msgid "registration"
+msgstr "Registro"
+
+#: ecsl/templates/registration/activation_email.html:11
+#, python-format
+msgid ""
+"\n"
+"    You (or someone pretending to be you) have asked to register an account "
+"at\n"
+"    %(site_name)s.  If this wasn't you, please ignore this email\n"
+"    and your address will be removed from our records.\n"
+"    "
+msgstr ""
+"\n"
+"    Usted o alguien más, ha solicitado registrar su cuenta en "
+"%(site_name)s.  Si usted no ha sido, por favor ignore este correo\n"
+"    y su dirección será borrada de nuestros registros.\n"
+"    "
+
+#: ecsl/templates/registration/activation_email.html:18
+#, python-format
+msgid ""
+"\n"
+"    To activate this account, please click the following link within the "
+"next\n"
+"    %(expiration_days)s days:\n"
+"    "
+msgstr ""
+"\n"
+"    Para activar su cuenta, por favor haga clic en el siguiente enlace, "
+"tiene \n"
+"    %(expiration_days)s dias:\n"
+"    "
+
+#: ecsl/templates/registration/activation_email.html:30
+#: ecsl/templates/registration/admin_approve_email.html:23
+#, python-format
+msgid ""
+"\n"
+"    Sincerely,\n"
+"    %(site_name)s Management\n"
+"    "
+msgstr ""
+"\n"
+"    Gracias,\n"
+"    Equipo de %(site_name)s\n"
+"    "
+
+#: ecsl/templates/registration/admin_approve.html:4
+msgid "Approval Failure"
+msgstr "Aprobación fallida"
+
+#: ecsl/templates/registration/admin_approve.html:7
+msgid "Account Approval failed."
+msgstr "Validación de cuenta fallida"
+
+#: ecsl/templates/registration/admin_approve_complete.html:4
+msgid "Account Approved"
+msgstr "Cuenta aprobada"
+
+#: ecsl/templates/registration/admin_approve_complete.html:8
+msgid "The user's account is now approved."
+msgstr "La cuenta está aprobada"
+
+#: ecsl/templates/registration/admin_approve_complete_email.html:6
+msgid "admin approval"
+msgstr "Administrador aprobó"
+
+#: ecsl/templates/registration/admin_approve_complete_email.html:11
+msgid ""
+"\n"
+"    Your account is now approved. You can \n"
+"    "
+msgstr ""
+"\n"
+"    Su cuenta ahora está aprobada. Ahora puede \n"
+"    "
+
+#: ecsl/templates/registration/admin_approve_complete_email.html:14
+msgid "log in."
+msgstr "Iniciar sesión."
+
+#: ecsl/templates/registration/admin_approve_complete_email.txt:2
+msgid ""
+"\n"
+"Your account is now approved. You can log in using the following link\n"
+msgstr ""
+"\n"
+"Su cuenta está ahora activa. Usted puede iniciar sesión en el siguiente "
+"enlace\n"
+
+#: ecsl/templates/registration/admin_approve_complete_email_subject.txt:1
+msgid "Account activation on"
+msgstr "Cuenta activa"
+
+#: ecsl/templates/registration/admin_approve_email.html:11
+#, python-format
+msgid ""
+"\n"
+"    The following user (%(user)s) has asked to register an account at\n"
+"    %(site_name)s.\n"
+"    "
+msgstr ""
+"\n"
+"    El siguiente usuario (%(user)s) ha solicitado registro en \n"
+"    %(site_name)s.\n"
+"    "
+
+#: ecsl/templates/registration/admin_approve_email.html:17
+msgid ""
+"\n"
+"    To approve this, please \n"
+"    "
+msgstr ""
+"\n"
+"    Para aprobar esto, por favor \n"
+"    "
+
+#: ecsl/templates/registration/admin_approve_email.html:20
+msgid "click here"
+msgstr "haga clic aquí"
+
+#: ecsl/templates/registration/admin_approve_email.txt:2
+#, python-format
+msgid ""
+"\n"
+"The following user (%(user)s) has asked to register an account at\n"
+"%(site_name)s.  \n"
+msgstr ""
+"\n"
+"El siguiente usuario (%(user)s) ha solicitado registro en \n"
+"%(site_name)s.\n"
+
+#: ecsl/templates/registration/admin_approve_email.txt:6
+msgid ""
+"\n"
+"To approve this, please click the following link.\n"
+msgstr ""
+"\n"
+"Para aprobar esto, por favor haga clic en el siguiente enlace.\n"
+
+#: ecsl/templates/registration/admin_approve_email_subject.txt:1
+msgid "Account approval on"
+msgstr "Cuenta aprobada"
+
+#: ecsl/templates/registration/password_change_done.html:4
+msgid "Password changed"
+msgstr "Contraseña cambiada"
+
+#: ecsl/templates/registration/password_change_done.html:7
+msgid "Password successfully changed!"
+msgstr "Contraseña cambiada satisfactoriamente"
+
+#: ecsl/templates/registration/password_change_form.html:4
+#: ecsl/templates/registration/password_change_form.html:10
+msgid "Change password"
+msgstr "Cambiar contraseña"
+
+#: ecsl/templates/registration/password_reset_complete.html:4
+msgid "Password reset complete"
+msgstr "Reinicio de contraseña completo"
+
+#: ecsl/templates/registration/password_reset_complete.html:8
+msgid "Your password has been reset!"
+msgstr "Su contraseña ha sido cambiada"
+
+#: ecsl/templates/registration/password_reset_complete.html:9
+#, python-format
+msgid "You may now <a href=\"%(login_url)s\">log in</a>"
+msgstr "Usted puede ahora <a href=\"%(login_url)s\">Iniciar sesión</a>"
+
+#: ecsl/templates/registration/password_reset_confirm.html:4
+msgid "Confirm password reset"
+msgstr "Confirmar cambio de contraseña"
+
+#: ecsl/templates/registration/password_reset_confirm.html:7
+msgid "Enter your new password below to reset your password:"
+msgstr "Ingrese la nueva contraseña."
+
+#: ecsl/templates/registration/password_reset_confirm.html:11
+msgid "Set password"
+msgstr "Poner contraseña"
+
+#: ecsl/templates/registration/password_reset_done.html:4
+msgid "Password reset"
+msgstr "Cambiar contraseña"
+
+#: ecsl/templates/registration/password_reset_done.html:8
+msgid ""
+"\n"
+"    We have sent you an email with a link to reset your password. Please "
+"check\n"
+"    your email and click the link to continue.\n"
+"    "
+msgstr ""
+"\n"
+"    Nosotros le hemos enviando un correo con el enlace para cambiar su "
+"contraseña. Por favor revise su bandeja de correo\n"
+"    y haga clic en el enlace para continuar.\n"
+"    "
+
+#: ecsl/templates/registration/password_reset_email.html:3
+#: ecsl/templates/registration/password_reset_email.txt:3
+msgid "Greetings"
+msgstr "Felicidades"
+
+#: ecsl/templates/registration/password_reset_email.html:5
+#: ecsl/templates/registration/password_reset_email.txt:5
+#, python-format
+msgid ""
+"\n"
+"You are receiving this email because you (or someone pretending to be you)\n"
+"requested that your password be reset on the %(domain)s site. If you do not\n"
+"wish to reset your password, please ignore this message.\n"
+msgstr ""
+"\n"
+"Usted recibió este email porque usted (o alguien pretendiendo ser usted)\n"
+"solicitó un cambio de contraseña en %(domain)s .  Si no fue usted\n"
+"por favor ignore este mensaje.\n"
+
+#: ecsl/templates/registration/password_reset_email.html:11
+#: ecsl/templates/registration/password_reset_email.txt:11
+msgid ""
+"\n"
+"To reset your password, please click the following link, or copy and paste "
+"it\n"
+"into your web browser:\n"
+msgstr ""
+"\n"
+"Para reiniciar su contraseña, por favor haga click en el siguiente enlace o "
+"copie y péguelo\n"
+"en su navegador:\n"
+
+#: ecsl/templates/registration/password_reset_email.html:18
+#: ecsl/templates/registration/password_reset_email.txt:18
+msgid "Your username, in case you've forgotten:"
+msgstr "Su nombre de usuario en caso de que lo haya olvidado:"
+
+#: ecsl/templates/registration/password_reset_email.html:21
+#: ecsl/templates/registration/password_reset_email.txt:21
+msgid "Best regards"
+msgstr "Gracias"
+
+#: ecsl/templates/registration/password_reset_email.html:22
+#: ecsl/templates/registration/password_reset_email.txt:22
+msgid "Management"
+msgstr "Equipo de"
+
+#: ecsl/templates/registration/password_reset_form.html:4
+#: ecsl/templates/registration/password_reset_form.html:15
+msgid "Reset password"
+msgstr "Cambiar contraseña"
+
+#: ecsl/templates/registration/password_reset_form.html:8
+msgid ""
+"\n"
+"    Forgot your password? Enter your email in the form below and we'll send "
+"you instructions for creating a new one.\n"
+"    "
+msgstr ""
+"\n"
+"    ¿Olvidó su contraseña? Ingrese su correo electrónico en el formulario y "
+"nosotros le enviaremos las instrucciones para cambiarla.\n"
+"    "
+
+#: ecsl/templates/registration/registration_closed.html:4
+msgid "Registration is closed"
+msgstr "El registro ha sido cerrado"
+
+#: ecsl/templates/registration/registration_closed.html:7
+msgid "Sorry, but registration is closed at this moment. Come back later."
+msgstr ""
+"Lo lamentamos, el registro está cerrado en este momento, por favor vuelva "
+"más tarde."
+
+#: ecsl/templates/registration/registration_complete.html:3
+msgid "Activation email sent"
+msgstr "Correo de activación enviado"
+
+#: ecsl/templates/registration/resend_activation_complete.html:4
+msgid "Account Activation Resent"
+msgstr "Su reactivación ha sido enviada"
+
+#: ecsl/templates/registration/resend_activation_complete.html:8
+#, python-format
+msgid ""
+"\n"
+"  We have sent an email to %(email)s with further instructions.\n"
+"  "
+msgstr ""
+"\n"
+"  Hemos enviado un correo a %(email)s con instrucciones para cambiar su "
+"contraseña.\n"
+"  "
+
+#: ecsl/templates/registration/resend_activation_form.html:4
+msgid "Resend Activation Email"
+msgstr "Reenviar el correo de activación"
+
+#: ecsl/templates/registration/resend_activation_form.html:10
+msgid "Submit"
+msgstr "Enviar"
+
+#: ecsl/views.py:28
+msgid "Profile created successfully, please register in the event"
+msgstr "Perfil ha sido creado satisfactoriamente, por favor registre el evento"
+
+#: ecsl/views.py:67
+msgid "Profile updated successfully"
+msgstr "Perfil actualizado satisfactoriamente"
+
+#: ecsl/views.py:144
+msgid "Register updated successfully"
+msgstr "Registro actualizado satisfactoriamente"
+
+#: proposal/models.py:9 proposal/models.py:16
+msgid "Name"
+msgstr "Nombre"
+
+#: proposal/models.py:31
+msgid "everyone"
+msgstr "Cualquiera"
+
+#: proposal/models.py:32
+msgid "novice"
+msgstr "Básico"
+
+#: proposal/models.py:33
+msgid "intermediate"
+msgstr "Intermedio"
+
+#: proposal/models.py:34
+msgid "advanced"
+msgstr "Avanzado"
+
+#: proposal/models.py:39
+msgid "Speaker_information"
+msgstr "Información del charlista"
+
+#: proposal/models.py:40
+msgid "Speech Title"
+msgstr "Titulo de la charla"
+
+#: proposal/models.py:41
+msgid "Description"
+msgstr "Descripción"
+
+#: proposal/models.py:42
+msgid "Topic"
+msgstr "Temas"
+
+#: proposal/models.py:43
+msgid "Audience"
+msgstr "Audiencia"
+
+#: proposal/models.py:46
+msgid "Skill level required"
+msgstr "Nivel de habilidad"
+
+#: proposal/models.py:48
+msgid "Notes for audience"
+msgstr "Notas para la audiencia"
+
+#: proposal/models.py:49
+msgid "Speech Type"
+msgstr "Tipo de charla"
+
+#: proposal/templates/speech/speech_delete.html:6
+msgid "Are you sure you want to delete"
+msgstr "Está seguro que desea eliminar"
+
+#: proposal/templates/speech/speech_list.html:8
+msgid "Add"
+msgstr "Agregar"
+
+#: proposal/templates/speech/speech_list.html:18
+msgid "Edit"
+msgstr "Editar"
+
+#: proposal/templates/speech/speech_list.html:21
+msgid "Delete"
+msgstr "Eliminar"
+
+#: proposal/templates/speech/speech_list.html:32
+msgid "Previous"
+msgstr "Anterior"
+
+#: proposal/templates/speech/speech_list.html:37
+msgid "Page"
+msgstr "Página"
+
+#: proposal/templates/speech/speech_list.html:42
+msgid "Next"
+msgstr "Siguiente"
