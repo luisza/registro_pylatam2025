@@ -17,9 +17,14 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from ecsl import views
 from proposal.views import proposals
+from ajax_select import urls as ajax_select_urls
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^ajax_select/', include(ajax_select_urls)),
+    
     url(r'accounts/profile/?$', views.profile_view, name="profile"),
     url(r'^accounts/', include('registration.backends.hmac.urls')),
     url(r'^$', views.Index.as_view(), name="index"),
@@ -31,6 +36,11 @@ urlpatterns = [
     url(r'^registro/create$', views.CreateRegister.as_view(), name='create_payment'),
     url(r'^registro/update/(?P<pk>\d+)$',  views.PaymentUpdate.as_view(),
         name='edit_payment'),   
-    url(r'proposal/', include(proposals.get_urls(), namespace='speech'))
+    url(r'proposal/', include(proposals.get_urls(), namespace='speech')),
+    
 ] + views.becas
 
+
+
+if settings.DEBUG:
+     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

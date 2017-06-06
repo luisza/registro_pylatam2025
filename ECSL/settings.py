@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'proposal',
     'cruds_adminlte',
     'crispy_forms',
+    'ajax_select'
 ]
 
 MIDDLEWARE = [

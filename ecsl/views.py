@@ -190,13 +190,23 @@ class BecasCRUD(UserCRUDView):
         Cview = super(BecasCRUD, self).get_create_view()
         class BecaCreate(Cview):
             def dispatch(self, request, *args, **kwargs):
+                error = False
+                try:
+                    inscription = request.user.inscription
+                except:
+                    error=True
+                    
+                if error or not inscription:
+                    messages.success(self.request, "Lo lamentamos, primero actualiza tus datos y luego procede con el registro")
+                    return redirect(reverse('index'))
+                
                 beca = Becas.objects.filter(user=request.user).first()
                 if beca:
                     return redirect("ecsl_becas_detail", pk=beca.pk )
                 return super(BecaCreate, self).dispatch(request, *args, **kwargs)   
             
             def get_success_url(self):
-                messages.success(self.request, "Hemos recibido su solicitud de beca, por favor actualice sus datos en Mis datos")
+                messages.success(self.request, "Hemos recibido su solicitud de beca satisfactoriamente")
                 return reverse('index')                 
         return BecaCreate
                 
