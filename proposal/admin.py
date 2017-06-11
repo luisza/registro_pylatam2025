@@ -11,6 +11,7 @@ import io
 import zipfile
 from django.utils.html import format_html_join
 from django.utils.safestring import mark_safe
+from ajax_select.helpers import make_ajax_form
 
 def action_export_register_list(modeladmin, request, queryset):
     if queryset is None:
@@ -48,7 +49,6 @@ class SpeechAdmin(admin.ModelAdmin):
         )
     readonly_fields = ('registrados_cuenta', 'get_registration_list',)
 
-
     def registrados_cuenta(self, instance):
         regs = Register_Speech.objects.filter(speech__speech=instance)
         return regs.count()
@@ -67,5 +67,9 @@ class SpeechAdmin(admin.ModelAdmin):
 
     get_registration_list.short_description = "Lista de registrados"
 
+class ScheduleAdmin(admin.ModelAdmin):
+    form = make_ajax_form(SpeechSchedule, {'speech': 'charlas'})
+    
 admin.site.register(Speech, SpeechAdmin)
-admin.site.register([SpeechType, Topic, SpeechSchedule, Room])
+admin.site.register(SpeechSchedule, ScheduleAdmin)
+admin.site.register([SpeechType, Topic, Room])
