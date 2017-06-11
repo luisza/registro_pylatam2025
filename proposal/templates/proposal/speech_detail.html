@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+
+<h2 style="color: {{object.topic.color}}"> {{ object.title }}<br>
+<small> {{ object.topic.name }} </small>
+</h2>
+
+<div class="panel panel-success">
+  <div class="panel-heading">
+  <div class="row">
+  <div class="col-md-6">{{object.speech_type}}</div>
+  <div class="col-md-4">
+  
+  {{ schedule.start_time | date:"SHORT_DATE_FORMAT"  }} -- {{ schedule.start_time | date:"P" }} a {{ schedule.end_time | date:"P" }}
+  </div>
+  <div class="col-md-2">
+  Registrarme
+  </div>
+</div>
+  
+    
+  </div>
+
+  <div class="panel-body">
+  
+    {{ object.description }}
+    {% if object.audience and object.audience != " " %}
+    	<h2 > Audiencia </h2>
+    	{{ object.audience }}
+    {% endif %}
+  </div>
+  <div class="panel-footer">
+  <b>Nivel</b>: {{object.get_skill_level_display}} <br>
+  {% if object.presentation %}
+  <a href="{{object.presentation.url" class="btn btn-warning"> Descargar presentación </a> 
+  {% endif %}
+  </div>
+</div>
+
+<div class="panel panel-danger">
+  <div class="panel-heading">
+    <h3 class="panel-title">Información (los/las) expositor(es/as)</h3>
+  </div>
+  <div class="panel-body">
+    {{object.speaker_information }}
+  </div>
+</div>
+
+{% if object.notes and object.notes != " " %}
+<div class="alert alert-info">
+	{{object.notes}}
+</div>
+{% endif %}
+
+{% endblock %}

@@ -7,13 +7,15 @@ from django.utils.translation import ugettext_lazy as _
 
 class Topic(models.Model):
     name = models.CharField(max_length=150, verbose_name=_("Name"))
-
+    color = models.CharField(max_length=10, default="#fff")
+    
     def __str__(self):
         return self.name
 
 
 class SpeechType(models.Model):
     name = models.CharField(max_length=150, verbose_name=_("Name"))
+
 
     def __str__(self):
         return self.name

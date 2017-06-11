@@ -26,15 +26,16 @@
 	 {% if request.user.is_authenticated %}
 	<a class="btn btn-default" href="{% url 'profile' %}">Mis datos</a>
 	<a class="btn btn-default" href="{% url 'payment' %}">Registro</a>
-	<a class="btn btn-default" href="{{ beca }}">Becas</a>
+	
 	{% if speech_url %}
 		<a class="btn btn-default" href="{{speech_url}}">Mis exposiciones</a>
 	{% endif %}
 	{% else %}
 		<a class="btn btn-info" href="{% url 'auth_login' %}">Iniciar sesión</a>
 		<a class="btn btn-default" href="{% url 'registration_register' %}">Registrarme</a>
+		
 	{% endif %}
-	
+		<a class="btn btn-info" href="{% url 'list_charlas' %}">Agenda</a>
 	</div>
 	</div>
 	</div>

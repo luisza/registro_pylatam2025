@@ -59,6 +59,14 @@ class PaymentAdmin(admin.ModelAdmin):
     actions=[action_export_payment,
              action_reenviar_notificacion]
     form = make_ajax_form(Payment, {'user': 'users'})
+    
+    def save_model(self, request, obj, form, change):
+        dev =  admin.ModelAdmin.save_model(self, request, obj, form, change)
+        ins = Inscription.objects.filter(user=obj.user).first()
+        if ins and obj.confirmado:
+            ins.status =2
+            ins.save()
+        return dev
 
 admin.site.register(Gustos)
 admin.site.register(PaymentOption)
