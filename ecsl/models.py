@@ -42,6 +42,7 @@ class Inscription(models.Model):
         ('Costa Rica', 'Costa Rica'),
         ('Nicaragua', 'Nicaragua'),
         ('El Salvador', 'El salvador'),
+        ('Guatemala', 'Guatemala'),
         ('Hondura', 'Honduras'),
         ('Belize', 'Belize'),
         ('Otro', 'Otro'),
