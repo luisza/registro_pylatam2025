@@ -58,7 +58,7 @@ class ProfileForm(forms.ModelForm):
         
 class PaymentForm(forms.ModelForm):
     option = forms.ModelChoiceField(widget=forms.RadioSelect, 
-        queryset=PaymentOption.objects.all(), 
+        queryset=PaymentOption.objects.all().exclude(name="Beca"), 
         label="Opción de pago",
                                     empty_label=None)
     class Meta:
