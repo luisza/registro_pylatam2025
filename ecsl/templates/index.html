@@ -29,6 +29,8 @@
 	
 	{% if speech_url %}
 		<a class="btn btn-default" href="{{speech_url}}">Mis exposiciones</a>
+	{% else %}
+		<a class="btn btn-default" href="{% url 'speech:proposal_speech_create' %}">Mis exposiciones</a>
 	{% endif %}
 	{% else %}
 		<a class="btn btn-info" href="{% url 'auth_login' %}">Iniciar sesión</a>

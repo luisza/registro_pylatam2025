@@ -50,7 +50,9 @@ class Speech(models.Model):
                              verbose_name=_("Notes for audience"))
     speech_type = models.ForeignKey(SpeechType, verbose_name=_("Speech Type"))
     
-    presentacion = models.FileField(upload_to='presentaciones/', null=True, blank=True)
+    presentacion = models.FileField(upload_to='presentaciones/',
+                                    verbose_name=_("Presentación"),
+                                     null=True, blank=True)
 
 
     @property
