@@ -69,6 +69,11 @@ class SpeechAdmin(admin.ModelAdmin):
 
 class ScheduleAdmin(admin.ModelAdmin):
     form = make_ajax_form(SpeechSchedule, {'speech': 'charlas'})
+    search_fields = (
+            'speech__title',
+            'speech__user__first_name',
+            'speech__user__last_name',
+        )
     
 admin.site.register(Speech, SpeechAdmin)
 admin.site.register(SpeechSchedule, ScheduleAdmin)
