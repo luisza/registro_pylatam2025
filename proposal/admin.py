@@ -48,6 +48,7 @@ class SpeechAdmin(admin.ModelAdmin):
             'user__last_name',
         )
     readonly_fields = ('registrados_cuenta', 'get_registration_list',)
+    form = make_ajax_form(Speech, {'user': 'users'})
 
     def registrados_cuenta(self, instance):
         regs = Register_Speech.objects.filter(speech__speech=instance)
