@@ -34,6 +34,7 @@ ALLOWED_HOSTS = ['*','ecsl2017.softwarelibre.ca', 'www.ecsl2017.softwarelibre.ca
 # Application definition
 
 INSTALLED_APPS = [
+    'ecsl',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'registration',
     "bootstrapform",
-    'ecsl',
+
    # 'osem',
     'proposal',
     'cruds_adminlte',
