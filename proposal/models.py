@@ -41,7 +41,8 @@ class Speech(models.Model):
         verbose_name=_("Speaker_information"))
     title = models.TextField(verbose_name=_("Speech Title"))
     description = models.TextField(verbose_name=_("Description"))
-    topic = models.ForeignKey(Topic, verbose_name=_("Topic"))
+    topic = models.ForeignKey(Topic, 
+                              verbose_name=_("Eje temático"))
     audience = models.TextField(verbose_name=_("Audience"))
     skill_level = models.PositiveIntegerField(
         choices=SKILL_LEVEL.choices, default=SKILL_LEVEL.EVERYONE,
