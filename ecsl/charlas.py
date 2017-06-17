@@ -64,7 +64,22 @@ class MyAgenda(CharlaContext, ListView):
     model = BlockSchedule
     template_name = 'proposal/mi_agenda.html'
     order_by="start_time"
-    
+
+    def dispatch(self, request, *args, **kwargs):
+        pago = Payment.objects.filter(user=request.user).first()
+        error = False
+        try:
+            inscription = request.user.inscription
+        except:
+            error=True
+        if not pago:
+            error=True
+
+        if error or not inscription:
+            messages.error(request, "Lo lamentamos, primero actualiza tus datos y procede con el registro")
+            return redirect(reverse('index'))        
+            
+        return ListView.dispatch(self, request, *args, **kwargs)    
 
 class CharlaDetail(DetailView):
     model = Speech
