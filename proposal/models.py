@@ -84,7 +84,14 @@ class Room(models.Model):
     
     def __str__(self):
         return self.name
+
+class Register_Speech(models.Model):
+    user = models.ForeignKey(User)
+    speech = models.ForeignKey('SpeechSchedule')
     
+    def __str__(self):
+        return "%s %s"%(self.user.get_full_name(), self.speech.title)
+  
 class SpeechSchedule(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
@@ -95,10 +102,37 @@ class SpeechSchedule(models.Model):
         return "(%s %s) %s en %s"%(self.start_time.strftime("%Y-%m-%d %H:%M"), 
                    self.end_time.strftime("%Y-%m-%d %H:%M"), 
                    self.speech.title, self.room.name )
+        
+        
+    def registros(self):
+        regs = Register_Speech.objects.filter(speech=self).count()
+        total = self.room.spaces - regs
+        dev = "Lleno"
+        if total>0:
+            dev="Hay %d espacios"%(total,)
     
-class Register_Speech(models.Model):
-    user = models.ForeignKey(User)
-    speech = models.ForeignKey(SpeechSchedule)
+        return dev
+
+    
+class BlockSchedule(models.Model):
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    is_speech = models.BooleanField()
+    text = models.TextField(null=True, blank=True) 
+    color= models.CharField(max_length=10)
     
     def __str__(self):
-        return "%s %s"%(self.user.get_full_name(), self.speech.title)
+        return "%s %s"%(self.start_time.strftime("%Y-%m-%d %H:%M"), 
+                   self.end_time.strftime("%Y-%m-%d %H:%M"), )
+    
+    
+    def get_speech(self, user=None):
+        query= SpeechSchedule.objects.filter(
+                start_time__gte=self.start_time,
+                start_time__lte=self.end_time,
+                )
+        if user:
+            query=query.filter(register_speech__user=user)
+            
+        return query.order_by('start_time')   
+            

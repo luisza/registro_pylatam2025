@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load registro_charla %}
+
+{% block content %}
+<style>
+.theader{
+	text-decoration: blond;
+	background-color: #98978b;
+	padding: 10px 2px;
+	text-align: center;
+	color: #fff;
+	margin-bottom: 5px;
+}
+
+.speech_row {
+	
+	padding: 10px 5px;
+	text-align: left;
+}
+.speech_row .row{
+	border: solid 1px #fff;
+	padding: 5px 0px;
+}
+
+.text_row  {
+	padding: 10px 0px;
+	color: #fff;
+	font-weight: bold;
+}
+</style>
+
+<h2> Temáticas </h2>
+
+<div class="row">
+ <div class="col-md-1"></div>
+{% for tipo in tipos %}
+ <div class="col-md-2" style="color: {{tipo.color}}"> {{tipo.name }} </div>
+{% endfor %}
+</div>
+
+<hr>
+
+<ul class="nav nav-tabs">
+  <li role="presentation" class="{% if dia == 1 %} active {% endif %}">
+  <a href="{% url 'list_charlas' %}?dia=1">21 de julio</a></li>
+  <li role="presentation" class="{% if dia == 2 %} active {% endif %}">
+  <a href="{% url 'list_charlas' %}?dia=2"> 22 de julio</a></li>
+
+</ul>
+<br ><br>
+
+
+<div class="row theader">
+  <div class="col-md-2">Horario</div>
+  <div class="col-md-6">Título</div>
+  <div class="col-md-2">Salón</div>
+  <div class="col-md-2">Registro</div>
+</div>
+
+	{% for obj in object_list %}
+		
+		<div id="block_{{obj.pk}}" class="row {% if obj.is_speech %}speech_row{% else %} text_row {%endif%}" style="background-color:{{obj.color}}">
+		
+		{% if obj.is_speech %}
+		  {% for speech in obj.get_speech %}
+		  <div class="row">
+		  <div class="col-md-2">{{ speech.start_time | date:"P" }} a {{ speech.end_time | date:"P" }}
+		  		  	<p style="color:{{ speech.speech.topic.color}}">
+				{{ speech.speech.speech_type.name }}
+				</p>
+				{{speech.registros}}
+				
+		  </div>
+		  <div class="col-md-6">
+
+			<a href="{% url 'detail_charla' speech.speech.pk %}" target="_blank"> {{ speech.speech.title }} </a>
+		  </div>
+		  <div class="col-md-2">{{ speech.room.name }}</div>
+		  <div class="col-md-2">  {% get_registro speech as nreg%}  <a href="{{nreg.url}}"> {{nreg.message}} </a> </div>
+		  </div>
+			{% endfor %}
+			
+		{% else %}
+		
+		<div class="col-md-2 text-center"> {{ obj.start_time | date:"P" }} a {{ obj.end_time | date:"P" }} </div>
+		<div class="col-md-10 text-center"> {{obj.text}}</div>
+		
+		{% endif %}
+		</div>	
+	{% endfor %}
+
+<br><br>
+{% endblock %}

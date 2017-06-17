@@ -21,7 +21,7 @@ from ajax_select import urls as ajax_select_urls
 from django.conf.urls.static import static
 from django.conf import settings
 from ecsl.charlas import Charlas, CharlaDetail, register_user_to_speech,\
-    desregistrar_charla
+    desregistrar_charla, MyAgenda
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -38,11 +38,13 @@ urlpatterns = [
     url(r'^registro/create$', views.CreateRegister.as_view(), name='create_payment'),
     url(r'^registro/update/(?P<pk>\d+)$',  views.PaymentUpdate.as_view(),
         name='edit_payment'),   
-    url(r'proposal/', include(proposals.get_urls(), namespace='speech')),
-    url(r'agenda$', Charlas.as_view(), name="list_charlas"),
-    url(r'charla/(?P<pk>\d+)$', CharlaDetail.as_view(), name="detail_charla"),
-    url(r'charla/registro/(?P<pk>\d+)$', register_user_to_speech, name="registra_charla"),
-    url(r'charla/desregistrar/(?P<pk>\d+)$', desregistrar_charla, name="desregistrar_charla"),
+    url(r'^proposal/', include(proposals.get_urls(), namespace='speech')),
+    url(r'^agenda$', Charlas.as_view(), name="list_charlas"),
+    url(r'^miagenda$', MyAgenda.as_view(), name="mi_agenda"),
+    
+    url(r'^charla/(?P<pk>\d+)$', CharlaDetail.as_view(), name="detail_charla"),
+    url(r'^charla/registro/(?P<pk>\d+)$', register_user_to_speech, name="registra_charla"),
+    url(r'^charla/desregistrar/(?P<pk>\d+)$', desregistrar_charla, name="desregistrar_charla"),
     
     
 ] + views.becas

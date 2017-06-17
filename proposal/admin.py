@@ -3,7 +3,7 @@ from django.contrib import admin
 # Register your models here.
 
 from proposal.models import SpeechType, Topic, Speech, SpeechSchedule, Room,\
-    Register_Speech
+    Register_Speech, BlockSchedule
 from django.http.response import HttpResponse
 import csv
 
@@ -38,9 +38,46 @@ def action_export_register_list(modeladmin, request, queryset):
 
 action_export_register_list.short_description = "Descargar usuarios registrados"
 
+class AgendaFilter(admin.SimpleListFilter):
+    title =  "En agenda"
+    parameter_name = 'agenda'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('1', "En agenda"),
+            ('2', 'Propuesta'),
+        )
+
+
+    def queryset(self, request, queryset):
+        pks = [x['speech'] for x in SpeechSchedule.objects.all().values('speech')]
+        if self.value() == '1':
+            return queryset.filter(pk__in=pks)
+        if self.value() == '2':
+            return queryset.exclude(pk__in=pks)
+
+class CharlistaConfirmadoFilter(admin.SimpleListFilter):
+    title =  "Charlista confirmado"
+    parameter_name = 'agenda'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('1', "Confirmado"),
+            ('2', 'No confirmado'),
+        )
+
+
+    def queryset(self, request, queryset):
+        pks = [x['speech'] for x in SpeechSchedule.objects.all().values('speech')]
+        if self.value() == '1':
+            return queryset.filter(pk__in=pks)
+        if self.value() == '2':
+            return queryset.exclude(pk__in=pks)
+
+
 class SpeechAdmin(admin.ModelAdmin):
     list_display = ['speaker_name', 'title', 'skill_level', 'registrados_cuenta']
-    list_filter = ['topic', 'speech_type']
+    list_filter = [AgendaFilter,'topic', 'speech_type']
     actions = [action_export_register_list]
     search_fields = (
             'title',
@@ -79,3 +116,4 @@ class ScheduleAdmin(admin.ModelAdmin):
 admin.site.register(Speech, SpeechAdmin)
 admin.site.register(SpeechSchedule, ScheduleAdmin)
 admin.site.register([SpeechType, Topic, Room])
+admin.site.register(BlockSchedule)

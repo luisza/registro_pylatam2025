@@ -42,3 +42,10 @@ def get_registro(context, schedule):
         dev['url'] = reverse('registra_charla', kwargs={'pk': schedule.speech.pk })+"?dia=%d"%(dia,)
         dev['message'] = "Registrarme"        
     return dev
+
+@register.simple_tag(takes_context=True)
+def get_speech(context, block):
+    request = context['request']
+    return block.get_speech(user=request.user)
+    
+    

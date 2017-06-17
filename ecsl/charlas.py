@@ -4,7 +4,8 @@ Created on 5 jun. 2017
 @author: luis
 '''
 from django.views.generic.list import ListView
-from proposal.models import SpeechSchedule, Topic, Speech, Register_Speech
+from proposal.models import SpeechSchedule, Topic, Speech, Register_Speech,\
+    BlockSchedule
 import datetime
 from django.views.generic.detail import DetailView
 from django.shortcuts import get_object_or_404, redirect
@@ -14,11 +15,9 @@ from django.contrib import messages
 from django.urls.base import reverse
 from ecsl.models import Payment
 from django.db.models.query_utils import Q
+from django.utils.decorators import method_decorator
 
-class Charlas(ListView):
-    model = SpeechSchedule
-    order_by="start_time"
-    
+class CharlaContext:
     def get_context_data(self, **kwargs):
         context =  ListView.get_context_data(self, **kwargs)
         
@@ -53,7 +52,20 @@ class Charlas(ListView):
         context['dia'] = dia
         context['tipos'] = Topic.objects.all()
         return context
+
+class Charlas(CharlaContext, ListView):
+    model = BlockSchedule
+    order_by="start_time"
     
+ 
+    
+@method_decorator(login_required, name='dispatch')
+class MyAgenda(CharlaContext, ListView):
+    model = BlockSchedule
+    template_name = 'proposal/mi_agenda.html'
+    order_by="start_time"
+    
+
 class CharlaDetail(DetailView):
     model = Speech
     
@@ -110,7 +122,6 @@ def register_user_to_speech(request, pk):
 
         ).count()
     
-    print("Registros", registros)
     if registros > 0:
         messages.error(request, "Lo lamentamos hay un choque de horarios en su agenda")
         return redirect(reverse('list_charlas')+"?dia=%d"%(dia,))        
