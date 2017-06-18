@@ -33,12 +33,12 @@
         {% if request.user.is_authenticated %}     
 			 <li><a href="{% url 'profile' %}">Mis datos</a></li>
 			 <li><a href="{% url 'payment' %}">Registro</a></li>
-			 <li><a  href="{% url 'mi_agenda' %}"> Mi Agenda</a> </li>
+			<!--  <li><a  href="{% url 'mi_agenda' %}"> Mi Agenda</a> </li> --> 
         
         {% else %}
             <li><a href="{% url 'registration_register' %}">{% trans 'Register' %} </a></li>
         {% endif %}
-        <li><a href="{% url 'list_charlas' %}">Agenda</a></li> 
+       <!--  <li><a href="{% url 'list_charlas' %}">Agenda</a></li>  -->
         <li><a href="https://ecsl2017.softwarelibre.ca/contacto/"> Contáctenos </a></li>
        
     </ul>

@@ -105,7 +105,7 @@ class Payment(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name=_('Usuario'))
     option = models.ForeignKey(PaymentOption, 
                                on_delete=models.CASCADE, verbose_name=_('Opción de pago'))
-    codigo_de_referencia= models.CharField(max_length=12, verbose_name=_('Id de transacción'), help_text="Identificación de transacción o código de referencia")
+    codigo_de_referencia= models.CharField(max_length=40, verbose_name=_('Id de transacción'), help_text="Identificación de transacción o código de referencia")
     paquete = models.CharField(max_length=40, choices=PAQUETE)
     invoice = models.FileField(upload_to="invoices/")
     confirmado = models.BooleanField(default=False)
