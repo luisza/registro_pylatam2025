@@ -52,7 +52,7 @@
        
       	  <li ><a href="{% url 'profile' %}"> {% trans 'Profile' %} </a></li>
       	  <li class="nav-item"> 
-      	  <a class="nav-link" href="https://ecsl2017.softwarelibre.ca/registro/accounts/password/reset/" > Cambiar contraseña </a> </
+      	  <a class="nav-link" href="{% url 'auth_password_reset' %}" > Cambiar contraseña </a> </li>
  
           <li class="nav-item"><a class="nav-link" href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
         {% else %}

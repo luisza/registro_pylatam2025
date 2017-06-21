@@ -7,7 +7,7 @@ Created on 2 jun. 2017
 
 import csv
 from django.http import HttpResponse
-from ecsl.models import Inscription, Payment
+from ecsl.models import Inscription, Payment, PaymentOption
 
 
 def export_afiliation(request, queryset=None):
@@ -29,7 +29,6 @@ def export_afiliation(request, queryset=None):
         pago="No"
         opcion = ' '
         if pays is not None:
-            print(pays)
             opcion = pays.paquete
             pago = 'Sí' if pays.confirmado else 'No confirmado'
             
@@ -69,6 +68,60 @@ def export_payment(request, queryset=None):
                          
                      ])   
     return response
+
+
+
+def export_payment_option_stats(request, queryset=None):
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="pagos_estadisticas.csv"'
+    if queryset is None:
+        queryset = Payment.objects.all()
+
+
+    writer = csv.writer(response, delimiter=';', quotechar="'")
+    writer.writerow(['Nombre', 'cantidad'])
+   
+    for paymentoption in PaymentOption.objects.all():
+        writer.writerow([
+            "(%s) %s"%(paymentoption.tipo, paymentoption.name), 
+                       queryset.filter(option = paymentoption).count() 
+                     ])   
+    return response
+
+
+
+def _export_stats_payments(request, queryset, payments):
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="registrados_stats.csv"'
+    if queryset is None:
+        queryset = Inscription.objects.all()
+
+    writer = csv.writer(response, delimiter=';', quotechar="'")
+    gender = list(dict(Inscription.gender_choice).keys())
+    writer.writerow(['Descripción', 'Total' ]+gender)
+
+    for x in Inscription.PAIS :
+        writer.writerow([x[0], queryset.filter(nationality=x[0]).count() ] + [ queryset.filter(
+            gender=gen,
+            nationality=x[0]).count() for gen in gender]  )
+    
+    for x in Inscription.CAMISETA :
+        writer.writerow( [x[0], 
+                          queryset.filter(camiseta=x[0]).count()
+                          ]+ [ queryset.filter( gender=gen,
+            camiseta=x[0]).count() for gen in gender])
+    
+    writer.writerow(['Total por género', queryset.count()]+[ queryset.filter(
+            gender=gen).count() for gen in gender] )
+    return response
+
+def export_stats_payments(request, queryset=None):
+    queryset_ins = Inscription.objects.filter(user__in=
+        [x['user'] for x in queryset.values('user')])
+    
+    return _export_stats_payments(request, queryset=queryset_ins, payments=queryset)
 
 def export_stats_afiliation(request, queryset=None):
     # Create the HttpResponse object with the appropriate CSV header.

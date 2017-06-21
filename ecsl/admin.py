@@ -3,7 +3,7 @@ from django.contrib import admin
 # Register your models here.
 from ecsl.models import Inscription, Gustos, PaymentOption, Payment, Becas
 from ecsl.csv_export import export_payment, export_afiliation,\
-    export_stats_afiliation
+    export_stats_afiliation, export_payment_option_stats, export_stats_payments
 from django.core.mail import send_mail
 from ajax_select import make_ajax_form
 
@@ -16,6 +16,11 @@ def action_export_afiliation(modeladmin, request, queryset):
 def action_export_stats_afiliation(modeladmin, request, queryset):
     return export_stats_afiliation(request, queryset)
 
+def action_export_payment_option_stats(modeladmin, request, queryset):
+    return export_payment_option_stats(request, queryset)
+
+def action_export_stats_payments(modeladmin, request, queryset):
+    return export_stats_payments(request, queryset)
 
 def action_reenviar_notificacion(modeladmin, request, queryset):
     
@@ -36,6 +41,8 @@ action_export_payment.short_description = "Exportar pagos"
 action_export_afiliation.short_description = "Exportar registros"
 action_export_stats_afiliation.short_description = "Estadísticas de registros"
 action_reenviar_notificacion.short_description = "Reenviar notificación de pago"
+action_export_payment_option_stats.short_description = "Estadisticas según tipo de pago"
+action_export_stats_payments.short_description = "Estadísticas de pagos"
 
 @admin.register(Inscription)
 class InscripcionAdmin(admin.ModelAdmin):
@@ -57,7 +64,9 @@ class PaymentAdmin(admin.ModelAdmin):
             'user__last_name',
         )
     actions=[action_export_payment,
-             action_reenviar_notificacion]
+             action_reenviar_notificacion,
+             action_export_payment_option_stats,
+             action_export_stats_payments]
     form = make_ajax_form(Payment, {'user': 'users'})
     
     def save_model(self, request, obj, form, change):
