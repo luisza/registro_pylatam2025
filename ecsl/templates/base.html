@@ -33,12 +33,12 @@
         {% if request.user.is_authenticated %}     
 			 <li><a href="{% url 'profile' %}">Mis datos</a></li>
 			 <li><a href="{% url 'payment' %}">Registro</a></li>
-			<!--  <li><a  href="{% url 'mi_agenda' %}"> Mi Agenda</a> </li> --> 
+			 <li><a  href="{% url 'mi_agenda' %}"> Mi Agenda</a> </li>
         
         {% else %}
             <li><a href="{% url 'registration_register' %}">{% trans 'Register' %} </a></li>
         {% endif %}
-       <!--  <li><a href="{% url 'list_charlas' %}">Agenda</a></li>  -->
+         <li><a href="{% url 'list_charlas' %}">Agenda</a></li> 
         <li><a href="https://ecsl2017.softwarelibre.ca/contacto/"> Contáctenos </a></li>
        
     </ul>
@@ -51,6 +51,9 @@
         {% if request.user.is_authenticated %}
        
       	  <li ><a href="{% url 'profile' %}"> {% trans 'Profile' %} </a></li>
+      	  <li class="nav-item"> 
+      	  <a class="nav-link" href="https://ecsl2017.softwarelibre.ca/registro/accounts/password/reset/" > Cambiar contraseña </a> </
+ 
           <li class="nav-item"><a class="nav-link" href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
         {% else %}
             <li class="nav-item"><a class="nav-link" href="{% url 'auth_login' %}">{% trans "Log in" %}</a></li>
