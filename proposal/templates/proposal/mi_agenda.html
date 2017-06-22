@@ -55,8 +55,9 @@
 
 <div class="row theader">
   <div class="col-md-2">Horario</div>
-  <div class="col-md-6">Título</div>
-  <div class="col-md-2">Salón</div>
+  <div class="col-md-5">Título</div>
+   <div class="col-md-2">Expositor/a responsable</div>
+  <div class="col-md-1">Salón</div>
   <div class="col-md-2">Registro</div>
 </div>
 
@@ -73,11 +74,12 @@
 				{{ speech.speech.speech_type.name }}
 				</p>
 		  </div>
-		  <div class="col-md-6">
+		  <div class="col-md-5">
 
 			<a href="{% url 'detail_charla' speech.speech.pk %}" target="_blank"> {{ speech.speech.title }} </a>
 		  </div>
-		  <div class="col-md-2">{{ speech.room.name }}</div>
+		  <div class="col-md-2">{{ speech.speech.user.get_full_name }}</div>
+		  <div class="col-md-1">{{ speech.room.name }}</div>
 		  <div class="col-md-2">  {% get_registro speech as nreg%}  <a href="{{nreg.url}}"> {{nreg.message}} </a> </div>
 		  </div>
 			{% endfor %}

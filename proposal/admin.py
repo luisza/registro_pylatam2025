@@ -38,6 +38,13 @@ def action_export_register_list(modeladmin, request, queryset):
 
 action_export_register_list.short_description = "Descargar usuarios registrados"
 
+def action_send_email(modeladmin, request, queryset):
+    pk = queryset.values('pk')
+    
+    
+action_send_email.short_description = "Enviar correo"
+
+
 class AgendaFilter(admin.SimpleListFilter):
     title =  "En agenda"
     parameter_name = 'agenda'
@@ -113,7 +120,11 @@ class ScheduleAdmin(admin.ModelAdmin):
             'speech__user__last_name',
         )
     
+class BlockScheduleAdmin(admin.ModelAdmin):
+    list_display = ('start_time', 'end_time', 'is_speech', 'text','color')
+    list_editable = ('color', )
+
 admin.site.register(Speech, SpeechAdmin)
 admin.site.register(SpeechSchedule, ScheduleAdmin)
 admin.site.register([SpeechType, Topic, Room])
-admin.site.register(BlockSchedule)
+admin.site.register(BlockSchedule, BlockScheduleAdmin)
