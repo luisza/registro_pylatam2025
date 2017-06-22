@@ -16,6 +16,9 @@ def get_registro(context, schedule):
     dia = context['dia']
     dev= {}
 
+    if schedule.pk == 14:
+        return ""
+
     if not request.user.is_authenticated():
         dev['url'] = reverse( 'auth_login' )+"?next="+reverse('list_charlas')
         dev['message'] = "Iniciar sesión para registrarse en el evento"

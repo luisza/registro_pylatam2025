@@ -107,6 +107,10 @@ class SpeechSchedule(models.Model):
     def registros(self):
         regs = Register_Speech.objects.filter(speech=self).count()
         total = self.room.spaces - regs
+        
+        if self.pk == 14:
+            return ""
+        
         dev = "Lleno"
         if total>0:
             dev="Hay %d espacios"%(total,)
