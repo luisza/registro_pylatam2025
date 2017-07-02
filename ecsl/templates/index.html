@@ -50,11 +50,25 @@
 	
 
 <div class="row">
-<h1 class="text-center text-warning"> Participantes </h1>
-<div id="participantes" class="list-group">
+<div class="page-header">
+<h1 class="text-center text-warning">Ya somos {{numparticipantes}} participantes </h1></div>
+<div id="participantes" class="list-group col-md-8 ">
 
 </div>
-<h1 class="text-center text-warning"> Sea parte de nuestra comunidad; aprenda, comparta, colabore y disfrute con nosotros. </h1>
+<div  class="col-md-4 ">
+
+<h3 class="text-center"> Distribución por género </h3>
+<canvas id="genero"></canvas>
+<h3 class="text-center"> Distribución por país </h3>
+<canvas id="pais"></canvas>
+
+</div>
+</div>
+
+<div class="row">
+<div class="page-header col-md-8 col-md-offset-2">
+<h2 class="text-center text-warning"> Sea parte de nuestra comunidad; <br>aprenda, comparta, colabore y disfrute con nosotros. </h2>
+</div>
 </div>
 	
 	
@@ -90,5 +104,64 @@ $.get( "{% url "participantes" %}", function( data ) {
 
 
 </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.js" ></script>
+
+<script>
+var ctx = document.getElementById('genero').getContext('2d');
+var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'pie',
+
+    // The data for our dataset
+    data: {
+        labels: ["Masculino", "Femenino", "Otro", ],
+        datasets: [{
+            label: "Distribución por género",
+            backgroundColor: ['rgb(199, 30, 37)', 'rgb(112, 159, 44)', 'rgb(226, 189, 15)',  ],
+            borderColor: 'rgb(43, 57, 145)',
+            data: [{{genero.masculino}},{{ genero.femenino }}, {{genero.otro}} ],
+        }]
+    },
+
+    // Configuration options go here
+    options: {}
+});
+</script>
+
+
+<script>
+
+var ctx = document.getElementById('pais').getContext('2d');
+
+
+var myBarChart = new Chart(ctx, {
+    type: 'horizontalBar',
+    // The data for our dataset
+    data: {
+        labels: ['Panamá', 'Costa Rica', 'Nicaragua','El Salvador','Guatemala','Hondura','Belize','Otro' ],
+        datasets: [{
+            label: "Distribución por país",
+            backgroundColor: ['rgb(199, 30, 37)', 
+            				  'rgb(112, 159, 44)', 
+            				  'rgb(226, 189, 15)',  
+            				  'rgb(199, 30, 37)', 
+            				  'rgb(112, 159, 44)', 
+            				  'rgb(226, 189, 15)',  
+            				  'rgb(199, 30, 37)',
+            				  'rgb(112, 159, 44)'
+            				  ],
+            borderColor: 'rgb(43, 57, 145)',
+            data: [{{pais.panama}},{{ pais.costarica }}, {{pais.nicaragua}},
+            	{{pais.elsalvador}},{{ pais.guatemala }}, {{pais.honduras}},
+            	{{ pais.belize }}, {{pais.otro }}
+            ],
+        }]
+    },
+    options: {}
+});
+
+</script>
+
 
 {% endblock %}
