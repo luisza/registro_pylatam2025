@@ -124,6 +124,8 @@ class ScheduleAdmin(admin.ModelAdmin):
         'speech__user__first_name',
         'speech__user__last_name',
     )
+
+    ordering = ['start_time']
     list_filter = ['speech__speech_type', 'room']
 
 
