@@ -12,5 +12,4 @@ from proposal.views import proposals
 
 urlpatterns = [
     url(r'proposal/', include(proposals.get_urls(), namespace='speech')),
-
 ]

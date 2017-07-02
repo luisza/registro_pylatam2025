@@ -5,13 +5,18 @@ from django.shortcuts import render
 
 from proposal.models import Speech
 from cruds_adminlte.crud import UserCRUDView
+from ecsl.models import Payment
+import hashlib
+import urllib
+from django.http.response import JsonResponse
+
 
 class ProposalSpeech(UserCRUDView):
     model = Speech
     namespace = "speech"
     check_perms = False
-    views_available=['list', 'create','update', 'detail']
-    list_fields = ['title','topic',  'skill_level']
+    views_available = ['list', 'create', 'update', 'detail']
+    list_fields = ['title', 'topic',  'skill_level']
     fields = [
         'speaker_information',
         'title',
@@ -20,7 +25,25 @@ class ProposalSpeech(UserCRUDView):
         'audience',
         'skill_level',
         'notes',
-        'speech_type', 
+        'speech_type',
         'presentacion']
 
+
 proposals = ProposalSpeech()
+
+
+def get_participants(request):
+    dev = []
+    default = "https://ecsl2017.softwarelibre.ca/wp-content/uploads/2017/01/cropped-photo_2017-01-30_20-55-06.jpg".encode(
+        'utf-8')
+    size = 50
+    for payment in Payment.objects.all().order_by('?'):
+        email = payment.user.email.lower().encode('utf-8')
+        name = payment.user.get_full_name()
+
+        url = "https://www.gravatar.com/avatar/%s?%s" % (hashlib.md5(
+            email).hexdigest(), urllib.parse.urlencode({'d': default, 's': str(size)}))
+
+        dev.append({'url': url, 'name': name})
+
+    return JsonResponse(dev, safe=False)

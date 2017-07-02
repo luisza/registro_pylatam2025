@@ -48,6 +48,47 @@
 </div>
 	</div>
 	
+
+<div class="row">
+<h1 class="text-center text-warning"> Participantes </h1>
+<div id="participantes" class="list-group">
+
 </div>
+<h1 class="text-center text-warning"> Sea parte de nuestra comunidad; aprenda, comparta, colabore y disfrute con nosotros. </h1>
+</div>
+	
+	
+</div>
+
+{% endblock %}
+
+{% block js %}
+
+<script> 
+$.get( "{% url "participantes" %}", function( data ) {
+	
+	var li='<div class="col-md-1"> <img width="50px" heigth="50px"  src="url" alt="altnombre" class="img-circle"></div>';
+	li += '<div class="col-md-3">nombre</div>';
+
+	var item = "";
+	var p = 0;
+	var t = "bg-info";
+	 for(var x=0; x<data.length; x++){
+		 if(x%3 == 0){
+			 if( x!=0) item += '</div>';
+			 if(p%2 == 0){ t = "bg-default";
+			 }else{ t = "bg-info"; }
+			 item += '<div class="row '+t+'"> ';
+		}
+		p++;
+		var e=data[x];
+		item+= li.replace("altnombre", e.name).replace("nombre", e.name).replace("url", e.url);
+	};
+	item += '</div>';
+	$("#participantes").append( item );
+});
+
+
+</script>
 
 {% endblock %}
