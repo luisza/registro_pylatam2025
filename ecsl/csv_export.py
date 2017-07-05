@@ -17,35 +17,35 @@ def export_afiliation(request, queryset=None):
     if queryset is None:
         queryset = Inscription.objects.all()
 
-
     writer = csv.writer(response, delimiter=';', quotechar="'")
-    writer.writerow(['pago', 'Opción', 'Nombre', 'identificación', 'género', 'Estado',
+    writer.writerow(['pago', 'Opción', 'Nombre', 'camiseta', 'identificación', 'género', 'Estado',
                      'nationalidad', 'otra nacionalidad',
                      'born_date', 'institution', 'restrición alimentaria',
                      'consideraciones de salud', 'Gustos y manías', 'Comentario general'])
-   
+
     for obj in queryset:
         pays = Payment.objects.filter(user=obj.user).first()
-        pago="No"
+        pago = "No"
         opcion = ' '
         if pays is not None:
             opcion = pays.paquete
             pago = 'Sí' if pays.confirmado else 'No confirmado'
-            
-            
+
         writer.writerow([
             pago, opcion,
-                obj.name, obj.identification, obj.gender,
-                     obj.get_status_display(),
-                     obj.nationality, obj.other_nationality,
-                     str(obj.born_date) if obj.born_date else " ",
-                      obj.institution,
-                     obj.alimentary_restriction,
-                     obj.health_consideration,
-                     ",".join([x.name for x in obj.gustos_manias.all()]),
-                     obj.comentario_general,
-                     ])
+            obj.name, obj.camiseta,
+            obj.identification, obj.gender,
+            obj.get_status_display(),
+            obj.nationality, obj.other_nationality,
+            str(obj.born_date) if obj.born_date else " ",
+            obj.institution,
+            obj.alimentary_restriction,
+            obj.health_consideration,
+            ",".join([x.name for x in obj.gustos_manias.all()]),
+            obj.comentario_general,
+        ])
     return response
+
 
 def export_payment(request, queryset=None):
     # Create the HttpResponse object with the appropriate CSV header.
@@ -54,21 +54,19 @@ def export_payment(request, queryset=None):
     if queryset is None:
         queryset = Payment.objects.all()
 
-
     writer = csv.writer(response, delimiter=';', quotechar="'")
     writer.writerow(['Nombre', 'Paquete', 'Forma de pago', 'Código de referencia',
                      'confirmado'])
-   
+
     for obj in queryset:
-        writer.writerow([obj.name, 
+        writer.writerow([obj.name,
                          obj.opcion_paquete,
                          str(obj.option),
                          obj.codigo_de_referencia,
                          obj.confirmado
-                         
-                     ])   
-    return response
 
+                         ])
+    return response
 
 
 def export_payment_option_stats(request, queryset=None):
@@ -78,17 +76,15 @@ def export_payment_option_stats(request, queryset=None):
     if queryset is None:
         queryset = Payment.objects.all()
 
-
     writer = csv.writer(response, delimiter=';', quotechar="'")
     writer.writerow(['Nombre', 'cantidad'])
-   
+
     for paymentoption in PaymentOption.objects.all():
         writer.writerow([
-            "(%s) %s"%(paymentoption.tipo, paymentoption.name), 
-                       queryset.filter(option = paymentoption).count() 
-                     ])   
+            "(%s) %s" % (paymentoption.tipo, paymentoption.name),
+            queryset.filter(option=paymentoption).count()
+        ])
     return response
-
 
 
 def _export_stats_payments(request, queryset, payments):
@@ -100,28 +96,30 @@ def _export_stats_payments(request, queryset, payments):
 
     writer = csv.writer(response, delimiter=';', quotechar="'")
     gender = list(dict(Inscription.gender_choice).keys())
-    writer.writerow(['Descripción', 'Total' ]+gender)
+    writer.writerow(['Descripción', 'Total'] + gender)
 
-    for x in Inscription.PAIS :
-        writer.writerow([x[0], queryset.filter(nationality=x[0]).count() ] + [ queryset.filter(
+    for x in Inscription.PAIS:
+        writer.writerow([x[0], queryset.filter(nationality=x[0]).count()] + [queryset.filter(
             gender=gen,
-            nationality=x[0]).count() for gen in gender]  )
-    
-    for x in Inscription.CAMISETA :
-        writer.writerow( [x[0], 
-                          queryset.filter(camiseta=x[0]).count()
-                          ]+ [ queryset.filter( gender=gen,
-            camiseta=x[0]).count() for gen in gender])
-    
-    writer.writerow(['Total por género', queryset.count()]+[ queryset.filter(
-            gender=gen).count() for gen in gender] )
+            nationality=x[0]).count() for gen in gender])
+
+    for x in Inscription.CAMISETA:
+        writer.writerow([x[0],
+                         queryset.filter(camiseta=x[0]).count()
+                         ] + [queryset.filter(gender=gen,
+                                              camiseta=x[0]).count() for gen in gender])
+
+    writer.writerow(['Total por género', queryset.count()] + [queryset.filter(
+        gender=gen).count() for gen in gender])
     return response
 
+
 def export_stats_payments(request, queryset=None):
-    queryset_ins = Inscription.objects.filter(user__in=
-        [x['user'] for x in queryset.values('user')])
-    
+    queryset_ins = Inscription.objects.filter(
+        user__in=[x['user'] for x in queryset.values('user')])
+
     return _export_stats_payments(request, queryset=queryset_ins, payments=queryset)
+
 
 def export_stats_afiliation(request, queryset=None):
     # Create the HttpResponse object with the appropriate CSV header.
@@ -132,19 +130,21 @@ def export_stats_afiliation(request, queryset=None):
 
     writer = csv.writer(response, delimiter=';', quotechar="'")
     writer.writerow(['Descripción', 'Valor'])
-    stats={}
+    stats = {}
     for x in Inscription.gender_choice:
-        writer.writerow([x[0], queryset.filter(gender=x[0]).count() ] )
-    
-    for x in Inscription.PAIS :
-        writer.writerow([x[0], queryset.filter(nationality=x[0]).count() ] )
-    
-    for x in Inscription.CAMISETA :
-        writer.writerow([x[0], queryset.filter(camiseta=x[0]).count() ] )
-    
-    for x in Payment.PAQUETE :
-        writer.writerow([x[0], Payment.objects.filter(paquete=x[0]).count() ] )
+        writer.writerow([x[0], queryset.filter(gender=x[0]).count()])
 
-    writer.writerow(["Confirmados", Payment.objects.filter(confirmado=True).count() ] )
-    writer.writerow(["No Confirmados", Payment.objects.filter(confirmado=False).count() ] )
+    for x in Inscription.PAIS:
+        writer.writerow([x[0], queryset.filter(nationality=x[0]).count()])
+
+    for x in Inscription.CAMISETA:
+        writer.writerow([x[0], queryset.filter(camiseta=x[0]).count()])
+
+    for x in Payment.PAQUETE:
+        writer.writerow([x[0], Payment.objects.filter(paquete=x[0]).count()])
+
+    writer.writerow(
+        ["Confirmados", Payment.objects.filter(confirmado=True).count()])
+    writer.writerow(
+        ["No Confirmados", Payment.objects.filter(confirmado=False).count()])
     return response

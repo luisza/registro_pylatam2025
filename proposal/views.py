@@ -15,7 +15,7 @@ class ProposalSpeech(UserCRUDView):
     model = Speech
     namespace = "speech"
     check_perms = False
-    views_available = ['list', 'create', 'update', 'detail']
+    views_available = ['list', 'update', 'detail']
     list_fields = ['title', 'topic',  'skill_level']
     fields = [
         'speaker_information',

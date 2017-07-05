@@ -28,10 +28,7 @@
 	<a class="btn btn-default" href="{% url 'payment' %}">Registro</a>
 	
 	{% if speech_url %}
-		<a class="btn btn-default" href="{{speech_url}}">Mis exposiciones</a>
-	{% else %}
-		<a class="btn btn-default" href="{% url 'speech:proposal_speech_create' %}">Mis exposiciones</a>
-		
+		<a class="btn btn-default" href="{{speech_url}}">Mis exposiciones</a>	
 	{% endif %}
 		 <a class="btn btn-danger" href="{% url 'mi_agenda' %}"> Mi Agenda</a>   
 	{% else %}
