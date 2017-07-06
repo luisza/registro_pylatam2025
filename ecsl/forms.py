@@ -20,15 +20,17 @@ class ProfileForm(forms.ModelForm):
         'encuentros',
         'alimentary_restriction', 'health_consideration',
         'gustos_manias', 'observacion_gustos_manias',
-        'comentario_general'
-        
+        'comentario_general',
+        'hora_de_llegada', 'hora_de_salida', 'medio_de_transporte',
+        'lugar_de_arribo', 'observaciones_del_viaje'
+
     ]
 
     def __init__(self, *args, **kwargs):
         self.user = None
         if 'instance' in kwargs and kwargs['instance']:
             self.user = kwargs['instance'].user
-            
+
         if 'request' in kwargs:
             request = kwargs.pop('request')
             self.user = request.user
@@ -55,12 +57,14 @@ class ProfileForm(forms.ModelForm):
         model = Inscription
         fields = '__all__'
         exclude = ['user', 'status']
-        
+
+
 class PaymentForm(forms.ModelForm):
-    option = forms.ModelChoiceField(widget=forms.RadioSelect, 
-        queryset=PaymentOption.objects.all().exclude(name="Beca"), 
-        label="Opción de pago",
+    option = forms.ModelChoiceField(widget=forms.RadioSelect,
+                                    queryset=PaymentOption.objects.all().exclude(name="Beca"),
+                                    label="Opción de pago",
                                     empty_label=None)
+
     class Meta:
         model = Payment
         fields = '__all__'
