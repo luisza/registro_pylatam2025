@@ -22,8 +22,10 @@ from django.conf.urls.static import static
 from django.conf import settings
 from ecsl.charlas import Charlas, CharlaDetail, register_user_to_speech,\
     desregistrar_charla, MyAgenda
+from ecsl.webservice import get_calendar_json
 
 urlpatterns = [
+    url(r'api/agenda.json', get_calendar_json, name="api_json"),
     url(r'^admin/', admin.site.urls),
     url(r'^ajax_select/', include(ajax_select_urls)),
 
