@@ -33,7 +33,7 @@
 {% block js %}
 <script type="text/javascript" src="{% static 'js/bootstrap-datepicker.js' %}"></script>
 <script>
-$("#id_hora_de_llegada").closest('.form-group').after(
+$("#id_hora_de_llegada").closest('.form-group').before(
 '<div class="page-header"><h2 class="text-center text-success">Itinerario de viaje<br><small>No indispensable para costarricenses </small></h2></div>');
 
 $('#id_born_date').bootstrap_datepicker({ format: "dd/mm/yyyy"});
