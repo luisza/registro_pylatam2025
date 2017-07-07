@@ -7,7 +7,61 @@ Created on 2 jun. 2017
 
 import csv
 from django.http import HttpResponse
-from ecsl.models import Inscription, Payment, PaymentOption
+from ecsl.models import Inscription, Payment, PaymentOption, Gustos
+
+
+def export_gustos_manias_afiliation2(request, queryset=None, header=[], fields=[], filter=True):
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="%s.csv"' % ("_".join(
+        header))
+    if queryset is None:
+        queryset = Inscription.objects.all()
+
+    writer = csv.writer(response, delimiter=';', quotechar="'")
+
+    writer.writerow(header)
+
+    for obj in queryset:
+        data_ok = [obj.user.get_full_name()]
+        data = []
+        d = ""
+        for dati in obj.gustos_manias.all():
+            d += dati.name + ", "
+        data.append(d)
+        data.append(obj.observacion_gustos_manias)
+
+        if filter and any(data):
+            data_ok += data
+            writer.writerow(data_ok)
+    return response
+
+
+def export_gustos_manias_afiliation(request, queryset=None, header=[], fields=[], filter=True):
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="%s.csv"' % ("_".join(
+        header))
+    if queryset is None:
+        queryset = Inscription.objects.all()
+
+    writer = csv.writer(response, delimiter=';', quotechar="'")
+
+    writer.writerow(header)
+
+    for obj in queryset:
+        data_ok = [obj.user.get_full_name()]
+        data = []
+        for x in fields:
+            x = x.split('__')
+            tmp = obj
+            for d in x:
+                tmp = getattr(tmp, d)
+            data.append(tmp)
+        if filter and any(data):
+            data_ok += data
+            writer.writerow(data_ok)
+    return response
 
 
 def export_afiliation(request, queryset=None):
