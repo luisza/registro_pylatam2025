@@ -8,6 +8,9 @@ from ecsl.csv_export import export_payment, export_afiliation,\
     export_gustos_manias_afiliation2
 from django.core.mail import send_mail
 from ajax_select import make_ajax_form
+from async_notifications.register import update_template_context
+from async_notifications.utils import send_email_from_template
+from django.contrib import messages
 
 
 def action_export_payment(modeladmin, request, queryset):
@@ -72,6 +75,45 @@ def action_stats_all_afiliation(modeladmin, request, queryset):
     return _export_stats_payments(request, queryset, payments)
 
 
+context = [
+    ('inscripcion', '''Disponibles:  inscripcion.identification ,
+inscripcion.born_date ,
+inscripcion.institution,
+inscripcion.get_gender_display,
+inscripcion.nationality,
+inscripcion.other_nationality ,
+inscripcion.alimentary_restriction,
+inscripcion.health_consideration ,
+inscripcion.comentario_general,
+inscripcion.camiseta,
+inscripcion.hora_de_salida,
+inscripcion.medio_de_transporte,
+inscripcion.lugar_de_arribo,
+inscripcion.observaciones_del_viaje'''),
+    ('usuario', '''Disponibles usuario.email, 
+    usuario.username, 
+    usuario.first_name, 
+    usuario.last_name,
+    usuario.get_full_name '''),
+
+]
+update_template_context("inscripcion.correo",
+                        'Mensaje importante del ECSL 2017', context)
+
+
+def action_enviar_correo_inscripcion(modeladmin, request, queryset):
+    for inscripcion in queryset:
+        send_email_from_template("inscripcion.correo", [inscripcion.user.email],
+                                 context={
+                                     'inscripcion': inscripcion,
+                                     'usuario': inscripcion.user,
+        },
+            enqueued=True,
+            user=request.user,
+            upfile=None)
+    messages.success(request, 'Mensajes enviados con éxito')
+
+
 action_export_payment.short_description = "Exportar pagos"
 action_export_afiliation.short_description = "Exportar registros"
 action_export_stats_afiliation.short_description = "Estadísticas de registros"
@@ -84,6 +126,7 @@ action_stats_all_afiliation.short_description = "Estadisticas todos los afiliado
 action_export_gustos.short_description = "Exportar Gustos"
 action_export_condicion_salud.short_description = "Exportar Condiciones de salud"
 action_export_alimentary_restriction.short_description = "Restricciones alimentarias"
+action_enviar_correo_inscripcion.short_description = "Enviar correo"
 
 
 @admin.register(Inscription)
@@ -94,7 +137,8 @@ class InscripcionAdmin(admin.ModelAdmin):
         'user__first_name',
         'user__last_name',
     )
-    actions = [action_export_afiliation, action_export_stats_afiliation,
+    actions = [action_enviar_correo_inscripcion,
+               action_export_afiliation, action_export_stats_afiliation,
                action_export_gustos,
                action_export_condicion_salud,
                action_export_alimentary_restriction, ]

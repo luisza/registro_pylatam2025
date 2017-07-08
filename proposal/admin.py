@@ -1,4 +1,4 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 
 # Register your models here.
 
@@ -12,6 +12,94 @@ import zipfile
 from django.utils.html import format_html_join
 from django.utils.safestring import mark_safe
 from ajax_select.helpers import make_ajax_form
+from async_notifications.register import update_template_context
+from async_notifications.utils import send_email_from_template
+
+
+context = [
+    ('inscripcion', '''Disponibles:  actividad.speaker_information,
+ actividad.title,
+ actividad.description,
+ actividad.topic,
+ actividad.audience,
+ actividad.skill_level,
+ actividad.notes,
+ actividad.speech_type,
+ actividad.presentacion'''),
+    ('usuario', '''Disponibles usuario.email, 
+    usuario.username, 
+    usuario.first_name, 
+    usuario.last_name,
+    usuario.get_full_name '''),
+
+]
+update_template_context("charla.expositor",
+                        'Mensaje importante sobre su actividad en el ECSL 2017', context)
+
+
+def action_enviar_correo_charla(modeladmin, request, queryset):
+    for prop in queryset:
+        send_email_from_template("charla.expositor", [prop.user.email],
+                                 context={
+                                     'actividad': prop,
+                                     'usuario': prop.user,
+        },
+            enqueued=True,
+            user=request.user,
+            upfile=None)
+    messages.success(request, 'Mensajes enviados con éxito')
+
+
+action_enviar_correo_charla.short_description = "Enviar correo a expositores"
+
+
+context = [
+    ('inscripcion', '''Disponibles:  actividad.speaker_information,
+ actividad.title,
+ actividad.description,
+ actividad.topic,
+ actividad.audience,
+ actividad.skill_level,
+ actividad.notes,
+ actividad.speech_type,
+ actividad.presentacion'''),
+    ('usuario', '''Disponibles usuario.email, 
+    usuario.username, 
+    usuario.first_name, 
+    usuario.last_name,
+    usuario.get_full_name '''),
+    ('expositor', '''Disponibles usuario.email, 
+    usuario.username, 
+    usuario.first_name, 
+    usuario.last_name,
+    usuario.get_full_name '''),
+    ('agenta', """Disponibles: agenda.start_time
+agenda.end_time
+agenda.speech
+agenda.room""")
+
+]
+update_template_context("charla.participante",
+                        'Mensaje importante sobre su actividad en el ECSL 2017', context)
+
+
+def action_enviar_correo_charla_participantes(modeladmin, request, queryset):
+    for prop in queryset:
+        for participa in Register_Speech.objects.filter(speech__speech=prop):
+            send_email_from_template("charla.participante", [prop.user.email],
+                                     context={
+                                     'actividad': prop,
+                                     'usuario': participa.user,
+                                     'expositor': prop.user,
+                                     'agenda': participa.speech
+                                     },
+                                     enqueued=True,
+                                     user=request.user,
+                                     upfile=None)
+    messages.success(request, 'Mensajes enviados con éxito')
+
+
+action_enviar_correo_charla_participantes.short_description = "Enviar correo"
 
 
 def action_export_register_list(modeladmin, request, queryset):
@@ -39,13 +127,6 @@ def action_export_register_list(modeladmin, request, queryset):
 
 
 action_export_register_list.short_description = "Descargar usuarios registrados"
-
-
-def action_send_email(modeladmin, request, queryset):
-    pk = queryset.values('pk')
-
-
-action_send_email.short_description = "Enviar correo"
 
 
 class AgendaFilter(admin.SimpleListFilter):
@@ -90,7 +171,9 @@ class SpeechAdmin(admin.ModelAdmin):
     list_display = ['speaker_name', 'title',
                     'skill_level', 'registrados_cuenta']
     list_filter = [AgendaFilter, 'topic', 'speech_type']
-    actions = [action_export_register_list]
+    actions = [action_enviar_correo_charla,
+               action_enviar_correo_charla_participantes,
+               action_export_register_list]
     search_fields = (
         'title',
         'user__first_name',

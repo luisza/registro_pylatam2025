@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
-
+{% load registro_charla %}
 {% block content %}
 
 <h2 style="color: {{object.topic.color}}"> {{ object.title }}<br>
@@ -16,7 +16,8 @@
   {{ schedule.start_time | date:"SHORT_DATE_FORMAT"  }} -- {{ schedule.start_time | date:"P" }} a {{ schedule.end_time | date:"P" }}
   </div>
   <div class="col-md-2">
-  Registrarme
+  {% get_registro schedule as nreg%}  <a class="btn btn-info" href="{{nreg.url}}"> {{nreg.message}} </a>
+
   </div>
 </div>
   

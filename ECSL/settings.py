@@ -9,13 +9,13 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
-
+from __future__ import absolute_import
 import os
 from django.urls.base import reverse_lazy
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ADMINS=(
+ADMINS = (
     ('Luis', 'luisza14@gmail.com'),
 )
 
@@ -28,7 +28,8 @@ SECRET_KEY = '5)%f%3ng*4981z7w6n3b_@_ctfmlzw(+thct%x!agmn%hwt(l1'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*','ecsl2017.softwarelibre.ca', 'www.ecsl2017.softwarelibre.ca']
+ALLOWED_HOSTS = ['*', 'ecsl2017.softwarelibre.ca',
+                 'www.ecsl2017.softwarelibre.ca']
 
 
 # Application definition
@@ -44,11 +45,14 @@ INSTALLED_APPS = [
     'registration',
     "bootstrapform",
 
-   # 'osem',
+    # 'osem',
     'proposal',
     'cruds_adminlte',
     'crispy_forms',
-    'ajax_select'
+    'ajax_select',
+    'async_notifications',
+    'ckeditor',
+    'ckeditor_uploader'
 ]
 
 MIDDLEWARE = [
@@ -142,6 +146,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+CKEDITOR_UPLOAD_PATH = "uploads/"
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'localhost'
@@ -160,3 +165,23 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
     'django.contrib.auth.hashers.Argon2PasswordHasher',
 ]
+
+
+CELERY_MODULE = "ECSL.celery"
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_ACCEPT_CONTENT = ['pickle', 'json']
+
+from celery.schedules import crontab
+
+CELERYBEAT_SCHEDULE = {
+    # execute 12:30 pm
+    'send_daily_emails': {
+        'task': 'async_notifications.tasks.send_daily',
+        'schedule': crontab(minute='*/3',),
+    },
+}
+
+ASYNC_NOTIFICATION_TEXT_AREA_WIDGET = 'ckeditor.widgets.CKEditorWidget'
+ASYNC_NOTIFICATION_MAX_PER_MAIL = 5
+
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
