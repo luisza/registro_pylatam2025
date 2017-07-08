@@ -154,7 +154,7 @@ EMAIL_PORT = 25
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = False
-DEFAULT_FROM_EMAIL = 'ECSL2017 <not-replay@ecsl2017.softwarelibre.ca>'
+DEFAULT_FROM_EMAIL = 'ECSL2017 <not-reply@ecsl2017.softwarelibre.ca>'
 
 
 MAX_INSCRIPTION = 250
