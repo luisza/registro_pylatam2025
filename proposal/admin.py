@@ -99,7 +99,7 @@ def action_enviar_correo_charla_participantes(modeladmin, request, queryset):
     messages.success(request, 'Mensajes enviados con éxito')
 
 
-action_enviar_correo_charla_participantes.short_description = "Enviar correo"
+action_enviar_correo_charla_participantes.short_description = "Enviar correo a participantes"
 
 
 def action_export_register_list(modeladmin, request, queryset):
