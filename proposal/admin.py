@@ -169,8 +169,9 @@ class CharlistaConfirmadoFilter(admin.SimpleListFilter):
 
 class SpeechAdmin(admin.ModelAdmin):
     list_display = ['speaker_name', 'title',
-                    'skill_level', 'registrados_cuenta']
-    list_filter = [AgendaFilter, 'topic', 'speech_type']
+                    'skill_level', 'registrados_cuenta', 'en_agenda']
+    list_filter = [AgendaFilter,
+                   'speechschedule__room', 'topic', 'speech_type']
     actions = [action_enviar_correo_charla,
                action_enviar_correo_charla_participantes,
                action_export_register_list]
@@ -179,13 +180,25 @@ class SpeechAdmin(admin.ModelAdmin):
         'user__first_name',
         'user__last_name',
     )
-    readonly_fields = ('registrados_cuenta', 'get_registration_list',)
+    readonly_fields = ('registrados_cuenta',
+                       'get_registration_list', 'en_agenda')
     form = make_ajax_form(Speech, {'user': 'users'})
 
     def registrados_cuenta(self, instance):
         regs = Register_Speech.objects.filter(speech__speech=instance)
         return regs.count()
     registrados_cuenta.short_description = "# registrados"
+
+    def en_agenda(self, instance):
+        schedule = SpeechSchedule.objects.filter(speech=instance).first()
+        if not schedule:
+            return "No agendada"
+        return "%s -- %s" % (
+            schedule.start_time.strftime("%b %d %H:%M"),
+            schedule.end_time.strftime("%H:%M")
+        )
+    en_agenda.short_description = "Horario"
+    en_agenda.admin_order_field = '-speechschedule__start_time'
 
     def get_registration_list(self, instance):
 
