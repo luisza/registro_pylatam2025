@@ -5,7 +5,7 @@ from django.shortcuts import render
 
 from proposal.models import Speech
 from cruds_adminlte.crud import UserCRUDView
-from ecsl.models import Payment
+from ecsl.models import Payment, Inscription
 import hashlib
 import urllib
 from django.http.response import JsonResponse
@@ -39,11 +39,14 @@ def get_participants(request):
     size = 50
     for payment in Payment.objects.all().order_by('?'):
         email = payment.user.email.lower().encode('utf-8')
-        name = payment.user.get_full_name()
 
-        url = "https://www.gravatar.com/avatar/%s?%s" % (hashlib.md5(
-            email).hexdigest(), urllib.parse.urlencode({'d': default, 's': str(size)}))
+        insc = Inscription.objects.filter(user=payment.user).first()
+        if insc and insc.aparecer_en_participantes:
+            name = payment.user.get_full_name()
 
-        dev.append({'url': url, 'name': name})
+            url = "https://www.gravatar.com/avatar/%s?%s" % (hashlib.md5(
+                email).hexdigest(), urllib.parse.urlencode({'d': default, 's': str(size)}))
+
+            dev.append({'url': url, 'name': name})
 
     return JsonResponse(dev, safe=False)

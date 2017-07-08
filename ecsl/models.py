@@ -108,6 +108,7 @@ class Inscription(models.Model):
         max_length=150, null=True, blank=True)
     observaciones_del_viaje = models.TextField(
         null=True, blank=True, help_text="Si viaja en avión agregue el número de vuelo.")
+    aparecer_en_participantes = models.BooleanField(default=True)
 
     @property
     def name(self):

@@ -22,7 +22,7 @@ class ProfileForm(forms.ModelForm):
         'gustos_manias', 'observacion_gustos_manias',
         'comentario_general',
         'hora_de_llegada', 'hora_de_salida', 'medio_de_transporte',
-        'lugar_de_arribo', 'observaciones_del_viaje'
+        'lugar_de_arribo', 'observaciones_del_viaje', 'aparecer_en_participantes'
 
     ]
 
