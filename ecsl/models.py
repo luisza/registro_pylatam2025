@@ -22,12 +22,20 @@ class Gustos(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = _('company')
+        verbose_name_plural = _('companies')
+
 
 class Encuentros_Anteriores(models.Model):
     name = models.CharField(max_length=255, verbose_name=_('Nombre'))
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = "Encuentro anterior"
+        verbose_name_plural = "Encuentros anteriores"
 
 
 class Inscription(models.Model):
@@ -117,6 +125,10 @@ class Inscription(models.Model):
     def __str__(self):
         return self.user.get_full_name()
 
+    class Meta:
+        verbose_name = "Inscripción"
+        verbose_name_plural = "Inscripciones"
+
 
 class Payment(models.Model):
     PAQUETE = (
@@ -146,11 +158,15 @@ class Payment(models.Model):
     def __str__(self):
         return "%s %s" % (self.user.get_full_name(), str(self.option))
 
+    class Meta:
+        verbose_name = "Pago"
+        verbose_name_plural = "Pagos"
+
 
 class Patrocinadores(models.Model):
     class Meta:
-        verbose_name_plural = 'Patrons'
-        verbose_name = 'Patron'
+        verbose_name_plural = 'Patrocinador'
+        verbose_name = 'Patrocinadores'
 
     TYPES = (
         ('gold', 'Oro'),
@@ -185,3 +201,7 @@ class Becas(models.Model):
 
     def __str__(self):
         return self.user.get_full_name()
+
+    class Meta:
+        verbose_name = "Beca"
+        verbose_name_plural = "Becas"
