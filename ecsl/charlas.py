@@ -93,8 +93,9 @@ class CharlaDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = DetailView.get_context_data(self, **kwargs)
-        context['schedule'] = SpeechSchedule.objects.filter(
-            speech=context['object']).first()
+
+        context['schedule'] = get_object_or_404(
+            SpeechSchedule, speech=context['object'])
         return context
 
 

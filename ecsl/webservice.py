@@ -4,7 +4,6 @@ Created on 5 jul. 2017
 @author: luis
 '''
 from proposal.models import Room
-import time
 from django.http.response import JsonResponse
 
 BASE = {
@@ -139,6 +138,7 @@ def get_calendar_json(request):
             "id": room.pk,
             "name": room.name,
             "size": room.spaces,
+            "map_url": room.map.url,
             "events": get_events_list(room)
         })
     dev["rooms"] = rooms

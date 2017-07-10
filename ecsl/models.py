@@ -15,6 +15,10 @@ class PaymentOption(models.Model):
     def __str__(self):
         return "%s -- %s (%s)" % (self.tipo, self.name, self.identification)
 
+    class Meta:
+        verbose_name = "Opción de pago"
+        verbose_name_plural = "Opciones de pago"
+
 
 class Gustos(models.Model):
     name = models.CharField(max_length=255, verbose_name=_('Nombre'))
@@ -23,8 +27,8 @@ class Gustos(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = _('company')
-        verbose_name_plural = _('companies')
+        verbose_name = "Gusto"
+        verbose_name_plural = "Gustos"
 
 
 class Encuentros_Anteriores(models.Model):

@@ -12,12 +12,20 @@ class Topic(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "Temática"
+        verbose_name_plural = "Temáticas"
+
 
 class SpeechType(models.Model):
     name = models.CharField(max_length=150, verbose_name=_("Name"))
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = "Tipo de actividad"
+        verbose_name_plural = "Tipos de actividad"
 
 
 class Speech(models.Model):
@@ -76,13 +84,21 @@ class Speech(models.Model):
             ("view_speech", "Can see available Speech"),
         )
 
+        verbose_name = "Actividad"
+        verbose_name_plural = "Actividades"
+
 
 class Room(models.Model):
     name = models.CharField(max_length=100, verbose_name=_('Nombre'))
     spaces = models.SmallIntegerField(default=30)
+    map = models.ImageField(upload_to="mapa", null=True, blank=True)
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = "Sala"
+        verbose_name_plural = "Salas"
 
 
 class Register_Speech(models.Model):
@@ -91,6 +107,10 @@ class Register_Speech(models.Model):
 
     def __str__(self):
         return "%s %s" % (self.user.get_full_name(), self.speech.speech.title)
+
+    class Meta:
+        verbose_name = "Registro en actividad"
+        verbose_name_plural = "Registros en actividades"
 
 
 class SpeechSchedule(models.Model):
@@ -117,6 +137,10 @@ class SpeechSchedule(models.Model):
 
         return dev
 
+    class Meta:
+        verbose_name = "Horario de actividad"
+        verbose_name_plural = "Horarios de actividades"
+
 
 class BlockSchedule(models.Model):
     start_time = models.DateTimeField()
@@ -138,3 +162,7 @@ class BlockSchedule(models.Model):
             query = query.filter(register_speech__user=user)
 
         return query.order_by('start_time')
+
+    class Meta:
+        verbose_name = "Bloque de horario"
+        verbose_name_plural = "Bloques de horarios"
