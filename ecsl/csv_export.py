@@ -72,7 +72,8 @@ def export_afiliation(request, queryset=None):
         queryset = Inscription.objects.all()
 
     writer = csv.writer(response, delimiter=';', quotechar="'")
-    writer.writerow(['pago', 'Opción', 'Nombre', 'camiseta', 'identificación', 'género', 'Estado',
+    writer.writerow(['pago', 'Opción', 'Nombre', 'camiseta', 'identificación',
+                     'direccion_en_su_pais',  'género', 'Estado',
                      'nationalidad', 'otra nacionalidad',
                      'born_date', 'institution', 'restrición alimentaria',
                      'consideraciones de salud', 'Gustos y manías', 'Comentario general'])
@@ -88,7 +89,9 @@ def export_afiliation(request, queryset=None):
         writer.writerow([
             pago, opcion,
             obj.name, obj.camiseta,
-            obj.identification, obj.gender,
+            obj.identification,
+            obj.direccion_en_su_pais,
+            obj.gender,
             obj.get_status_display(),
             obj.nationality, obj.other_nationality,
             str(obj.born_date) if obj.born_date else " ",
