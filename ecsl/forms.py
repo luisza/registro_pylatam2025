@@ -14,7 +14,9 @@ class ProfileForm(forms.ModelForm):
 
     field_order = [
         'first_name', 'last_name',
-        'identification', 'nationality', 'other_nationality',
+        'identification',
+        'direccion_en_su_pais',
+        'nationality', 'other_nationality',
         'gender', 'camiseta',
         'born_date', 'institution',
         'encuentros',
