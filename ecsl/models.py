@@ -60,7 +60,7 @@ class Inscription(models.Model):
         ('Nicaragua', 'Nicaragua'),
         ('El Salvador', 'El salvador'),
         ('Guatemala', 'Guatemala'),
-        ('Hondura', 'Honduras'),
+        ('Honduras', 'Honduras'),
         ('Belize', 'Belize'),
         ('Otro', 'Otro'),
 
