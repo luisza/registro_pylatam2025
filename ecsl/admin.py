@@ -132,7 +132,10 @@ action_enviar_correo_inscripcion.short_description = "Enviar correo"
 @admin.register(Inscription)
 class InscripcionAdmin(admin.ModelAdmin):
     list_display = ('name', 'nationality', 'gender', 'status')
-    list_filter = ('nationality', 'gender', 'status', 'gustos_manias')
+    list_filter = ('nationality', 'gender', 'status',
+                   'user__payment__paquete',
+
+                   'gustos_manias')
     search_fields = (
         'user__first_name',
         'user__last_name',

@@ -80,7 +80,7 @@ class Inscription(models.Model):
         User, on_delete=models.CASCADE, verbose_name=_('Usuario'))
     status = models.SmallIntegerField(choices=STATUS, default=0)
     identification = models.CharField(
-        max_length=30, verbose_name=_('Identificación en su país/pasaporte'), null=True,
+        max_length=50, verbose_name=_('Identificación en su país/pasaporte'), null=True,
         help_text='Requisito para hospedarse en hotel')
     direccion_en_su_pais = models.CharField(
         max_length=250, verbose_name=_('Dirección en su país'), null=True, blank=True,
@@ -88,7 +88,7 @@ class Inscription(models.Model):
     born_date = models.DateField(
         verbose_name=_('Fecha de Nacimiento'), null=True)
     institution = models.CharField(
-        max_length=12, null=True, blank=True, verbose_name=_('Institución'))
+        max_length=250, null=True, blank=True, verbose_name=_('Institución'))
     gender = models.CharField(max_length=9, choices=gender_choice, verbose_name=_(
         'Género'), default='Masculino')
     nationality = models.CharField(
