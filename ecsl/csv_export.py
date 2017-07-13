@@ -10,6 +10,12 @@ from django.http import HttpResponse
 from ecsl.models import Inscription, Payment, PaymentOption, Gustos
 
 
+def get_datetime(fecha):
+    if not fecha:
+        return "N/D"
+    return fecha
+
+
 def export_gustos_manias_afiliation2(request, queryset=None, header=[], fields=[], filter=True):
     # Create the HttpResponse object with the appropriate CSV header.
     response = HttpResponse(content_type='text/csv')
@@ -73,10 +79,13 @@ def export_afiliation(request, queryset=None):
 
     writer = csv.writer(response, delimiter=';', quotechar="'")
     writer.writerow(['pago', 'Opción', 'Nombre', 'camiseta', 'identificación',
-                     'direccion_en_su_pais',  'género', 'Estado',
+                     'direccion en su pais',  'género', 'Estado',
                      'nationalidad', 'otra nacionalidad',
                      'born_date', 'institution', 'restrición alimentaria',
-                     'consideraciones de salud', 'Gustos y manías', 'Comentario general'])
+                     'consideraciones de salud', 'Gustos y manías', 'Comentario general',
+                     'hora de llegada', 'hora de salida', 'medio de transporte', 'lugar de arribo',
+                     'observaciones del viaje'
+                     ])
 
     for obj in queryset:
         pays = Payment.objects.filter(user=obj.user).first()
@@ -100,6 +109,14 @@ def export_afiliation(request, queryset=None):
             obj.health_consideration,
             ",".join([x.name for x in obj.gustos_manias.all()]),
             obj.comentario_general,
+
+            get_datetime(obj.hora_de_llegada),
+            get_datetime(obj.hora_de_salida),
+            obj.medio_de_transporte,
+            obj.lugar_de_arribo,
+            obj.observaciones_del_viaje
+
+
         ])
     return response
 
