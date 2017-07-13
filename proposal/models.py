@@ -124,6 +124,10 @@ class SpeechSchedule(models.Model):
                                      self.end_time.strftime("%Y-%m-%d %H:%M"),
                                      self.speech.title, self.room.name)
 
+    @property
+    def title(self):
+        return self.speech
+
     def registros(self):
         regs = Register_Speech.objects.filter(speech=self).count()
         total = self.room.spaces - regs

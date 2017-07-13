@@ -224,6 +224,9 @@ class ScheduleAdmin(admin.ModelAdmin):
     ordering = ['start_time']
     list_filter = ['speech__speech_type', 'room']
 
+    list_display = ('title', 'start_time', 'end_time', 'room')
+    list_editable = ('start_time', 'end_time', 'room')
+
 
 class BlockScheduleAdmin(admin.ModelAdmin):
     list_display = ('start_time', 'end_time', 'is_speech', 'text', 'color')
