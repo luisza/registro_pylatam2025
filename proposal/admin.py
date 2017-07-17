@@ -14,6 +14,7 @@ from django.utils.safestring import mark_safe
 from ajax_select.helpers import make_ajax_form
 from async_notifications.register import update_template_context
 from async_notifications.utils import send_email_from_template
+from ecsl.pdf import render_pdf
 
 
 context = [
@@ -233,7 +234,26 @@ class BlockScheduleAdmin(admin.ModelAdmin):
     list_editable = ('color', )
 
 
+def action_ud_esta_aqui(modeladmin, request, queryset):
+
+    template_path = 'ecsl/ud_esta_aqui.html'
+    context = {
+        'object_list': queryset
+    }
+
+    return render_pdf(request, 'ud_esta_aqui.pdf',
+                      'ecsl/ud_esta_aqui.html',
+                      context=context
+                      )
+    action_ud_esta_aqui.short_description = "Usted está aquí"
+
+
+class RoomAdmin(admin.ModelAdmin):
+    actions = [action_ud_esta_aqui]
+
+
 admin.site.register(Speech, SpeechAdmin)
 admin.site.register(SpeechSchedule, ScheduleAdmin)
-admin.site.register([SpeechType, Topic, Room])
+admin.site.register(Room, RoomAdmin)
+admin.site.register([SpeechType, Topic])
 admin.site.register(BlockSchedule, BlockScheduleAdmin)

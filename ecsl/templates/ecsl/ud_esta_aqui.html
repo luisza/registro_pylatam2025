@@ -1,0 +1,45 @@
+{% load static %}
+<html>
+<style type="text/css">
+@page {
+    size: letter portrait;
+	@frame header_frame {           /* Static frame */
+	    -pdf-frame-content: header_content;
+	     width: 21.5cm;  height: 2cm;
+
+	}
+	@frame content_frame {          /* Content Frame */
+	    left: 1cm; width: 19cm; top: 3cm; height: 22.2cm;
+	    
+	}
+	@frame footer_frame {           /* Static frame */
+	    -pdf-frame-content: footer_content;
+	     width: 21.5cm; top: 26cm; height: 2cm;
+	}
+}
+</style>
+<body>
+<div id="header_content">
+	<img  src="{% include 'ecsl/pdf_header.html' %}" alt="logo" />
+</div>
+<div id="content" > 
+
+{% for room in object_list %}
+<div >
+<center>
+<h1 style="color:#709f2c; font-size: 3em"> {{room.name}} </h1> <br><br>
+<img style="text-align: center;" src="{{room.map.url}}"  />
+
+</center>
+</div>
+
+{% if not foorloop.last%}
+<pdf:nextpage />
+{% endif %}
+{% endfor %}
+</div>
+<div id="footer_content"> 
+<img  src="{% include 'ecsl/pdf_footer.html' %}" alt="logo" />
+</div>
+</body>
+</html>
