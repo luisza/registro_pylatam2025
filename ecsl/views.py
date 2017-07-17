@@ -53,7 +53,7 @@ class Index(TemplateView):
             'nicaragua': Payment.objects.filter(user__inscription__nationality='Nicaragua').count(),
             'elsalvador': Payment.objects.filter(user__inscription__nationality='El Salvador').count(),
             'guatemala': Payment.objects.filter(user__inscription__nationality='Guatemala').count(),
-            'honduras': Payment.objects.filter(user__inscription__nationality='Hondura').count(),
+            'honduras': Payment.objects.filter(user__inscription__nationality='Honduras').count(),
             'belize': Payment.objects.filter(user__inscription__nationality='Belize').count(),
             'otro': Payment.objects.filter(user__inscription__nationality='Otro').count(),
 
