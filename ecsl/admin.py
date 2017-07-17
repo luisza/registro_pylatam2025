@@ -11,6 +11,13 @@ from ajax_select import make_ajax_form
 from async_notifications.register import update_template_context
 from async_notifications.utils import send_email_from_template
 from django.contrib import messages
+from ecsl.pdf import render_pdf
+
+
+def action_pdf_certificaciones(modeladmin, request, queryset):
+    return render_pdf(request, "certificados.pdf", 'ecsl/certificaciones.html', context={
+        'object_list': queryset
+    })
 
 
 def action_export_payment(modeladmin, request, queryset):
@@ -114,6 +121,7 @@ def action_enviar_correo_inscripcion(modeladmin, request, queryset):
     messages.success(request, 'Mensajes enviados con éxito')
 
 
+action_pdf_certificaciones.short_description = "Descargar certificaciones"
 action_export_payment.short_description = "Exportar pagos"
 action_export_afiliation.short_description = "Exportar registros"
 action_export_stats_afiliation.short_description = "Estadísticas de registros"
@@ -144,7 +152,8 @@ class InscripcionAdmin(admin.ModelAdmin):
                action_export_afiliation, action_export_stats_afiliation,
                action_export_gustos,
                action_export_condicion_salud,
-               action_export_alimentary_restriction, ]
+               action_export_alimentary_restriction,
+               action_pdf_certificaciones]
     form = form = make_ajax_form(Inscription, {'user': 'users'})
 
 
