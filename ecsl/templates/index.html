@@ -43,7 +43,6 @@
 	<div class="btn-group-vertical">
 	 {% if request.user.is_authenticated %}
 	<a class="btn btn-default" href="{% url 'profile' %}">Mis datos</a>
-	<a class="btn btn-default" href="{% url 'payment' %}">Registro</a>
 	
 	{% if speech_url %}
 		<a class="btn btn-default" href="{{speech_url}}">Mis exposiciones</a>	

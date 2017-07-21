@@ -130,6 +130,27 @@ def action_export_register_list(modeladmin, request, queryset):
 action_export_register_list.short_description = "Descargar usuarios registrados"
 
 
+def action_export_pdf_register_list(modeladmin, request, queryset):
+    query = []
+
+    for activity in queryset:
+        query.append({
+            'activity': activity,
+            'participants': Register_Speech.objects.filter(speech__speech=activity)
+        })
+        # print(activity)
+        # print([(x.pk, x)
+        # for x in Register_Speech.objects.filter(speech__speech=activity)])
+
+    return render_pdf(request, 'lista_participantes.pdf',
+                      'speech/lista_participantes_pdf.html', context={
+                          'object_list': query
+                      })
+
+
+action_export_pdf_register_list.short_description = "Lista de participación pdf"
+
+
 class AgendaFilter(admin.SimpleListFilter):
     title = "En agenda"
     parameter_name = 'agenda'
@@ -175,7 +196,8 @@ class SpeechAdmin(admin.ModelAdmin):
                    'speechschedule__room', 'topic', 'speech_type']
     actions = [action_enviar_correo_charla,
                action_enviar_correo_charla_participantes,
-               action_export_register_list]
+               action_export_register_list,
+               action_export_pdf_register_list]
     search_fields = (
         'title',
         'user__first_name',

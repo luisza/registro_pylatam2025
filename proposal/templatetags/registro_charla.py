@@ -8,6 +8,7 @@ from django import template
 from django.urls import reverse
 from ecsl.models import Payment
 from proposal.models import Register_Speech
+from django.utils.safestring import mark_safe
 register = template.Library()
 
 
@@ -30,15 +31,14 @@ def get_registro(context, schedule):
         dev['url'] = reverse('index')
         dev['message'] = "Registrese en el encuentro para agendar evento"
         return dev
-
+    registro = Register_Speech.objects.filter(user=request.user,
+                                              speech=schedule).first()
     registros = Register_Speech.objects.filter(speech=schedule).count()
-    if registros > schedule.room.spaces:
+    if registros > schedule.room.spaces and not registro:
         dev['url'] = "#"
         dev['message'] = "Sin campos disponibles"
         return dev
 
-    registro = Register_Speech.objects.filter(user=request.user,
-                                              speech=schedule).first()
     if registro:
         dev['url'] = reverse('desregistrar_charla', kwargs={
                              'pk': registro.pk}) + "?dia=%d" % (dia,)
