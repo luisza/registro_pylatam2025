@@ -27,6 +27,7 @@ SECRET_KEY = '5)%f%3ng*4981z7w6n3b_@_ctfmlzw(+thct%x!agmn%hwt(l1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'true').lower() == 'true'
+DEBUG_TOOLBAR = os.getenv('DEBUG_TOOLBAR', 'false').lower() == 'true'
 
 if os.getenv('ALLOWED_HOSTS', ''):
     ALLOWED_HOSTS = [c for c in os.getenv('ALLOWED_HOSTS', '').split(',')]
@@ -52,8 +53,12 @@ INSTALLED_APPS = [
     'ajax_select',
     'async_notifications',
     'ckeditor',
-    'ckeditor_uploader'
+    'ckeditor_uploader',
+    'django_celery_beat',
 ]
+
+if DEBUG_TOOLBAR:
+    INSTALLED_APPS += ['debug_toolbar',]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -64,6 +69,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+if DEBUG_TOOLBAR:
+    MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware',]
 
 ROOT_URLCONF = 'ECSL.urls'
 
@@ -179,7 +187,7 @@ CELERYBEAT_SCHEDULE = {
     # execute 12:30 pm
     'send_daily_emails': {
         'task': 'async_notifications.tasks.send_daily',
-        'schedule': crontab(minute='*/3',),
+        'schedule': crontab(minute='*/10',),
     },
 }
 
@@ -188,5 +196,24 @@ ASYNC_NOTIFICATION_MAX_PER_MAIL = 5
 
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'amqp://guest:guest@localhost:5672/ecsl')
 CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', 'amqp://guest:guest@localhost:5672/ecslresult')
+DJANGO_CELERY_RESULTS_TASK_ID_MAX_LENGTH=191
 
-
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+        'organilab': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+    },
+}
