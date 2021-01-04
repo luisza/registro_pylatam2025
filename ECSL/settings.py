@@ -26,12 +26,12 @@ ADMINS = (
 SECRET_KEY = '5)%f%3ng*4981z7w6n3b_@_ctfmlzw(+thct%x!agmn%hwt(l1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'true').lower() == 'true'
 
-ALLOWED_HOSTS = ['*', 'ecsl2017.softwarelibre.ca',
-                 'www.ecsl2017.softwarelibre.ca']
-
-
+if os.getenv('ALLOWED_HOSTS', ''):
+    ALLOWED_HOSTS = [c for c in os.getenv('ALLOWED_HOSTS', '').split(',')]
+else:
+    ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
@@ -91,12 +91,12 @@ WSGI_APPLICATION = 'ECSL.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ecslregistro',
-        'USER': 'ecslregistro',
-        'PASSWORD': 'quickunkIsh8',
-        'HOST': '127.0.0.1',
-        'PORT': 3306
+        'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.mysql'),
+        'NAME': os.getenv('DB_NAME', 'ecsl'),
+        'USER': os.getenv('DB_USER', 'ecsl'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'ecslpass'),
+        'HOST': os.getenv('DB_HOST', '127.0.0.1'),
+        'PORT':  int(os.getenv('DB_PORT', '3306'))
     }
 }
 
@@ -148,13 +148,13 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 CKEDITOR_UPLOAD_PATH = "uploads/"
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'localhost'
-EMAIL_PORT = 25
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
-EMAIL_USE_TLS = False
-DEFAULT_FROM_EMAIL = 'ECSL2017 <not-reply@ecsl2017.softwarelibre.ca>'
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'localhost')  # mail service smtp
+EMAIL_PORT = os.getenv('EMAIL_PORT', '1025')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', None)  # a real email
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', None)
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'Registro ECSL <not-reply@softwarelibre.ca>')
 
 
 MAX_INSCRIPTION = 250
@@ -169,7 +169,9 @@ PASSWORD_HASHERS = [
 
 CELERY_MODULE = "ECSL.celery"
 CELERY_TIMEZONE = TIME_ZONE
-CELERY_ACCEPT_CONTENT = ['pickle', 'json']
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
 
 from celery.schedules import crontab
 
@@ -184,4 +186,7 @@ CELERYBEAT_SCHEDULE = {
 ASYNC_NOTIFICATION_TEXT_AREA_WIDGET = 'ckeditor.widgets.CKEditorWidget'
 ASYNC_NOTIFICATION_MAX_PER_MAIL = 5
 
-CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'amqp://guest:guest@localhost:5672/ecsl')
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', 'amqp://guest:guest@localhost:5672/ecslresult')
+
+
