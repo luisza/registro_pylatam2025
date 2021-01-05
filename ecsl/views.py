@@ -205,10 +205,6 @@ class PaymentUpdate(UpdateView):
         return response
 
 
-class BecasCRUD(generic.ListView):
-    model = Becas
-
-
 # class BecasCRUD(UserCRUDView):
 #     model = Becas
 #     check_perms = False

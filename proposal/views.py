@@ -14,10 +14,6 @@ from django.http.response import JsonResponse
 from django.views import generic
 
 
-class ProposalSpeech(generic.ListView):
-    model = Speech
-    namespace = "speech"
-
 # class ProposalSpeech(UserCRUDView):
 #     model = Speech
 #     namespace = "speech"
@@ -36,7 +32,7 @@ class ProposalSpeech(generic.ListView):
 #         'presentacion']
 #
 #
-proposals = ProposalSpeech()
+# proposals = ProposalSpeech()
 
 
 def get_participants(request):

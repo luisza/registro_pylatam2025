@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from ecsl import views
-from proposal.views import proposals, get_participants
+from proposal.views import get_participants  # , proposals
 from ajax_select import urls as ajax_select_urls
 from django.conf.urls.static import static
 from django.conf import settings
