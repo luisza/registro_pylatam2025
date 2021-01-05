@@ -53,3 +53,7 @@ def get_participants(request):
             dev.append({'url': url, 'name': name})
 
     return JsonResponse(dev, safe=False)
+
+
+def proposals(request):
+    return None
