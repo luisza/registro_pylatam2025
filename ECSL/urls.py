@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from ecsl import views
-from proposal.views import proposals, get_participants
+from proposal.views import get_participants  # , proposals
 from ajax_select import urls as ajax_select_urls
 from django.conf.urls.static import static
 from django.conf import settings
@@ -34,7 +34,7 @@ urlpatterns = [
     url(r'^ajax_select/', include(ajax_select_urls)),
 
     url(r'accounts/profile/?$', views.profile_view, name="profile"),
-    url(r'^accounts/', include('registration.backends.hmac.urls')),
+    url(r'^accounts/', include('django_registration.backends.activation.urls')),
     url(r'^$', views.Index.as_view(), name="index"),
     url(r'^register/profile/create$',
         views.CreateProfile.as_view(), name='create_profile'),
@@ -44,7 +44,7 @@ urlpatterns = [
     url(r'^registro/create$', views.CreateRegister.as_view(), name='create_payment'),
     url(r'^registro/update/(?P<pk>\d+)$',  views.PaymentUpdate.as_view(),
         name='edit_payment'),
-    url(r'^proposal/', include(proposals.get_urls(), namespace='speech')),
+    # url(r'^proposal/', include((proposals.get_urls(), 'speech'), namespace='speech')),
     url(r'^agenda$', Charlas.as_view(), name="list_charlas"),
     url(r'^miagenda$', MyAgenda.as_view(), name="mi_agenda"),
     url(r'participantes.js$', get_participants, name="participantes"),
@@ -56,7 +56,7 @@ urlpatterns = [
         desregistrar_charla, name="desregistrar_charla"),
 
 
-] + views.becas
+] #+ views.becas
 
 
 if settings.DEBUG:

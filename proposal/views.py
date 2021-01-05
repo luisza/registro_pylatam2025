@@ -4,32 +4,35 @@ from django.shortcuts import render
 
 
 from proposal.models import Speech
-from cruds_adminlte.crud import UserCRUDView
+# from cruds_adminlte.crud import UserCRUDView
 from ecsl.models import Payment, Inscription
 import hashlib
 import urllib
 from django.http.response import JsonResponse
 
 
-class ProposalSpeech(UserCRUDView):
-    model = Speech
-    namespace = "speech"
-    check_perms = False
-    views_available = ['list', 'update', 'detail']
-    list_fields = ['title', 'topic',  'skill_level']
-    fields = [
-        'speaker_information',
-        'title',
-        'topic',
-        'description',
-        'audience',
-        'skill_level',
-        'notes',
-        'speech_type',
-        'presentacion']
+from django.views import generic
 
 
-proposals = ProposalSpeech()
+# class ProposalSpeech(UserCRUDView):
+#     model = Speech
+#     namespace = "speech"
+#     check_perms = False
+#     views_available = ['list', 'update', 'detail']
+#     list_fields = ['title', 'topic',  'skill_level']
+#     fields = [
+#         'speaker_information',
+#         'title',
+#         'topic',
+#         'description',
+#         'audience',
+#         'skill_level',
+#         'notes',
+#         'speech_type',
+#         'presentacion']
+#
+#
+# proposals = ProposalSpeech()
 
 
 def get_participants(request):

@@ -43,12 +43,12 @@ class Speech(models.Model):
             (ADVANCED, _('advanced')),
         ]
 
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('Usuario'))
     speaker_information = models.TextField(
         verbose_name=_("Speaker_information"))
     title = models.TextField(verbose_name=_("Speech Title"))
     description = models.TextField(verbose_name=_("Description"))
-    topic = models.ForeignKey(Topic,
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE,
                               verbose_name=_("Eje temático"))
     audience = models.TextField(verbose_name=_("Audience"))
     skill_level = models.PositiveIntegerField(
@@ -56,7 +56,7 @@ class Speech(models.Model):
         verbose_name=_("Skill level required"))
     notes = models.TextField(blank=True,
                              verbose_name=_("Notes for audience"))
-    speech_type = models.ForeignKey(SpeechType, verbose_name=_("Speech Type"))
+    speech_type = models.ForeignKey(SpeechType, on_delete=models.CASCADE, verbose_name=_("Speech Type"))
 
     presentacion = models.FileField(upload_to='presentaciones/',
                                     verbose_name=_("Presentación"),
@@ -80,9 +80,9 @@ class Speech(models.Model):
 
     class Meta:
         ordering = ('pk',)
-        permissions = (
-            ("view_speech", "Can see available Speech"),
-        )
+        # permissions = (
+        #     ("view_speech", "Can see available Speech"),
+        # )
 
         verbose_name = "Actividad"
         verbose_name_plural = "Actividades"
@@ -102,8 +102,8 @@ class Room(models.Model):
 
 
 class Register_Speech(models.Model):
-    user = models.ForeignKey(User)
-    speech = models.ForeignKey('SpeechSchedule')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    speech = models.ForeignKey('SpeechSchedule', on_delete=models.CASCADE)
 
     def __str__(self):
         return "%s %s" % (self.user.get_full_name(), self.speech.speech.title)
@@ -116,8 +116,8 @@ class Register_Speech(models.Model):
 class SpeechSchedule(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
-    speech = models.ForeignKey(Speech)
-    room = models.ForeignKey(Room)
+    speech = models.ForeignKey(Speech, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
     def __str__(self):
         return "(%s %s) %s en %s" % (self.start_time.strftime("%Y-%m-%d %H:%M"),
