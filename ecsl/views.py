@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views import generic
 from django.views.generic.base import TemplateView
 from django.urls.base import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
@@ -13,7 +12,8 @@ from django.core.mail import send_mail
 from django.conf import settings
 # Create your views here.
 
-#from cruds_adminlte.crud import UserCRUDView
+# from cruds_adminlte.crud import UserCRUDView
+from django.views import generic
 
 
 class Index(TemplateView):
@@ -204,44 +204,41 @@ class PaymentUpdate(UpdateView):
         )
         return response
 
-'''
-class BecasCRUD(UserCRUDView):
-    model = Becas
-    check_perms = False
-    views_available = ['create', 'detail']
-    fields = [
-        'razon', 'aportes_a_la_comunidad', 'tiempo', 'observaciones'
-    ]
 
-    def get_create_view(self):
-        Cview = super(BecasCRUD, self).get_create_view()
+# class BecasCRUD(UserCRUDView):
+#     model = Becas
+#     check_perms = False
+#     views_available = ['create', 'detail']
+#     fields = [
+#         'razon', 'aportes_a_la_comunidad', 'tiempo', 'observaciones'
+#     ]
+#
+#     def get_create_view(self):
+#         Cview = super(BecasCRUD, self).get_create_view()
+#
+#         class BecaCreate(Cview):
+#             def dispatch(self, request, *args, **kwargs):
+#                 error = False
+#                 try:
+#                     inscription = request.user.inscription
+#                 except:
+#                     error = True
+#
+#                 if error or not inscription:
+#                     messages.success(
+#                         self.request, "Lo lamentamos, primero actualiza tus datos y luego procede con el registro")
+#                     return redirect(reverse('index'))
+#
+#                 beca = Becas.objects.filter(user=request.user).first()
+#                 if beca:
+#                     return redirect("ecsl_becas_detail", pk=beca.pk)
+#                 return super(BecaCreate, self).dispatch(request, *args, **kwargs)
+#
+#             def get_success_url(self):
+#                 messages.success(
+#                     self.request, "Hemos recibido su solicitud de beca satisfactoriamente")
+#                 return reverse('index')
+#         return BecaCreate
 
-        class BecaCreate(Cview):
-            def dispatch(self, request, *args, **kwargs):
-                error = False
-                try:
-                    inscription = request.user.inscription
-                except:
-                    error = True
 
-                if error or not inscription:
-                    messages.success(
-                        self.request, "Lo lamentamos, primero actualiza tus datos y luego procede con el registro")
-                    return redirect(reverse('index'))
-
-                beca = Becas.objects.filter(user=request.user).first()
-                if beca:
-                    return redirect("ecsl_becas_detail", pk=beca.pk)
-                return super(BecaCreate, self).dispatch(request, *args, **kwargs)
-
-            def get_success_url(self):
-                messages.success(
-                    self.request, "Hemos recibido su solicitud de beca satisfactoriamente")
-                return reverse('index')
-        return BecaCreate
-'''
-
-class BecasCRUD(generic.ListView):
-    model = Becas
-
-#becas = BecasCRUD().get_urls()
+# becas = BecasCRUD().get_urls()

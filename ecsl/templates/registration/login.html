@@ -11,7 +11,7 @@
 
 
 
-    <form method="post" action="{% url 'auth_login' %}">
+    <form method="post" action="{% url 'login' %}">
       {% csrf_token %}
       {{ form|bootstrap  }}
     <div class="form-group">
@@ -25,8 +25,8 @@
     <br>
     ¿Problemas con el ingreso ?<br>
     <div class="btn-group">
-      <a class="btn btn-info"  href="{% url 'registration_register' %}">Registrarme</a>
-      <a class="btn btn-danger" href="{% url 'auth_password_reset' %}">¿Olvidó su clave ?</a>
+      <a class="btn btn-info"  href="{% url 'django_registration_register' %}">Registrarme</a>
+      <a class="btn btn-danger" href="{% url 'password_reset' %}">¿Olvidó su clave ?</a>
     </div>
     </center>
   </div>

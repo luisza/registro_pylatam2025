@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 # Create your views here.
-from django.views import generic
+
 
 from proposal.models import Speech
 # from cruds_adminlte.crud import UserCRUDView
@@ -11,7 +11,10 @@ import urllib
 from django.http.response import JsonResponse
 
 
-# class ProposalSpeech:
+from django.views import generic
+
+
+# class ProposalSpeech(UserCRUDView):
 #     model = Speech
 #     namespace = "speech"
 #     check_perms = False
@@ -27,13 +30,9 @@ from django.http.response import JsonResponse
 #         'notes',
 #         'speech_type',
 #         'presentacion']
-
-class ProposalSpeech(generic.ListView):
-    model = Speech
-    namespace = "speech"
-
-
-proposals = ProposalSpeech()
+#
+#
+# proposals = ProposalSpeech()
 
 
 def get_participants(request):
@@ -54,3 +53,7 @@ def get_participants(request):
             dev.append({'url': url, 'name': name})
 
     return JsonResponse(dev, safe=False)
+
+
+def proposals(request):
+    return None

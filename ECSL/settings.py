@@ -48,7 +48,6 @@ INSTALLED_APPS = [
 
     # 'osem',
     'proposal',
-    #'cruds_adminlte',
     'crispy_forms',
     'ajax_select',
     'async_notifications',
