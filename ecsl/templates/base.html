@@ -35,7 +35,7 @@
 			 <li><a  href="{% url 'mi_agenda' %}"> Mi Agenda</a> </li>
         
         {% else %}
-            <li><a href="{% url 'registration_register' %}">{% trans 'Register' %} </a></li>
+{#            <li><a href="{% url 'registration_register' %}">{% trans 'Register' %} </a></li> #}
         {% endif %}
          <li><a href="{% url 'list_charlas' %}">Agenda</a></li> 
         <li><a href="https://ecsl2017.softwarelibre.ca/contacto/"> Contáctenos </a></li>
@@ -51,11 +51,11 @@
        
       	  <li ><a href="{% url 'profile' %}"> {% trans 'Profile' %} </a></li>
       	  <li class="nav-item"> 
-      	  <a class="nav-link" href="{% url 'auth_password_reset' %}" > Cambiar contraseña </a> </li>
- 
-          <li class="nav-item"><a class="nav-link" href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
+{#      	  <a class="nav-link" href="{% url 'auth_password_reset' %}" > Cambiar contraseña </a> </li>#}
+{# #}
+{#          <li class="nav-item"><a class="nav-link" href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>#}
         {% else %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'auth_login' %}">{% trans "Log in" %}</a></li>
+{#            <li class="nav-item"><a class="nav-link" href="{% url 'auth_login' %}">{% trans "Log in" %}</a></li>#}
         {% endif %}
        </ul>
    </li> </ul>

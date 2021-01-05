@@ -43,12 +43,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'registration',
+    'django_registration',
     "bootstrapform",
 
     # 'osem',
     'proposal',
-    'cruds_adminlte',
+    #'cruds_adminlte',
     'crispy_forms',
     'ajax_select',
     'async_notifications',
@@ -100,9 +100,9 @@ WSGI_APPLICATION = 'ECSL.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.mysql'),
-        'NAME': os.getenv('DB_NAME', 'ecsl'),
-        'USER': os.getenv('DB_USER', 'ecsl'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'ecslpass'),
+        'NAME': os.getenv('DB_NAME', 'escl'),
+        'USER': os.getenv('DB_USER', 'root'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'daniel'),
         'HOST': os.getenv('DB_HOST', '127.0.0.1'),
         'PORT':  int(os.getenv('DB_PORT', '3306'))
     }

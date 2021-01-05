@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views import generic
 from django.views.generic.base import TemplateView
 from django.urls.base import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
@@ -12,7 +13,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 # Create your views here.
 
-from cruds_adminlte.crud import UserCRUDView
+#from cruds_adminlte.crud import UserCRUDView
 
 
 class Index(TemplateView):
@@ -21,7 +22,7 @@ class Index(TemplateView):
     def get_context_data(self, **kwargs):
 
         context = TemplateView.get_context_data(self, **kwargs)
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated:
             proposal = None
             try:
                 proposal = self.request.user.speech_set.count()
@@ -30,12 +31,12 @@ class Index(TemplateView):
             except Exception as e:
                 pass
 
-            beca = Becas.objects.filter(user=self.request.user).first()
-            if beca:
-                context['beca'] = reverse(
-                    'ecsl_becas_detail', kwargs={'pk': beca.pk})
-            else:
-                context['beca'] = reverse('ecsl_becas_create')
+            # beca = Becas.objects.filter(user=self.request.user).first()
+            # if beca:
+            #     context['beca'] = reverse(
+            #         'ecsl_becas_detail', kwargs={'pk': beca.pk})
+            # else:
+            #     context['beca'] = reverse('ecsl_becas_create')
             if proposal:
                 context['speech_url'] = proposal
 
@@ -203,7 +204,7 @@ class PaymentUpdate(UpdateView):
         )
         return response
 
-
+'''
 class BecasCRUD(UserCRUDView):
     model = Becas
     check_perms = False
@@ -238,6 +239,9 @@ class BecasCRUD(UserCRUDView):
                     self.request, "Hemos recibido su solicitud de beca satisfactoriamente")
                 return reverse('index')
         return BecaCreate
+'''
 
+class BecasCRUD(generic.ListView):
+    model = Becas
 
-becas = BecasCRUD().get_urls()
+#becas = BecasCRUD().get_urls()
