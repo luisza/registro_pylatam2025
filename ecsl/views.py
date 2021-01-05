@@ -12,7 +12,8 @@ from django.core.mail import send_mail
 from django.conf import settings
 # Create your views here.
 
-from cruds_adminlte.crud import UserCRUDView
+# from cruds_adminlte.crud import UserCRUDView
+from django.views import generic
 
 
 class Index(TemplateView):
@@ -21,7 +22,7 @@ class Index(TemplateView):
     def get_context_data(self, **kwargs):
 
         context = TemplateView.get_context_data(self, **kwargs)
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated:
             proposal = None
             try:
                 proposal = self.request.user.speech_set.count()
@@ -30,12 +31,12 @@ class Index(TemplateView):
             except Exception as e:
                 pass
 
-            beca = Becas.objects.filter(user=self.request.user).first()
-            if beca:
-                context['beca'] = reverse(
-                    'ecsl_becas_detail', kwargs={'pk': beca.pk})
-            else:
-                context['beca'] = reverse('ecsl_becas_create')
+            # beca = Becas.objects.filter(user=self.request.user).first()
+            # if beca:
+            #     context['beca'] = reverse(
+            #         'ecsl_becas_detail', kwargs={'pk': beca.pk})
+            # else:
+            #     context['beca'] = reverse('ecsl_becas_create')
             if proposal:
                 context['speech_url'] = proposal
 
@@ -204,40 +205,44 @@ class PaymentUpdate(UpdateView):
         return response
 
 
-class BecasCRUD(UserCRUDView):
+class BecasCRUD(generic.ListView):
     model = Becas
-    check_perms = False
-    views_available = ['create', 'detail']
-    fields = [
-        'razon', 'aportes_a_la_comunidad', 'tiempo', 'observaciones'
-    ]
-
-    def get_create_view(self):
-        Cview = super(BecasCRUD, self).get_create_view()
-
-        class BecaCreate(Cview):
-            def dispatch(self, request, *args, **kwargs):
-                error = False
-                try:
-                    inscription = request.user.inscription
-                except:
-                    error = True
-
-                if error or not inscription:
-                    messages.success(
-                        self.request, "Lo lamentamos, primero actualiza tus datos y luego procede con el registro")
-                    return redirect(reverse('index'))
-
-                beca = Becas.objects.filter(user=request.user).first()
-                if beca:
-                    return redirect("ecsl_becas_detail", pk=beca.pk)
-                return super(BecaCreate, self).dispatch(request, *args, **kwargs)
-
-            def get_success_url(self):
-                messages.success(
-                    self.request, "Hemos recibido su solicitud de beca satisfactoriamente")
-                return reverse('index')
-        return BecaCreate
 
 
-becas = BecasCRUD().get_urls()
+# class BecasCRUD(UserCRUDView):
+#     model = Becas
+#     check_perms = False
+#     views_available = ['create', 'detail']
+#     fields = [
+#         'razon', 'aportes_a_la_comunidad', 'tiempo', 'observaciones'
+#     ]
+#
+#     def get_create_view(self):
+#         Cview = super(BecasCRUD, self).get_create_view()
+#
+#         class BecaCreate(Cview):
+#             def dispatch(self, request, *args, **kwargs):
+#                 error = False
+#                 try:
+#                     inscription = request.user.inscription
+#                 except:
+#                     error = True
+#
+#                 if error or not inscription:
+#                     messages.success(
+#                         self.request, "Lo lamentamos, primero actualiza tus datos y luego procede con el registro")
+#                     return redirect(reverse('index'))
+#
+#                 beca = Becas.objects.filter(user=request.user).first()
+#                 if beca:
+#                     return redirect("ecsl_becas_detail", pk=beca.pk)
+#                 return super(BecaCreate, self).dispatch(request, *args, **kwargs)
+#
+#             def get_success_url(self):
+#                 messages.success(
+#                     self.request, "Hemos recibido su solicitud de beca satisfactoriamente")
+#                 return reverse('index')
+#         return BecaCreate
+
+
+# becas = BecasCRUD().get_urls()
