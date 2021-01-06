@@ -193,8 +193,8 @@ CELERYBEAT_SCHEDULE = {
 ASYNC_NOTIFICATION_TEXT_AREA_WIDGET = 'ckeditor.widgets.CKEditorWidget'
 ASYNC_NOTIFICATION_MAX_PER_MAIL = 5
 
-CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'amqp://guest:guest@localhost:5672/ecsl')
-CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', 'amqp://guest:guest@localhost:5672/ecslresult')
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'db+mysql://guest:guest@localhost:5672/ecsl')
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', 'db+mysql://guest:guest@localhost:5672/ecslresult')
 DJANGO_CELERY_RESULTS_TASK_ID_MAX_LENGTH=191
 
 LOGGING = {
