@@ -7,7 +7,7 @@
 </div>
 
 <div class="row">
-  <form method="post" action="{% url 'registration_register' %}">
+  <form method="post" action="{% url 'django_registration_register' %}">
     {% csrf_token %}
     {{ form|bootstrap }}
      <div class="form-group">
