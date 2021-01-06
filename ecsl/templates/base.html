@@ -32,6 +32,7 @@
     	
         {% if request.user.is_authenticated %}     
 			 <li><a href="{% url 'profile' %}">Mis datos</a></li>
+             <li><a href="{% url 'payment' %}">Registro</a></li>
 			 <li><a  href="{% url 'mi_agenda' %}"> Mi Agenda</a> </li>
         
         {% else %}
