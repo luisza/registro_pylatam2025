@@ -204,6 +204,8 @@ class PaymentUpdate(UpdateView):
         )
         return response
 
+def contactUs(request):
+    return render(request, 'contact/contact_us.html')
 
 # class BecasCRUD(UserCRUDView):
 #     model = Becas

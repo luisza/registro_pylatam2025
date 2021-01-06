@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.urls import path
+
 from ecsl import views
 from proposal.views import get_participants  # , proposals
 from ajax_select import urls as ajax_select_urls
@@ -55,6 +57,7 @@ urlpatterns = [
         register_user_to_speech, name="registra_charla"),
     url(r'^charla/desregistrar/(?P<pk>\d+)$',
         desregistrar_charla, name="desregistrar_charla"),
+    path('contact/', views.contactUs, name='contact-us')
 
 
 ] #+ views.becas
