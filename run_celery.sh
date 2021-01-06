@@ -5,7 +5,7 @@ docker run -d --rm --name ecsl-rabbitmq -p 5672:5672 -d rabbitmq:3
 
 echo "Esperando el inicio de rabbitmq ..." && sleep 20
 
-celery -A ECSL worker -l info -B --scheduler django_celery_beat.schedulers:DatabaseScheduler 
+celery -A ECSL worker -l INFO -B --scheduler django_celery_beat.schedulers:DatabaseScheduler
 
 docker rm -f ecsl-mail
 docker rm -f ecsl-rabbitmq
