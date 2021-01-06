@@ -1,12 +1,9 @@
-Estimado(a):<br>
+Estimado(a):
 
-Gracias por registrarse en el sitio del Encuentro Centroamericano de Software Libre 
-<br>
+Gracias por registrarse en el sitio del Encuentro Centroamericano de Software Libre
 Para continuar con el proceso de activación debe seguir el siguiente enlace:
 
-<a href="http://{{ site.domain }}/registro/accounts/activate/{{ activation_key }}/" target="blank">
-https://{{ site.domain }}/registro/accounts/activate/{{ activation_key }}/
-</a>
+http://{{ site.domain }}/accounts/activate/{{ activation_key }}
 
 Este enlace expirará en  {{ expiration_days }} días.
 
