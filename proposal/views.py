@@ -54,6 +54,3 @@ def get_participants(request):
 
     return JsonResponse(dev, safe=False)
 
-
-def proposals(request):
-    return None
