@@ -163,7 +163,7 @@ msgstr "Un administrador avaló su cuenta y ya puede loguearse"
 
 #: ecsl/templates/registration/activation_email.html:6
 #: ecsl/templates/registration/admin_approve_email.html:6
-msgid "registration"
+msgid "django_registration"
 msgstr "Registro"
 
 #: ecsl/templates/registration/activation_email.html:11
@@ -433,7 +433,7 @@ msgid "Registration is closed"
 msgstr "El registro ha sido cerrado"
 
 #: ecsl/templates/registration/registration_closed.html:7
-msgid "Sorry, but registration is closed at this moment. Come back later."
+msgid "Sorry, but django_registration is closed at this moment. Come back later."
 msgstr ""
 "Lo lamentamos, el registro está cerrado en este momento, por favor vuelva "
 "más tarde."

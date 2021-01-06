@@ -74,6 +74,8 @@ if DEBUG_TOOLBAR:
 
 ROOT_URLCONF = 'ECSL.urls'
 
+ACCOUNT_ACTIVATION_DAYS = 7
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -101,7 +103,7 @@ DATABASES = {
         'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.mysql'),
         'NAME': os.getenv('DB_NAME', 'ecsl'),
         'USER': os.getenv('DB_USER', 'ecsl'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'ecsl'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'root'),
         'HOST': os.getenv('DB_HOST', '127.0.0.1'),
         'PORT':  int(os.getenv('DB_PORT', '3306'))
     }

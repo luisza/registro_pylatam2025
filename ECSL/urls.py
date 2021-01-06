@@ -35,6 +35,7 @@ urlpatterns = [
 
     url(r'accounts/profile/?$', views.profile_view, name="profile"),
     url(r'^accounts/', include('django_registration.backends.activation.urls')),
+    url(r'accounts/', include('django.contrib.auth.urls')),
     url(r'^$', views.Index.as_view(), name="index"),
     url(r'^register/profile/create$',
         views.CreateProfile.as_view(), name='create_profile'),
