@@ -437,7 +437,7 @@ msgid "Registration is closed"
 msgstr "El registro ha sido cerrado"
 
 #: ecsl/templates/registration/registration_closed.html:7
-msgid "Sorry, but django_registration is closed at this moment. Come back later."
+msgid "Sorry, but registration is closed at this moment. Come back later."
 msgstr ""
 "Lo lamentamos, el registro está cerrado en este momento, por favor vuelva "
 "más tarde."

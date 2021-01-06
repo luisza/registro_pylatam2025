@@ -74,8 +74,6 @@ if DEBUG_TOOLBAR:
 
 ROOT_URLCONF = 'ECSL.urls'
 
-ACCOUNT_ACTIVATION_DAYS = 7
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
