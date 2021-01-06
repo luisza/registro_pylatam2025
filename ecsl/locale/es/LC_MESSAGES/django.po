@@ -134,6 +134,10 @@ msgstr "Salir"
 msgid "Log in"
 msgstr "Iniciar sesión"
 
+#: ecsl/templates/base.html:55
+msgid "Change password"
+msgstr "Cambiar contraseña"
+
 #: ecsl/templates/ecsl/inscription_form.html:10
 msgid "My profile"
 msgstr "Mi perfil"
