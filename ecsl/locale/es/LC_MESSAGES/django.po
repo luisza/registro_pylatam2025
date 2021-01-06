@@ -167,7 +167,7 @@ msgstr "Un administrador avaló su cuenta y ya puede loguearse"
 
 #: ecsl/templates/registration/activation_email.html:6
 #: ecsl/templates/registration/admin_approve_email.html:6
-msgid "django_registration"
+msgid "registration"
 msgstr "Registro"
 
 #: ecsl/templates/registration/activation_email.html:11
