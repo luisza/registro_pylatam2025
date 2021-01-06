@@ -7,9 +7,8 @@ Free as freedom will be 27/10/2016
 '''
 
 from __future__ import unicode_literals
-from django.conf.urls import url, include
 from proposal.views import proposals
-from django.urls import re_path
+from django.urls import re_path, include
 
 urlpatterns = [
     re_path(r'proposal/', include(proposals.get_urls(), namespace='speech')),

@@ -13,7 +13,6 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include
 from django.contrib import admin
 from ecsl import views
 from proposal.views import get_participants  # , proposals
@@ -27,8 +26,8 @@ from ajax_select import urls as ajax_select_urls
 from django.urls import include, path, re_path
 
 urlpatterns = [
-    path('ajax_select/', include(ajax_select_urls)),
-    path('ckeditor/', include('ckeditor_uploader.urls')),
+    re_path(r'^ajax_select/', include(ajax_select_urls)),
+    re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
     path('api/agenda.json', get_calendar_json, name="api_json"),
     re_path(r'^admin/', admin.site.urls),
     re_path(r'^ajax_select/', include(ajax_select_urls)),
