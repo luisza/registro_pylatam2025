@@ -6,8 +6,8 @@
 <div class="row">
 	<div class="col-md-6 col-md-offset-4">
 <h1 align="center">Propuesta para charlas en el encuentro</h1>
-<form action="{%if form.instance.pk %}{% url name_urls.edit form.instance.pk %}{%else%}{% url name_urls.add %} {% endif %}" method="post">{% csrf_token %}
-    {{ form|bootstrap  }}
+    <form method="post">{% csrf_token %}
+    {{ speech_form|bootstrap  }}
     <input class="btn btn-info" type="submit" value="{% trans 'Save' %}">
 </form>
 </div></div>
