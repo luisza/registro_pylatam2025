@@ -7,9 +7,13 @@ Free as freedom will be 27/10/2016
 '''
 
 from __future__ import unicode_literals
-from proposal.views import proposals
-from django.urls import re_path, include
+from proposal import views
+from django.urls import path
 
+app_name = 'proposal'
 urlpatterns = [
-    re_path(r'proposal/', include(proposals.get_urls(), namespace='speech')),
+    path('', views.SpeechListView.as_view(), name='index'),
+    path('create/', views.createUpdateview, name='create'),
+    path('<int:speech_id>/update/', views.createUpdateview, name='update'),
+    path('<int:speech_id>/delete/', views.deleteView, name='delete'),
 ]

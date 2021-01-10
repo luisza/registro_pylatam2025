@@ -1,38 +1,23 @@
 from django.shortcuts import render
+from .forms import SpeechForm
+from django.urls import reverse
+from proposal.models import Speech
+from ecsl.models import Payment, Inscription, EventECSL
+import hashlib
+import urllib
+from django.http.response import JsonResponse, HttpResponseRedirect
+from django.views import generic
 
 # Create your views here.
 
 
-from proposal.models import Speech
-# from cruds_adminlte.crud import UserCRUDView
-from ecsl.models import Payment, Inscription
-import hashlib
-import urllib
-from django.http.response import JsonResponse
+class SpeechListView(generic.ListView):
+    template_name = 'proposal/speech_list.html'
+    context_object_name = 'speech_list'
+    paginate_by = 10
 
-
-from django.views import generic
-
-
-# class ProposalSpeech(UserCRUDView):
-#     model = Speech
-#     namespace = "speech"
-#     check_perms = False
-#     views_available = ['list', 'update', 'detail']
-#     list_fields = ['title', 'topic',  'skill_level']
-#     fields = [
-#         'speaker_information',
-#         'title',
-#         'topic',
-#         'description',
-#         'audience',
-#         'skill_level',
-#         'notes',
-#         'speech_type',
-#         'presentacion']
-#
-#
-# proposals = ProposalSpeech()
+    def get_queryset(self):
+        return Speech.objects.filter(user=self.request.user)
 
 
 def get_participants(request):
@@ -54,3 +39,39 @@ def get_participants(request):
 
     return JsonResponse(dev, safe=False)
 
+
+def deleteView(request, speech_id):
+    if request.method == 'POST':
+        speech = Speech.objects.get(pk=speech_id)
+        speech.delete()
+    return HttpResponseRedirect(reverse('proposal:index'))
+
+
+def createUpdateview(request, speech_id=None):
+    context = {}
+    speech_form = SpeechForm()
+    event = EventECSL.objects.get(current=True)
+    if request.method == 'POST' and not speech_id:
+        speech_form = SpeechForm(request.POST)
+        if speech_form.is_valid():
+            form = speech_form.save(commit=False)
+            form.user = request.user
+            form.event = event
+            form.save()
+    elif request.method == 'POST' and speech_id:
+        speech = Speech.objects.filter(pk=speech_id).first()
+        speech_form = SpeechForm(request.POST, instance=speech)
+        if speech_form.is_valid():
+            form = speech_form.save(commit=False)
+            form.event = event
+            form.save()
+    elif speech_id and request.method == 'GET':
+        speech = Speech.objects.filter(pk=speech_id).first()
+        speech_form = SpeechForm(instance=speech)
+
+    context['speech_form'] = speech_form
+
+    if request.method == 'POST':
+        return HttpResponseRedirect(reverse('proposal:index'))
+    else:
+        return render(request, "proposal/speech_form.html", context)
