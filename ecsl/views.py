@@ -5,15 +5,13 @@ from django.contrib.auth.decorators import login_required
 from ecsl.models import Inscription, Payment, Becas
 from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.detail import DetailView
 from django.contrib import messages
 from ecsl.forms import ProfileForm, PaymentForm
 from django.utils.translation import ugettext_lazy as _
 from django.core.mail import send_mail
 from django.conf import settings
 # Create your views here.
-
-# from cruds_adminlte.crud import UserCRUDView
-from django.views import generic
 
 
 class Index(TemplateView):
@@ -31,12 +29,11 @@ class Index(TemplateView):
             except Exception as e:
                 pass
 
-            # beca = Becas.objects.filter(user=self.request.user).first()
-            # if beca:
-            #     context['beca'] = reverse(
-            #         'ecsl_becas_detail', kwargs={'pk': beca.pk})
-            # else:
-            #     context['beca'] = reverse('ecsl_becas_create')
+            beca = Becas.objects.filter(user=self.request.user).first()
+            if beca:
+                context['beca'] = reverse_lazy('becas-detail')
+            else:
+                context['beca'] = reverse_lazy('becas-create')
             if proposal:
                 context['speech_url'] = proposal
 
@@ -207,40 +204,45 @@ class PaymentUpdate(UpdateView):
 def contactUs(request):
     return render(request, 'contact/contact_us.html')
 
-# class BecasCRUD(UserCRUDView):
-#     model = Becas
-#     check_perms = False
-#     views_available = ['create', 'detail']
-#     fields = [
-#         'razon', 'aportes_a_la_comunidad', 'tiempo', 'observaciones'
-#     ]
-#
-#     def get_create_view(self):
-#         Cview = super(BecasCRUD, self).get_create_view()
-#
-#         class BecaCreate(Cview):
-#             def dispatch(self, request, *args, **kwargs):
-#                 error = False
-#                 try:
-#                     inscription = request.user.inscription
-#                 except:
-#                     error = True
-#
-#                 if error or not inscription:
-#                     messages.success(
-#                         self.request, "Lo lamentamos, primero actualiza tus datos y luego procede con el registro")
-#                     return redirect(reverse('index'))
-#
-#                 beca = Becas.objects.filter(user=request.user).first()
-#                 if beca:
-#                     return redirect("ecsl_becas_detail", pk=beca.pk)
-#                 return super(BecaCreate, self).dispatch(request, *args, **kwargs)
-#
-#             def get_success_url(self):
-#                 messages.success(
-#                     self.request, "Hemos recibido su solicitud de beca satisfactoriamente")
-#                 return reverse('index')
-#         return BecaCreate
+
+class BecasCreate(CreateView):
+    model = Becas
+    fields = [
+        'razon', 'aportes_a_la_comunidad', 'tiempo', 'observaciones'
+    ]
+
+    def form_valid(self, form):
+        beca = form.save(commit=False)
+        beca.user = self.request.user
+        beca.save()
+        return super().form_valid(form)
+
+    def dispatch(self, request, *args, **kwargs):
+        error = False
+        try:
+            inscription = request.user.inscription
+        except:
+            error = True
+
+        if error or not inscription:
+            messages.success(
+                self.request, "Lo lamentamos, primero actualiza tus datos y luego procede con el registro")
+            return redirect(reverse_lazy('index'))
+
+        beca = Becas.objects.filter(user=request.user).first()
+        if beca:
+            return redirect("becas-detail", pk=beca.pk)
+        return super(BecasCreate, self).dispatch(request, *args, **kwargs)
 
 
-# becas = BecasCRUD().get_urls()
+    def get_success_url(self):
+        messages.success(
+            self.request, "Hemos recibido su solicitud de beca satisfactoriamente")
+        return reverse_lazy('index')
+
+
+class BecasDetail(DetailView):
+    model = Becas
+    fields = [
+        'razon', 'aportes_a_la_comunidad', 'tiempo', 'observaciones'
+    ]

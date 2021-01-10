@@ -56,10 +56,11 @@ urlpatterns = [
         register_user_to_speech, name="registra_charla"),
     re_path(r'^charla/desregistrar/(?P<pk>\d+)$',
         desregistrar_charla, name="desregistrar_charla"),
-    path('contact/', views.contactUs, name='contact-us')
+    path('contact/', views.contactUs, name='contact-us'),
+    path('becas/', views.BecasCreate.as_view(), name="becas-create"),
+    re_path(r'becas/detail/(?P<pk>\d+)$', views.BecasDetail.as_view(), name="becas-detail"),
 
-
-] #+ views.becas
+]
 
 
 if settings.DEBUG:

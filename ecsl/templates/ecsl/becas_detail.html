@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load i18n %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <h1> {% trans 'Scholarship Detail' %} </h1>
+        </div>
+    </div>
+    <br>
+    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <strong> {% trans 'Reasons for applying to the scholarship' %} </strong>
+            </div>
+            <div class="col-md-9 ">
+                {{ object.razon}}
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-3">
+                <strong> {% trans 'Community Contributions' %} </strong>
+            </div>
+            <div class="col-md-9">
+                {{ object.aportes_a_la_comunidad}}
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-3">
+                <strong> {% trans 'Time involved in Free Software' %} </strong>
+            </div>
+            <div class="col-md-9">
+                {{ object.tiempo}}
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-3">
+                <strong> {% trans 'Additional observations' %} </strong>
+            </div>
+            <div class="col-md-9">
+                {{ object.observaciones}}
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+{% endblock content %}

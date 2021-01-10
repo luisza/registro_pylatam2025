@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load i18n %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div>
+                <h1> {% trans 'Create Scholarship' %} </h1>
+            </div>
+
+            <div class="row">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|bootstrap }}
+                    <div class="form-group">
+                      <button type="submit" class="btn btn-primary">{% trans 'Send' %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
