@@ -3,180 +3,189 @@
 
 {% block content %}
 
-<div class="container">
+    <div class="container">
 
-	
-<div class="row">
+        <div class="row">
 
-<div class="col-md-8">	<h1>Encuentro centroamericano de Software Libre </h1></div>
+            <div class="col-md-8"><h1>Encuentro centroamericano de Software Libre </h1></div>
 
-<div  class="col-md-2 ">
-<div class="text-center ">
-<h4 class="text-warning">Descarga el app *actualizada 11-07</h4>
-<a class="text-info" href="https://ecsl2017.softwarelibre.ca/static/ecsl2017.apk"> Android 5.x o superior</a>
-<a class="text-info" href="https://ecsl2017.softwarelibre.ca/static/ecsl2017_4.x.apk"> Android 4.1 o superior</a>
+            <div class="col-md-2 ">
+                <div class="text-center ">
+                    <h4 class="text-warning">Descarga el app *actualizada 11-07</h4>
+                    <a class="text-info" href="https://ecsl2017.softwarelibre.ca/static/ecsl2017.apk"> Android 5.x o
+                        superior</a>
+                    <a class="text-info" href="https://ecsl2017.softwarelibre.ca/static/ecsl2017_4.x.apk"> Android 4.1 o
+                        superior</a>
 
-<a href="https://nubila.tech/" >   <img href="https://nubila.tech/img/ico-nubila.png" /> Cortesía de nubila </a>
+                    <a href="https://nubila.tech/"> <img href="https://nubila.tech/img/ico-nubila.png"/> Cortesía de
+                        nubila </a>
 
-</div>
-</div>
-</div>
+                </div>
+            </div>
+        </div>
 
-</div>	
-<br><br>
-<div class="row">
-<div class="col-md-12">
-	<div class="well">
-	<div class="row">
-	<div class="col-md-4 text-center">
-	<img class="img-responsive" src="{% static 'img/RanaCirculo.png' %}" alt="Ranacirculo">
-	</div>
-	<div class="col-md-6">
-	<h3>Encuentro Centroamericano de Software Libre 2017 <small> <b></b> July 21 - 22, 2017 </small></h3>
-	<p>San José/Costa Rica</p>
-	<p>
-	</p><p>El Encuentro Centroamericano de Software Libre (E.C.S.L.) es una reunión anual de comunidades y grupos de usuarios afines a la temática del Software Libre y, en general, del Conocimiento Libre. Un punto de encuentro y espacio de articulación, educación, coordinación e intercambio de ideas para fortalecer acuerdos y formas de trabajo conjuntas, que faciliten la promoción de tecnologías libres y datos abiertos, así como el aporte de la misma comunidad a proyectos en torno a estos conceptos.</p>
-	
-	<p></p>
-	</div>
-	<div class="col-md-2">
-	<div class="btn-group-vertical">
-	 {% if request.user.is_authenticated %}
-	<a class="btn btn-default" href="{% url 'profile' %}">Mis datos</a>
-	<a class="btn btn-warning" href="{% url 'payment' %}">Registro</a>
+    </div>
+    <br><br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="well">
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <img class="img-responsive" src=" {{ event_logo.url }}" alt="Logo">
+                    </div>
+                    <div class="col-md-6">
+                        <h3>{{ event_name }}<small> <b></b> {{ event_dates }} </small></h3>
+                        <p>{{ event_location }}</p>
+                        <p>
+                        </p>
+                        <p>{{ event_description }}</p>
 
-	{% if speech_url %}
-		<a class="btn btn-default" href="{{speech_url}}">Mis exposiciones</a>	
-	{% endif %}
-		 <a class="btn btn-danger" href="{% url 'mi_agenda' %}"> Mi Agenda</a>   
-	{% else %}
-		<a class="btn btn-info" href="{% url 'login' %}">Iniciar sesión</a>
-		<a class="btn btn-default" href="{% url 'django_registration_register' %}">Registrarme</a>
-		
-	{% endif %}
-		  <a class="btn btn-info" href="{% url 'list_charlas' %}">Agenda</a>  
+                        <p></p>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="btn-group-vertical">
+                            {% if request.user.is_authenticated %}
+                                <a class="btn btn-default" href="{% url 'profile' %}">Mis datos</a>
+                                <a class="btn btn-warning" href="{% url 'payment' %}">Registro</a>
 
-	</div>
-	</div>
-	</div>
-	</div>
-</div>
-	</div>
-	
+                                {% if speech_url %}
+                                    <a class="btn btn-default" href="{{ speech_url }}">Mis exposiciones</a>
+                                {% endif %}
+                                <a class="btn btn-danger" href="{% url 'mi_agenda' %}"> Mi Agenda</a>
+                            {% else %}
+                                <a class="btn btn-info" href="{% url 'login' %}">Iniciar sesión</a>
+                                <a class="btn btn-default"
+                                   href="{% url 'django_registration_register' %}">Registrarme</a>
 
-<div class="row">
-<div class="page-header">
-<h1 class="text-center text-warning">Ya somos {{numparticipantes}} participantes </h1></div>
-<div id="participantes" class="list-group col-md-8 ">
+                            {% endif %}
+                            <a class="btn btn-info" href="{% url 'list_charlas' %}">Agenda</a>
 
-</div>
-<div  class="col-md-4 ">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<h3 class="text-center"> Distribución por género </h3>
-<canvas id="genero"></canvas>
-<h3 class="text-center"> Distribución por país </h3>
-<canvas id="pais"></canvas>
 
-</div>
-</div>
+    <div class="row">
+        <div class="page-header">
+            <h1 class="text-center text-warning">Ya somos {{ numparticipantes }} participantes </h1></div>
+        <div id="participantes" class="list-group col-md-8 ">
 
-<div class="row">
-<div class="page-header col-md-8 col-md-offset-2">
-<h2 class="text-center text-warning"> Sea parte de nuestra comunidad; <br>aprenda, comparta, colabore y disfrute con nosotros. </h2>
-</div>
-</div>
-	
-	
-</div>
+        </div>
+        <div class="col-md-4 ">
+
+            <h3 class="text-center"> Distribución por género </h3>
+            <canvas id="genero"></canvas>
+            <h3 class="text-center"> Distribución por país </h3>
+            <canvas id="pais"></canvas>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="page-header col-md-8 col-md-offset-2">
+            <h2 class="text-center text-warning"> Sea parte de nuestra comunidad; <br>aprenda, comparta, colabore y
+                disfrute con nosotros. </h2>
+        </div>
+    </div>
+
+
+    </div>
 
 {% endblock %}
 
 {% block js %}
 
-<script> 
-$.get( "{% url "participantes" %}", function( data ) {
-	
-	var li='<div class="col-md-1"> <img width="50px" heigth="50px"  src="url" alt="altnombre" class="img-circle"></div>';
-	li += '<div class="col-md-3">nombre</div>';
+    <script>
+        $.get("{% url "participantes" %}", function (data) {
 
-	var item = "";
-	var p = 0;
-	var t = "bg-info";
-	 for(var x=0; x<data.length; x++){
-		 if(x%3 == 0){
-			 if( x!=0) item += '</div>';
-			 if(p%2 == 0){ t = "bg-default";
-			 }else{ t = "bg-info"; }
-			 item += '<div class="row '+t+'"> ';
-		}
-		p++;
-		var e=data[x];
-		item+= li.replace("altnombre", e.name).replace("nombre", e.name).replace("url", e.url);
-	};
-	item += '</div>';
-	$("#participantes").append( item );
-});
+            var li = '<div class="col-md-1"> <img width="50px" heigth="50px"  src="url" alt="altnombre" class="img-circle"></div>';
+            li += '<div class="col-md-3">nombre</div>';
 
-
-</script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.js" ></script>
-
-<script>
-var ctx = document.getElementById('genero').getContext('2d');
-var chart = new Chart(ctx, {
-    // The type of chart we want to create
-    type: 'pie',
-
-    // The data for our dataset
-    data: {
-        labels: ["Masculino", "Femenino", "Otro", ],
-        datasets: [{
-            label: "Distribución por género",
-            backgroundColor: ['rgb(199, 30, 37)', 'rgb(112, 159, 44)', 'rgb(226, 189, 15)',  ],
-            borderColor: 'rgb(43, 57, 145)',
-            data: [{{genero.masculino}},{{ genero.femenino }}, {{genero.otro}} ],
-        }]
-    },
-
-    // Configuration options go here
-    options: {}
-});
-</script>
+            var item = "";
+            var p = 0;
+            var t = "bg-info";
+            for (var x = 0; x < data.length; x++) {
+                if (x % 3 == 0) {
+                    if (x != 0) item += '</div>';
+                    if (p % 2 == 0) {
+                        t = "bg-default";
+                    } else {
+                        t = "bg-info";
+                    }
+                    item += '<div class="row ' + t + '"> ';
+                }
+                p++;
+                var e = data[x];
+                item += li.replace("altnombre", e.name).replace("nombre", e.name).replace("url", e.url);
+            }
+            ;
+            item += '</div>';
+            $("#participantes").append(item);
+        });
 
 
-<script>
+    </script>
 
-var ctx = document.getElementById('pais').getContext('2d');
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.js"></script>
+
+    <script>
+        var ctx = document.getElementById('genero').getContext('2d');
+        var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'pie',
+
+            // The data for our dataset
+            data: {
+                labels: ["Masculino", "Femenino", "Otro",],
+                datasets: [{
+                    label: "Distribución por género",
+                    backgroundColor: ['rgb(199, 30, 37)', 'rgb(112, 159, 44)', 'rgb(226, 189, 15)',],
+                    borderColor: 'rgb(43, 57, 145)',
+                    data: [{{genero.masculino}}, {{ genero.femenino }}, {{genero.otro}}],
+                }]
+            },
+
+            // Configuration options go here
+            options: {}
+        });
+    </script>
 
 
-var myBarChart = new Chart(ctx, {
-    type: 'horizontalBar',
-    // The data for our dataset
-    data: {
-        labels: ['Panamá', 'Costa Rica', 'Nicaragua','El Salvador','Guatemala','Honduras','Belize','Otro' ],
-        datasets: [{
-            label: "Distribución por país",
-            backgroundColor: ['rgb(199, 30, 37)', 
-            				  'rgb(112, 159, 44)', 
-            				  'rgb(226, 189, 15)',  
-            				  'rgb(199, 30, 37)', 
-            				  'rgb(112, 159, 44)', 
-            				  'rgb(226, 189, 15)',  
-            				  'rgb(199, 30, 37)',
-            				  'rgb(112, 159, 44)'
-            				  ],
-            borderColor: 'rgb(43, 57, 145)',
-            data: [{{pais.panama}},{{ pais.costarica }}, {{pais.nicaragua}},
-            	{{pais.elsalvador}},{{ pais.guatemala }}, {{pais.honduras}},
-            	{{ pais.belize }}, {{pais.otro }}
-            ],
-        }]
-    },
-    options: {}
-});
+    <script>
 
-</script>
+        var ctx = document.getElementById('pais').getContext('2d');
+
+
+        var myBarChart = new Chart(ctx, {
+            type: 'horizontalBar',
+            // The data for our dataset
+            data: {
+                labels: ['Panamá', 'Costa Rica', 'Nicaragua', 'El Salvador', 'Guatemala', 'Honduras', 'Belize', 'Otro'],
+                datasets: [{
+                    label: "Distribución por país",
+                    backgroundColor: ['rgb(199, 30, 37)',
+                        'rgb(112, 159, 44)',
+                        'rgb(226, 189, 15)',
+                        'rgb(199, 30, 37)',
+                        'rgb(112, 159, 44)',
+                        'rgb(226, 189, 15)',
+                        'rgb(199, 30, 37)',
+                        'rgb(112, 159, 44)'
+                    ],
+                    borderColor: 'rgb(43, 57, 145)',
+                    data: [{{pais.panama}}, {{ pais.costarica }}, {{pais.nicaragua}},
+                        {{pais.elsalvador}}, {{ pais.guatemala }}, {{pais.honduras}},
+                        {{ pais.belize }}, {{pais.otro }}
+                    ],
+                }]
+            },
+            options: {}
+        });
+
+    </script>
 
 
 {% endblock %}

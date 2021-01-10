@@ -44,10 +44,11 @@
 <hr>
 
 <ul class="nav nav-tabs">
-  <li role="presentation" class="{% if dia == 1 %} active {% endif %}">
-  <a href="{% url 'mi_agenda' %}?dia=1">21 de julio</a></li>
-  <li role="presentation" class="{% if dia == 2 %} active {% endif %}">
-  <a href="{% url 'mi_agenda' %}?dia=2"> 22 de julio</a></li>
+  {% for d in dayList %}
+        <li role="presentation" class="{% if dia ==  forloop.counter  %} active {% endif %}">
+        <a href="{% url 'mi_agenda' %}?dia={{ forloop.counter }}">{{ d }}</a></li>
+  {% endfor %}
+
 
 </ul>
 <br ><br>
@@ -64,7 +65,6 @@
 	{% for obj in object_list %}
 		
 		<div id="block_{{obj.pk}}" class="row {% if obj.is_speech %}speech_row{% else %} text_row {%endif%}" style="background-color:{{obj.color}}">
-		
 		{% if obj.is_speech %}
 		  {% get_speech obj as sobj %}
 		  {% for speech in sobj %}

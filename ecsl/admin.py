@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from ecsl.models import Inscription, Gustos, PaymentOption, Payment, Becas
+from ecsl.models import Inscription, Gustos, PaymentOption, Payment, Becas, EventECSL
 from ecsl.csv_export import export_payment, export_afiliation,\
     export_stats_afiliation, export_payment_option_stats, export_stats_payments,\
     _export_stats_payments, export_gustos_manias_afiliation,\
@@ -185,5 +185,6 @@ class PaymentAdmin(admin.ModelAdmin):
 admin.site.register(Gustos)
 admin.site.register(PaymentOption)
 admin.site.register(Becas)
+admin.site.register(EventECSL)
 
 admin.site.site_header = "ECSL Administración"
