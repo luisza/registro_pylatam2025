@@ -135,8 +135,43 @@ msgid "Log in"
 msgstr "Iniciar sesión"
 
 #: ecsl/templates/base.html:55
+#: ecsl/templates/registration/password_change_form.html:4
+#: ecsl/templates/registration/password_change_form.html:10
+#: ecsl/templates/registration/password_reset_done.html:4
+#: ecsl/templates/registration/password_reset_form.html:4
+#: ecsl/templates/registration/password_reset_form.html:15
 msgid "Change password"
 msgstr "Cambiar contraseña"
+
+#: ecsl/templates/ecsl/becas_detail.html:9
+msgid "Scholarship Detail"
+msgstr "Detalles de beca"
+
+#: ecsl/templates/ecsl/becas_form.html:43
+msgid "Additional observations"
+msgstr "Observaciones adicionales"
+
+#: ecsl/templates/ecsl/becas_form.html:9
+msgid "Create Scholarship"
+msgstr "Crear beca"
+
+#: ecsl/templates/ecsl/becas_form.html:25
+msgid "Community Contributions"
+msgstr "Aportes a la comunidad"
+
+#: ecsl/templates/ecsl/becas_form.html:16
+msgid "Reasons for applying to the scholarship"
+msgstr "Razones para aplicar por la beca"
+
+#: ecsl/templates/ecsl/becas_form.html:34
+msgid "Time involved in Free Software"
+msgstr "Tiempo involucrado/a en el Software Libre"
+
+#: ecsl/templates/django_registration/login.html:21
+#: ecsl/templates/django_registration/registration_form.html:21
+#: ecsl/templates/ecsl/becas_form.html:17
+msgid "Send"
+msgstr "Enviar"
 
 #: ecsl/templates/ecsl/inscription_form.html:10
 msgid "My profile"
@@ -320,11 +355,6 @@ msgstr "Contraseña cambiada"
 msgid "Password successfully changed!"
 msgstr "Contraseña cambiada satisfactoriamente"
 
-#: ecsl/templates/registration/password_change_form.html:4
-#: ecsl/templates/registration/password_change_form.html:10
-msgid "Change password"
-msgstr "Cambiar contraseña"
-
 #: ecsl/templates/registration/password_reset_complete.html:4
 msgid "Password reset complete"
 msgstr "Reinicio de contraseña completo"
@@ -349,10 +379,6 @@ msgstr "Ingrese la nueva contraseña."
 #: ecsl/templates/registration/password_reset_confirm.html:11
 msgid "Set password"
 msgstr "Poner contraseña"
-
-#: ecsl/templates/registration/password_reset_done.html:4
-msgid "Password reset"
-msgstr "Cambiar contraseña"
 
 #: ecsl/templates/registration/password_reset_done.html:8
 msgid ""
@@ -414,11 +440,6 @@ msgstr "Gracias"
 #: ecsl/templates/registration/password_reset_email.txt:22
 msgid "Management"
 msgstr "Equipo de"
-
-#: ecsl/templates/registration/password_reset_form.html:4
-#: ecsl/templates/registration/password_reset_form.html:15
-msgid "Reset password"
-msgstr "Cambiar contraseña"
 
 #: ecsl/templates/registration/password_reset_form.html:8
 msgid ""

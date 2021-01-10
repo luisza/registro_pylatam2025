@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% load bootstrap %}
+{% load i18n %}
 
 {% block content %}
 
@@ -15,7 +16,7 @@
       {% csrf_token %}
       {{ form|bootstrap  }}
     <div class="form-group">
-      <button type="submit" class="btn btn-primary">Enviar</button>
+      <button type="submit" class="btn btn-primary">{% trans 'Send' %}</button>
     </div>
     
       <input type="hidden" name="next" value="{{ next }}" />
