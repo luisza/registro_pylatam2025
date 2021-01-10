@@ -57,10 +57,11 @@ urlpatterns = [
     re_path(r'^charla/desregistrar/(?P<pk>\d+)$',
         desregistrar_charla, name="desregistrar_charla"),
     path('contact/', views.contactUs, name='contact-us'),
+    path('sineventos/', views.noEvents, name='no-events'),
     path('becas/', views.BecasCreate.as_view(), name="becas-create"),
     re_path(r'becas/detail/(?P<pk>\d+)$', views.BecasDetail.as_view(), name="becas-detail"),
 
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  #+ views.becas
 
 
 if settings.DEBUG:

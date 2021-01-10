@@ -143,6 +143,10 @@ msgstr "Iniciar sesión"
 msgid "Change password"
 msgstr "Cambiar contraseña"
 
+#: ecsl/templates/no_events.html:18
+msgid "Sorry, but there are no events at the time."
+msgstr "Lo sentimos, pero no hay eventos por el momento."
+
 #: ecsl/templates/ecsl/becas_detail.html:9
 msgid "Scholarship Detail"
 msgstr "Detalles de beca"

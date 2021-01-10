@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-
+from ecsl.models import EventECSL
 # Create your models here.
 
 
@@ -61,6 +61,7 @@ class Speech(models.Model):
     presentacion = models.FileField(upload_to='presentaciones/',
                                     verbose_name=_("Presentación"),
                                     null=True, blank=True)
+    event = models.ForeignKey(EventECSL, default="", on_delete=models.CASCADE)
 
     @property
     def speaker_name(self):

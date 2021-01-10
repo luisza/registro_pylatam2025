@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+    <div class="container">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8"><h1>Encuentro centroamericano de Software Libre </h1></div>
+            </div>
+        </div>
+    </div>
+    <br><br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="well">
+                <div class="row">
+                    {% trans 'Sorry, but there are no events at the time.' %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block js %}
+    <script>
+        var nav = document.getElementById("navbar");
+        nav.style.display = "none";
+    </script>
+{% endblock js %}

@@ -1,8 +1,9 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.base import TemplateView
 from django.urls.base import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
-from ecsl.models import Inscription, Payment, Becas
+from ecsl.models import Inscription, Payment, Becas, EventECSL
 from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.detail import DetailView
@@ -14,10 +15,25 @@ from django.conf import settings
 # Create your views here.
 
 
+def noEvents(request):
+    current_event = EventECSL.objects.filter(current=True).first()
+    if current_event:
+        return redirect('index')
+    return render(request, 'no_events.html')
+
+
 class Index(TemplateView):
     template_name = 'index.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        current_event = EventECSL.objects.filter(current=True).first()
+        if not current_event:
+            return redirect('no-events')
+        else:
+            return super(Index, self).dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
+        current_event = EventECSL.objects.filter(current=True).first()
 
         context = TemplateView.get_context_data(self, **kwargs)
         if self.request.user.is_authenticated:
@@ -56,6 +72,14 @@ class Index(TemplateView):
             'otro': Payment.objects.filter(user__inscription__nationality='Otro').count(),
 
         }
+
+        context['event_name'] = str(current_event)
+        context['event_logo'] = current_event.logo
+        date = current_event.start_date.strftime('%B') + " " + current_event.start_date.strftime('%-d')
+        date += " - " + current_event.end_date.strftime('%B') + " " + current_event.end_date.strftime('%-d') + ", " + current_event.end_date.strftime('%Y')
+        context['event_dates'] = date
+        context['event_location'] = current_event.location
+        context['event_description'] = current_event.description
 
         return context
 

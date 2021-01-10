@@ -125,6 +125,7 @@ class Inscription(models.Model):
     observaciones_del_viaje = models.TextField(
         null=True, blank=True, help_text="Si viaja en avión agregue el número de vuelo.")
     aparecer_en_participantes = models.BooleanField(default=True)
+    event = models.ForeignKey('EventECSL', on_delete=models.CASCADE, null=True)
 
     @property
     def name(self):
@@ -154,6 +155,7 @@ class Payment(models.Model):
     paquete = models.CharField(max_length=40, choices=PAQUETE)
     invoice = models.FileField(upload_to="invoices/")
     confirmado = models.BooleanField(default=False)
+    event = models.ForeignKey('EventECSL', on_delete=models.CASCADE, null=True)
 
     @property
     def opcion_paquete(self):
@@ -185,6 +187,7 @@ class Patrocinadores(models.Model):
     web = models.URLField(verbose_name=_('Web'))
     logo = models.ImageField(verbose_name=_('logo'), upload_to='logos/')
     patrocin = models.SmallIntegerField(choices=TYPES)
+    event = models.ManyToManyField('EventECSL')
 
 
 class Becas(models.Model):
@@ -206,6 +209,8 @@ class Becas(models.Model):
     observaciones = models.TextField(
         verbose_name="¿Alguna observación adicional?")
     estado = models.SmallIntegerField(choices=ESTADOS, default=0)
+    event = models.ForeignKey('EventECSL', on_delete=models.CASCADE, null=True)
+
 
     def __str__(self):
         return self.user.get_full_name()
@@ -213,3 +218,20 @@ class Becas(models.Model):
     class Meta:
         verbose_name = "Beca"
         verbose_name_plural = "Becas"
+
+
+class EventECSL(models.Model):
+    logo = models.ImageField(verbose_name="Logo", null=True, upload_to='img/logos/',
+                             blank=False)
+    start_date = models.DateField(verbose_name="Fecha inicio", null=True)
+    end_date = models.DateField(verbose_name="Fecha finalización", null=True)
+    location = models.CharField(max_length=50, null=True)
+    description = models.TextField(verbose_name="Descripción", null=True)
+    current = models.BooleanField(default=False)
+
+    def __str__(self):
+        return "Encuentro centroamericano de Software Libre " + str(self.start_date.year)
+
+    class Meta:
+        verbose_name = "Evento"
+        verbose_name_plural = "Eventos"
