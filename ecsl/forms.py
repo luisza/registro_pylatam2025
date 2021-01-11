@@ -25,7 +25,6 @@ class ProfileForm(forms.ModelForm):
         'comentario_general',
         'hora_de_llegada', 'hora_de_salida', 'medio_de_transporte',
         'lugar_de_arribo', 'observaciones_del_viaje', 'aparecer_en_participantes'
-
     ]
 
     def __init__(self, *args, **kwargs):
@@ -58,7 +57,7 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Inscription
         fields = '__all__'
-        exclude = ['user', 'status']
+        exclude = ['user', 'status', 'event']
 
 
 class PaymentForm(forms.ModelForm):

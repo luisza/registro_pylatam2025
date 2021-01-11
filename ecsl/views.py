@@ -87,13 +87,14 @@ class Index(TemplateView):
 class CreateProfile(CreateView):
     model = Inscription
     form_class = ProfileForm
-
     success_url = reverse_lazy('index')
 
     def form_valid(self, form):
+        event = EventECSL.objects.filter(current=True).first()
         messages.success(self.request, _(
             'Profile created successfully, please register in the event'))
         form.instance.user = self.request.user
+        form.instance.event = event
         user = self.request.user
         user.first_name = form.cleaned_data['first_name']
         user.last_name = form.cleaned_data['last_name']

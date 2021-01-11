@@ -1,12 +1,14 @@
-from django.shortcuts import render
+from django.contrib import messages
+from django.shortcuts import render, redirect
 from .forms import SpeechForm
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from proposal.models import Speech
 from ecsl.models import Payment, Inscription, EventECSL
 import hashlib
 import urllib
 from django.http.response import JsonResponse, HttpResponseRedirect
 from django.views import generic
+
 
 # Create your views here.
 
@@ -15,6 +17,17 @@ class SpeechListView(generic.ListView):
     template_name = 'proposal/speech_list.html'
     context_object_name = 'speech_list'
     paginate_by = 10
+
+    def dispatch(self, request, *args, **kwargs):
+        event = EventECSL.objects.filter(current=True).first()
+        if not self.request.user.is_authenticated and event:
+            messages.warning(
+                self.request, "Lo lamentamos, tienes que estar registrado como usuario de sistema para poder enviar una"
+                              " solicitud de charla")
+            return redirect(reverse_lazy('index'))
+        elif not event:
+            return redirect(reverse('index'))
+        return super(SpeechListView, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         return Speech.objects.filter(user=self.request.user)
