@@ -92,7 +92,6 @@ def export_afiliation(request, queryset=None):
         pago = "No"
         opcion = ' '
         if pays is not None:
-            opcion = pays.paquete
             pago = 'Sí' if pays.confirmado else 'No confirmado'
 
         writer.writerow([
@@ -129,12 +128,11 @@ def export_payment(request, queryset=None):
         queryset = Payment.objects.all()
 
     writer = csv.writer(response, delimiter=';', quotechar="'")
-    writer.writerow(['Nombre', 'Paquete', 'Forma de pago', 'Código de referencia',
+    writer.writerow(['Nombre', 'Forma de pago', 'Código de referencia',
                      'confirmado'])
 
     for obj in queryset:
         writer.writerow([obj.name,
-                         obj.opcion_paquete,
                          str(obj.option),
                          obj.codigo_de_referencia,
                          obj.confirmado
@@ -214,8 +212,6 @@ def export_stats_afiliation(request, queryset=None):
     for x in Inscription.CAMISETA:
         writer.writerow([x[0], queryset.filter(camiseta=x[0]).count()])
 
-    for x in Payment.PAQUETE:
-        writer.writerow([x[0], Payment.objects.filter(paquete=x[0]).count()])
 
     writer.writerow(
         ["Confirmados", Payment.objects.filter(confirmado=True).count()])

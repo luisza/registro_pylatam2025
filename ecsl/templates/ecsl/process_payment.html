@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}Make Payment{% endblock %}
+
+{% block content %}
+    <h2>{{ price }}</h2>
+    <H3>{{ price.description }}</H3>
+    </br>
+    <h1>{% trans "Pay with paypal." %}</h1>
+    {{ form.render }}
+{% endblock %}

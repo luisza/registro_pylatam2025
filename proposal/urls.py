@@ -12,7 +12,7 @@ from django.urls import path
 
 app_name = 'proposal'
 urlpatterns = [
-    path('', views.SpeechListView.as_view(), name='index'),
+    path('', views.SpeechListView.as_view(), name='speech-list'),
     path('create/', views.createUpdateview, name='create'),
     path('<int:speech_id>/update/', views.createUpdateview, name='update'),
     path('<int:speech_id>/delete/', views.deleteView, name='delete'),

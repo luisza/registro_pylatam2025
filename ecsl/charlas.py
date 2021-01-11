@@ -4,7 +4,7 @@ Created on 5 jun. 2017
 @author: luis
 '''
 from django.views.generic.list import ListView
-from proposal.models import SpeechSchedule, Topic, Speech, Register_Speech,\
+from proposal.models import SpeechSchedule, Topic, Speech, Register_Speech, \
     BlockSchedule
 import datetime
 from django.views.generic.detail import DetailView
@@ -16,10 +16,13 @@ from django.urls.base import reverse
 from ecsl.models import Payment, EventECSL
 from django.db.models.query_utils import Q
 from django.utils.decorators import method_decorator
+from django.utils.translation import ugettext_lazy as _
+
 
 def dayAmout(date1, date2):
     difference = date1 - date2
-    return int(difference.days) +1
+    return int(difference.days) + 1
+
 
 class CharlaContext:
     def get_context_data(self, **kwargs):
@@ -36,22 +39,19 @@ class CharlaContext:
         charlasDic = {}
         counter = 1
         for day in daterange(current_event.start_date, current_event.end_date):
-            name = 'dia'+str(counter)
+            name = 'dia' + str(counter)
             day_start = datetime.datetime(day.year, day.month, day.day, 0, 0)
             day_end = datetime.datetime(day.year, day.month, day.day, 23, 59)
-            counter+=1
-            charlasDic[name] = queryset.filter(start_time__gte=day_start, start_time__lte=day_end).order_by('start_time')
+            counter += 1
+            charlasDic[name] = queryset.filter(start_time__gte=day_start, start_time__lte=day_end).order_by(
+                'start_time')
 
         try:
             dia = int(self.request.GET.get('dia', '1'))
-            if dia not in range(1, len(charlasDic)+1):
+            if dia not in range(1, len(charlasDic) + 1):
                 raise
         except:
             dia = 1
-
-        print(len(charlasDic))
-        print(dayAmout(current_event.end_date,current_event.start_date))
-
 
         days = []
         for day in daterange(current_event.start_date, current_event.end_date):
@@ -92,6 +92,11 @@ class MyAgenda(CharlaContext, ListView):
                 request, "Lo lamentamos, primero actualiza tus datos y procede con el registro")
             return redirect(reverse('index'))
 
+        if pago.confirmado == False:
+            messages.error(
+                request, _("The payment is still pending to be confirmed"))
+            return redirect(reverse('index'))
+
         return ListView.dispatch(self, request, *args, **kwargs)
 
 
@@ -115,7 +120,7 @@ def register_user_to_speech(request, pk):
 
     try:
         dia = int(request.GET.get('dia', '1'))
-        if dia not in (1, dayAmout(current_event.end_date,current_event.start_date)):
+        if dia not in (1, dayAmout(current_event.end_date, current_event.start_date)):
             raise
     except:
         dia = 1
@@ -133,6 +138,10 @@ def register_user_to_speech(request, pk):
         messages.error(
             request, "Lo lamentamos, primero actualiza tus datos y luego procede con el registro")
         return redirect(reverse('index'))
+    if pago.confirmado == False:
+        messages.error(
+            request,  _("The payment is still pending to be confirmed"))
+        return redirect(reverse('list_charlas') + "?dia=%d" % (dia,))
 
     registros = Register_Speech.objects.filter(speech=schedule).count()
     if registros >= schedule.room.spaces:
@@ -149,7 +158,7 @@ def register_user_to_speech(request, pk):
         speech__end_time__gt=schedule.end_time
     )
 
-    ).count()
+                                 ).count()
 
     if registros > 0:
         messages.error(
@@ -169,7 +178,7 @@ def desregistrar_charla(request, pk):
     current_event = EventECSL.objects.filter(current=True).first()
     try:
         dia = int(request.GET.get('dia', '1'))
-        if dia not in (1, dayAmout(current_event.end_date,current_event.start_date)):
+        if dia not in (1, dayAmout(current_event.end_date, current_event.start_date)):
             raise
     except:
         dia = 1
