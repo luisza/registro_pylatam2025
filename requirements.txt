@@ -1,5 +1,6 @@
 django==3.1.5
 django-registration==3.1.1
+django-crispy-forms==1.10.0
 Pillow == 8.1.0
 django-bootstrap-form==3.4
 mysqlclient
@@ -8,7 +9,7 @@ bcrypt==3.2.0
 #django-cruds-adminlte==0.0.16
 async_notifications==0.1.24
 django-ckeditor == 6.0.0
-celery==5.0
+celery==5.0.5
 django-celery-beat==2.1.0
 django-celery-results==2.0.0
 xhtml2pdf==0.2.5
