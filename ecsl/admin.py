@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from ecsl.models import Inscription, Gustos, PaymentOption, Payment, Becas, EventECSL
+from ecsl.models import Inscription, Gustos, PaymentOption, Payment, Becas, EventECSL, Package
 from ecsl.csv_export import export_payment, export_afiliation,\
     export_stats_afiliation, export_payment_option_stats, export_stats_payments,\
     _export_stats_payments, export_gustos_manias_afiliation,\
@@ -141,8 +141,6 @@ action_enviar_correo_inscripcion.short_description = "Enviar correo"
 class InscripcionAdmin(admin.ModelAdmin):
     list_display = ('name', 'nationality', 'gender', 'status')
     list_filter = ('nationality', 'gender', 'status',
-                   'user__payment__paquete',
-
                    'gustos_manias')
     search_fields = (
         'user__first_name',
@@ -159,9 +157,9 @@ class InscripcionAdmin(admin.ModelAdmin):
 
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
-    list_display = ('name', 'option', 'opcion_paquete',
+    list_display = ('name', 'option',
                     'confirmado', 'codigo_de_referencia')
-    list_filter = ('confirmado', 'option', 'paquete')
+    list_filter = ('confirmado', 'option')
     search_fields = (
         'user__first_name',
         'user__last_name',
@@ -186,5 +184,6 @@ admin.site.register(Gustos)
 admin.site.register(PaymentOption)
 admin.site.register(Becas)
 admin.site.register(EventECSL)
+admin.site.register(Package)
 
 admin.site.site_header = "ECSL Administración"

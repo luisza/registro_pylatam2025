@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     {# TITLE #}
-    <title>ECSL 2017 | {% block title %}Index{% endblock %}</title>
+    <title>ECSL | {% block title %}Index{% endblock %}</title>
 
     {# CSS #}
 
@@ -29,7 +29,7 @@
 <div class="{% block container %}container{% endblock %}">
     {# NAV #}
     <nav class="navbar navbar-dark bg-inverse">
-        <a class="navbar-brand" href="{% url 'index' %}"><strong>ECSL 2017</strong></a>
+        <a class="navbar-brand" href="{% url 'index' %}"><strong>ECSL</strong></a>
         <ul class="nav navbar-nav">
 
             {% if request.user.is_authenticated %}
