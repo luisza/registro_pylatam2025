@@ -154,7 +154,7 @@ class Package(models.Model):
 
 class Payment(models.Model):
 
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         User, on_delete=models.CASCADE, verbose_name=_('Usuario'))
     option = models.ForeignKey(PaymentOption,
                                on_delete=models.CASCADE, verbose_name=_('Opción de pago'))

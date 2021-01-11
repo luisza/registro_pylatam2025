@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ECSL V1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-11 11:01-0600\n"
+"POT-Creation-Date: 2021-01-11 15:23-0600\n"
 "PO-Revision-Date: 2017-06-04 17:12-0600\n"
 "Last-Translator: Luis Zárate <luis.zarate@solvosoft.com>\n"
 "Language-Team: ES <ES@li.org>\n"
@@ -568,17 +568,21 @@ msgstr "Pagar con Paypal."
 msgid "Sorry, but there are no events at the time."
 msgstr "Lo sentimos, pero no hay eventos por el momento."
 
-#: ecsl/views.py:98
+#: ecsl/views.py:100
 msgid "Profile created successfully, please register in the event"
 msgstr "Perfil ha sido creado satisfactoriamente, por favor registre el evento"
 
-#: ecsl/views.py:137
+#: ecsl/views.py:139
 msgid "Profile updated successfully"
 msgstr "Perfil actualizado satisfactoriamente"
 
-#: ecsl/views.py:222
+#: ecsl/views.py:224
 msgid "Register updated successfully"
 msgstr "Registro actualizado satisfactoriamente"
+
+#: ecsl/views.py:292
+msgid "No action, you already paid for this event"
+msgstr "No hubo transacción, ya se pago por este evento"
 
 #: proposal/models.py:9 proposal/models.py:21
 #: venv/lib/python3.8/site-packages/django_celery_beat/models.py:382
