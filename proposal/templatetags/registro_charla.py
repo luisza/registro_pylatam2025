@@ -22,7 +22,7 @@ def get_registro(context, schedule):
         return
 
     if not request.user.is_authenticated:
-        dev['url'] = reverse('auth_login') + "?next=" + reverse('list_charlas')
+        dev['url'] = reverse('login') + "?next=" + reverse('list_charlas')
         dev['message'] = "Iniciar sesión para registrarse en el evento"
         return dev
 

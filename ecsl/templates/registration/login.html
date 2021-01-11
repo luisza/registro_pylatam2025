@@ -8,7 +8,7 @@
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
 
-  <h1>Login</h1>
+  <h1>{% trans 'Login' %}</h1>
 
 
 
@@ -22,12 +22,10 @@
       <input type="hidden" name="next" value="{{ next }}" />
       
     </form>
-    <center>
-    <br>
-    ¿Problemas con el ingreso ?<br>
+    <br>{% trans 'Having trouble logging in?' %}<br>
     <div class="btn-group">
-      <a class="btn btn-info"  href="{% url 'django_registration_register' %}">Registrarme</a>
-      <a class="btn btn-danger" href="{% url 'password_reset' %}">¿Olvidó su clave ?</a>
+      <a class="btn btn-info"  href="{% url 'django_registration_register' %}">{% trans 'Sign Up' %}</a>
+      <a class="btn btn-danger" href="{% url 'password_reset' %}">{% trans 'Forgot your password?' %}</a>
     </div>
     </center>
   </div>

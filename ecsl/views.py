@@ -259,7 +259,7 @@ def contact(request):
                        ['not-reply@ecsl2017.softwarelibre.ca'],
                        fail_silently=False
                        )):
-                messages.success(request, 'Tu mensaje ha sido enviado con exito')
+                messages.success(request, _('Thank! Your message was sent successfully'))
     return redirect(reverse('contact-us'))
 
 
