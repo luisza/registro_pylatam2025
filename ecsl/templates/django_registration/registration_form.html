@@ -9,7 +9,7 @@
   	
   	
 <div>
-  <h1>Registration</h1>
+  <h1> {% trans 'registration' %}</h1>
 </div>
 
 <div class="row">
@@ -18,7 +18,7 @@
     {{ form|bootstrap  }}
 
     <div class="form-group">
-      <button type="submit" class="btn btn-primary">{% trans 'Send' %}</button>
+      <button type="submit" class="btn btn-primary">{% trans 'Submit' %}</button>
     </div>
     
     <input type="hidden" name="next" value="{{ next }}" />

@@ -18,6 +18,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.6.10\n"
 
+#: ecsl/contact/contact_us.html:14
+msgid "Contact Us"
+msgstr "Contáctenos"
+
 #: ecsl/forms.py:12
 msgid "First name"
 msgstr "Nombre"
@@ -170,12 +174,6 @@ msgstr "Razones para aplicar por la beca"
 #: ecsl/templates/ecsl/becas_form.html:34
 msgid "Time involved in Free Software"
 msgstr "Tiempo involucrado/a en el Software Libre"
-
-#: ecsl/templates/django_registration/login.html:21
-#: ecsl/templates/django_registration/registration_form.html:21
-#: ecsl/templates/ecsl/becas_form.html:17
-msgid "Send"
-msgstr "Enviar"
 
 #: ecsl/templates/ecsl/inscription_form.html:10
 msgid "My profile"
@@ -491,6 +489,9 @@ msgstr ""
 msgid "Resend Activation Email"
 msgstr "Reenviar el correo de activación"
 
+#: ecsl/templates/django_registration/login.html:21
+#: ecsl/templates/registration/login.html:19
+#: ecsl/templates/django_registration/registration_form.html:21
 #: ecsl/templates/registration/resend_activation_form.html:10
 msgid "Submit"
 msgstr "Enviar"
@@ -586,3 +587,6 @@ msgstr "Página"
 #: proposal/templates/speech/speech_list.html:42
 msgid "Next"
 msgstr "Siguiente"
+
+
+

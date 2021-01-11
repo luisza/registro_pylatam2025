@@ -71,3 +71,54 @@ class PaymentForm(forms.ModelForm):
         model = Payment
         fields = '__all__'
         exclude = ['user', 'confirmado']
+
+
+class ContactForm(forms.Form):
+
+    Name = forms.CharField(
+        label=False,
+        min_length=2,
+        max_length=50,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'Name',
+                'class': 'form-control',
+            }
+        )
+    )
+
+    Email = forms.CharField(
+        label=False,
+        min_length=6,
+        max_length=50,
+        widget=forms.EmailInput(
+            attrs={
+                'placeholder': 'Email',
+                'class': 'form-control',
+            }
+        )
+    )
+
+    Subject = forms.CharField(
+        label=False,
+        min_length=2,
+        max_length=150,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'Subject',
+                'class': 'form-control',
+            }
+        )
+    )
+
+    Message = forms.CharField(
+        label=False,
+        widget=forms.Textarea(
+            attrs={
+                'placeholder': 'Message',
+                'class': 'form-control',
+            }
+        )
+    )
+
+

@@ -8,10 +8,10 @@ from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.detail import DetailView
 from django.contrib import messages
-from ecsl.forms import ProfileForm, PaymentForm
+from ecsl.forms import ProfileForm, PaymentForm, ContactForm
 from django.utils.translation import ugettext_lazy as _
-from django.core.mail import send_mail
 from django.conf import settings
+from django.core.mail import send_mail
 # Create your views here.
 
 
@@ -44,7 +44,6 @@ class Index(TemplateView):
                     proposal = reverse("speech:proposal_speech_list")
             except Exception as e:
                 pass
-
             beca = Becas.objects.filter(user=self.request.user).first()
             if beca:
                 context['beca'] = reverse_lazy('becas-detail')
@@ -179,7 +178,8 @@ class CreateRegister(CreateView):
 
     def form_valid(self, form):
         messages.success(
-            self.request, "Felicidades su registro se ha completado satisfactoriamente, por favor registrese en las charlas")
+            self.request,
+            "Felicidades su registro se ha completado satisfactoriamente, por favor registrese en las charlas")
         form.instance.user = self.request.user
         response = super(CreateRegister, self).form_valid(form)
         send_mail('Nuevo pago de inscripción',
@@ -215,18 +215,42 @@ class PaymentUpdate(UpdateView):
         response = UpdateView.form_valid(self, form)
         send_mail('Cambio en la suscripción de %s' % (self.object.user.get_full_name(),),
                   'Hola, %s ha pagado la inscripción con la opción %s y el código de identificación %s' % (
-            self.object.user.get_full_name(),
-            self.object.option,
-            self.object.codigo_de_referencia
-        ),
-            'not-reply@ecsl2017.softwarelibre.ca',
-            [self.object.option.email],
-            fail_silently=False
-        )
+                      self.object.user.get_full_name(),
+                      self.object.option,
+                      self.object.codigo_de_referencia
+                  ),
+                  'not-reply@ecsl2017.softwarelibre.ca',
+                  [self.object.option.email],
+                  fail_silently=False
+                  )
         return response
 
+
 def contactUs(request):
-    return render(request, 'contact/contact_us.html')
+    form = ContactForm()
+
+    if request.user.is_authenticated:
+        form.fields['Name'].initial = request.user.username
+        form.fields['Email'].initial = request.user.email
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'contact/contact_us.html', context)
+
+
+def contact(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            if (send_mail(form.cleaned_data.get("Subject"),
+                       'Nombre:' + form.cleaned_data.get('Name') + '\n' + form.cleaned_data.get("Message"),
+                       form.cleaned_data.get("Email"),
+                       ['not-reply@ecsl2017.softwarelibre.ca'],
+                       fail_silently=False
+                       )):
+                messages.success(request, 'Tu mensaje ha sido enviado con exito')
+    return redirect(reverse('contact-us'))
 
 
 class BecasCreate(CreateView):
