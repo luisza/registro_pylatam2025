@@ -1,3 +1,5 @@
+import random
+
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.base import TemplateView
@@ -264,28 +266,36 @@ def contact(request):
 def process_payment(request, text):
     order = ''
     host = request.get_host()
+    inscription = request.user.inscription
     price = Package.objects.filter(name=text).first()
     current_event = EventECSL.objects.filter(current=True).first()
-    invoice= str(request.user) + '-ECSL-' + current_event.start_date.strftime("%Y")
+    number = random.randint(1000, 9999)
+    invoice= str(request.user) + '-ECSL-' + str(current_event.start_date.year) + str(number)
+    item ='ECSL-' + str(current_event.start_date.year) + str(inscription.id)
     paypal_dict = {
         'business': settings.PAYPAL_RECEIVER_EMAIL,
         'amount': price.price,
-        'item_name': 'Pago de evento',
+        'item_name': item,
         'invoice': invoice,
         'currency_code': 'USD',
-        'notify_url': 'http://{}{}'.format(host,
+        'notify_url': 'https//{}{}'.format(host,
                                            reverse('paypal-ipn')),
         'return_url': 'http://{}{}'.format(host,
                                            reverse('payment_done')),
-        'cancel_return': 'http://{}{}'.format(host,
+        'cancel_return': 'https//{}{}'.format(host,
                                               reverse('payment_cancelled')),
     }
 
-    p_Option = PaymentOption.objects.filter(name='Paypal').first()
-    payment = Payment(user=request.user, confirmado=False, event=current_event, option=p_Option)
-    payment.save()
-
-    form = PayPalPaymentsForm(initial=paypal_dict)
+    alreadyPaid = Payment.objects.filter(user=request.user).first()
+    if alreadyPaid:
+        messages.success(
+            request, _("No action, you already paid for this event"))
+        return redirect(reverse_lazy('index'))
+    else:
+        p_Option = PaymentOption.objects.filter(name='Paypal').first()
+        payment = Payment(user=request.user, confirmado=False, event=current_event, option=p_Option)
+        payment.save()
+        form = PayPalPaymentsForm(initial=paypal_dict)
     return render(request, 'ecsl/process_payment.html', {'order': order, 'form': form, 'price' : price})
 
 
@@ -295,7 +305,7 @@ def payment_done(request):
     inscription.status = 2
     inscription.save()
 
-    payment =request.user.payment
+    payment = Payment.objects.filter(user=request.user).first()
     payment.confirmado = True
     payment.save()
     return render(request, 'ecsl/payment_done.html')
