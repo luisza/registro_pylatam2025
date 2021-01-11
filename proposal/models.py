@@ -61,7 +61,7 @@ class Speech(models.Model):
     presentacion = models.FileField(upload_to='presentaciones/',
                                     verbose_name=_("Presentation"),
                                     null=True, blank=True)
-    event = models.ForeignKey(EventECSL, default="", on_delete=models.CASCADE)
+    event = models.ForeignKey(EventECSL, default="", on_delete=models.CASCADE, verbose_name=_("Event"))
 
     @property
     def speaker_name(self):

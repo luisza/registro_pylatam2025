@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Cierre de seción correcto</h1>
-<p>Considere ir al <a class="btn btn-info" href="/registro/">inicio</a></p>
+<h1>{% trans 'Logout successful' %}</h1>
+<p>{% trans 'Please consider going to' %}<a class="btn btn-info" href="/registro/">{% trans 'start' %}</a></p>
 {% endblock %}

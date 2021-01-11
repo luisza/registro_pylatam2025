@@ -1,9 +1,10 @@
-Estimado(a):
+{% load i18n %}
+{% blocktrans %}
+Dear user:
 
-Gracias por registrarse en el sitio del Encuentro Centroamericano de Software Libre
-Para continuar con el proceso de activación debe seguir el siguiente enlace:
-
+Thanks for register into the Central American Free Software Meeting.
+In order to continue with the registration process, please follow the following link:
+{% endblocktrans %}
 http://{{ site.domain }}/accounts/activate/{{ activation_key }}
 
-Este enlace expirará en  {{ expiration_days }} días.
-
+{% trans 'This link will expire in' %} {{ expiration_days }} {% trans 'days.' %}
