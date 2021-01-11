@@ -54,7 +54,10 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'django_celery_beat',
+    'paypal.standard.ipn',
 ]
+PAYPAL_RECEIVER_EMAIL = 'sb-npkcq4593155@business.example.com'
+PAYPAL_TEST = True
 
 if DEBUG_TOOLBAR:
     INSTALLED_APPS += ['debug_toolbar',]
@@ -216,3 +219,7 @@ LOGGING = {
         },
     },
 }
+
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'ecsl/locale'),
+)

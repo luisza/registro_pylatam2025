@@ -57,7 +57,7 @@ def deleteView(request, speech_id):
     if request.method == 'POST':
         speech = Speech.objects.get(pk=speech_id)
         speech.delete()
-    return HttpResponseRedirect(reverse('proposal:index'))
+    return HttpResponseRedirect(reverse('proposal:speech-list'))
 
 
 def createUpdateview(request, speech_id=None):
@@ -85,6 +85,6 @@ def createUpdateview(request, speech_id=None):
     context['speech_form'] = speech_form
 
     if request.method == 'POST':
-        return HttpResponseRedirect(reverse('proposal:index'))
+        return HttpResponseRedirect(reverse('proposal:speech-list'))
     else:
         return render(request, "proposal/speech_form.html", context)

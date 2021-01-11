@@ -4,7 +4,7 @@ Created on 2 jun. 2017
 @author: luis
 '''
 from django import forms
-from ecsl.models import Inscription, Payment, PaymentOption
+from ecsl.models import Inscription, Payment, PaymentOption, EventECSL
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -62,14 +62,14 @@ class ProfileForm(forms.ModelForm):
 
 class PaymentForm(forms.ModelForm):
     option = forms.ModelChoiceField(widget=forms.RadioSelect,
-                                    queryset=PaymentOption.objects.all().exclude(name="Beca"),
+                                    queryset=PaymentOption.objects.all().exclude(name="Beca").exclude(name="Paypal"),
                                     label="Opción de pago",
                                     empty_label=None)
 
     class Meta:
         model = Payment
         fields = '__all__'
-        exclude = ['user', 'confirmado']
+        exclude = ['user', 'confirmado', 'event']
 
 
 class ContactForm(forms.Form):

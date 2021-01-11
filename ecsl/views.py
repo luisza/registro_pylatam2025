@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.base import TemplateView
 from django.urls.base import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
-from ecsl.models import Inscription, Payment, Becas, EventECSL
+from ecsl.models import Inscription, Payment, Becas, EventECSL, Package, PaymentOption
 from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.detail import DetailView
@@ -11,6 +11,9 @@ from django.contrib import messages
 from ecsl.forms import ProfileForm, PaymentForm, ContactForm
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
+from paypal.standard.forms import PayPalPaymentsForm
+from django.views.decorators.csrf import csrf_exempt
+
 from django.core.mail import send_mail
 # Create your views here.
 
@@ -171,10 +174,12 @@ class CreateRegister(CreateView):
                 self.request, "Lo lamentamos, primero actualiza tus datos y luego procede con el registro")
             return redirect(reverse('index'))
 
+
         if Payment.objects.all().count() > settings.MAX_INSCRIPTION:
             messages.warning(
                 self.request, "Lo lamentamos, ya no hay más espacio disponible")
             return redirect(reverse('index'))
+
         return CreateView.dispatch(self, request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -182,6 +187,8 @@ class CreateRegister(CreateView):
             self.request,
             "Felicidades su registro se ha completado satisfactoriamente, por favor registrese en las charlas")
         form.instance.user = self.request.user
+        form.instance.event = EventECSL.objects.filter(current=True).first()
+
         response = super(CreateRegister, self).form_valid(form)
         send_mail('Nuevo pago de inscripción',
                   'Hola, %s ha pagado la inscripción con la opción %s y el código de identificación %s' % (
@@ -252,6 +259,55 @@ def contact(request):
                        )):
                 messages.success(request, 'Tu mensaje ha sido enviado con exito')
     return redirect(reverse('contact-us'))
+
+
+def process_payment(request, text):
+    order = ''
+    host = request.get_host()
+    price = Package.objects.filter(name=text).first()
+    current_event = EventECSL.objects.filter(current=True).first()
+    invoice= str(request.user) + '-ECSL-' + current_event.start_date.strftime("%Y")
+    paypal_dict = {
+        'business': settings.PAYPAL_RECEIVER_EMAIL,
+        'amount': price.price,
+        'item_name': 'Pago de evento',
+        'invoice': invoice,
+        'currency_code': 'USD',
+        'notify_url': 'http://{}{}'.format(host,
+                                           reverse('paypal-ipn')),
+        'return_url': 'http://{}{}'.format(host,
+                                           reverse('payment_done')),
+        'cancel_return': 'http://{}{}'.format(host,
+                                              reverse('payment_cancelled')),
+    }
+
+    p_Option = PaymentOption.objects.filter(name='Paypal').first()
+    payment = Payment(user=request.user, confirmado=False, event=current_event, option=p_Option)
+    payment.save()
+
+    form = PayPalPaymentsForm(initial=paypal_dict)
+    return render(request, 'ecsl/process_payment.html', {'order': order, 'form': form, 'price' : price})
+
+
+@csrf_exempt
+def payment_done(request):
+    inscription = request.user.inscription
+    inscription.status = 2
+    inscription.save()
+
+    payment =request.user.payment
+    payment.confirmado = True
+    payment.save()
+    return render(request, 'ecsl/payment_done.html')
+
+
+@csrf_exempt
+def payment_canceled(request):
+    return render(request, 'ecsl/payment_cancelled.html')
+
+
+def checkout(request):
+    return render(request, 'ecsl/checkout.html', locals())
 
 
 class BecasCreate(CreateView):

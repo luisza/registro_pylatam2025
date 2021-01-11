@@ -139,12 +139,20 @@ class Inscription(models.Model):
         verbose_name_plural = "Inscripciones"
 
 
-class Payment(models.Model):
-    PAQUETE = (
-        ('Completo', 'Completo (Habitación compartida en hostal - Alimentación - Ingreso a actividades)'),
-        ('Sin hotel', 'Sin hotel (Acceso a actividades - Alimentación)'),
+class Package(models.Model):
+    name = models.CharField(max_length=40, default='',verbose_name=_("nombre"))
+    description = models.CharField(max_length=100, default='', verbose_name=_("descripción"))
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name=_('precio'))
 
-    )
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Paquete"
+        verbose_name_plural = "Paquetes"
+
+
+class Payment(models.Model):
 
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, verbose_name=_('Usuario'))
@@ -152,14 +160,11 @@ class Payment(models.Model):
                                on_delete=models.CASCADE, verbose_name=_('Opción de pago'))
     codigo_de_referencia = models.CharField(max_length=40, verbose_name=_(
         'Id de transacción'), help_text="Identificación de transacción o código de referencia")
-    paquete = models.CharField(max_length=40, choices=PAQUETE)
     invoice = models.FileField(upload_to="invoices/")
     confirmado = models.BooleanField(default=False)
     event = models.ForeignKey('EventECSL', on_delete=models.CASCADE, null=True)
+    package = models.ForeignKey(Package, on_delete=models.CASCADE, null=True, verbose_name=_("Paquete"))
 
-    @property
-    def opcion_paquete(self):
-        return self.paquete
 
     @property
     def name(self):

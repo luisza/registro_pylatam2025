@@ -3,7 +3,6 @@
 {% load i18n %}
 
 {% block content %}
-
 <div class="row">
 
 <div class="col-md-6 ">
@@ -40,13 +39,24 @@ si usted no puede hacer el pago bancario, por favor comuniquese con la coordinac
 
 
   <div class="col-md-6">  	<div>
-  <h1>Pago de inscripción</h1>
+  <h1>{% trans "Inscription Payment"%}</h1>
 </div>
 
 <div class="row">
+    <label>Paypal</label>
+<input type="checkbox" id="paypal"></input>
+
+
+
   <form method="post" action="" enctype="multipart/form-data">
+
+      </br>
     {% csrf_token %}
-    {{ form|bootstrap  }}
+    {{ form.package|bootstrap  }}
+    <div id="form-A">
+    {{ form.option|bootstrap  }}
+    {{ form.codigo_de_referencia|bootstrap  }}
+    {{ form.invoice|bootstrap  }}
 
     <div class="form-group">
       <button type="submit" class="btn btn-primary">Registrarme</button>
@@ -54,7 +64,41 @@ si usted no puede hacer el pago bancario, por favor comuniquese con la coordinac
   </form>
 </div>
 
-  </div>
+<div id="form-B" style="display: none;">
+    </br>
+    <label>{% trans "Register with Paypal." %}</label>
+    </br>
+    <input type="button" class="btn btn-primary" onclick="selectedSubjectName()"  id='usePaypal' value="Paypal" />
 </div>
+
+
+</div>
+</div>
+</div>
+
+
 {% endblock %}
 
+{% block js %}
+    <script>
+        $('#paypal').change(function(){
+                    if ($(this).is(":checked")) {
+                        $("#form-A").hide();
+                        $("#form-B").show();
+                    } else {
+                        $("#form-A").show();
+                        $("#form-B").hide();
+                    }
+        });
+    </script>
+<script>
+    function selectedSubjectName() {
+      var subjectIdNode = document.getElementById('id_package');
+      var value = subjectIdNode.options[subjectIdNode.selectedIndex].text;
+      console.log("The selected value=" + value);
+      url = "{% url "process_payment"  999 %}".replace(999,value)
+      document.location.href= url
+   }
+
+</script>
+{% endblock %}

@@ -1,16 +1,18 @@
-{% extends "admin/change_list.html" %} 
+{% extends "admin/change_list.html" %}
 
 {% load i18n static admin_modify %}
 {% block object-tools-items %}
     <li>
-        <a target="_blank" 
-        class="historylink" 
-        href="{% url 'admin:async_notifications_emailtemplate_changelist' %}?q=charla.expositor">P. correo expositores</a>
+        <a target="_blank"
+           class="historylink"
+           href="{% url 'admin:async_notifications_emailtemplate_changelist' %}?q=charla.expositor">P. correo
+            expositores</a>
     </li>
     <li>
-        <a target="_blank" 
-        class="historylink" 
-        href="{% url 'admin:async_notifications_emailtemplate_changelist' %}?q=charla.participante">P. correo participantes</a>
+        <a target="_blank"
+           class="historylink"
+           href="{% url 'admin:async_notifications_emailtemplate_changelist' %}?q=charla.participante">P. correo
+            participantes</a>
     </li>
     {{ block.super }}
 
