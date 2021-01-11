@@ -15,6 +15,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from paypal.standard.forms import PayPalPaymentsForm
 from django.views.decorators.csrf import csrf_exempt
+from django.template.defaultfilters import date as _date
 
 from django.core.mail import send_mail
 # Create your views here.
@@ -79,8 +80,7 @@ class Index(TemplateView):
 
         context['event_name'] = str(current_event)
         context['event_logo'] = current_event.logo
-        date = current_event.start_date.strftime('%B') + " " + current_event.start_date.strftime('%-d')
-        date += " - " + current_event.end_date.strftime('%B') + " " + current_event.end_date.strftime('%-d') + ", " + current_event.end_date.strftime('%Y')
+        date = _("from %(start)s to %(end)s")%{'start': current_event.start_date.strftime("%B %-d"),'end': current_event.end_date.strftime("%B %-d, %Y")}
         context['event_dates'] = date
         context['event_location'] = current_event.location
         context['event_description'] = current_event.description
@@ -173,13 +173,13 @@ class CreateRegister(CreateView):
 
         if error or not inscription:
             messages.success(
-                self.request, "Lo lamentamos, primero actualiza tus datos y luego procede con el registro")
+                self.request, _("Sorry, first you have to update your data and then proceed with the registration"))
             return redirect(reverse('index'))
 
 
         if Payment.objects.all().count() > settings.MAX_INSCRIPTION:
             messages.warning(
-                self.request, "Lo lamentamos, ya no hay más espacio disponible")
+                self.request, _("Sorry, there are no more spaces available"))
             return redirect(reverse('index'))
 
         return CreateView.dispatch(self, request, *args, **kwargs)
@@ -187,7 +187,7 @@ class CreateRegister(CreateView):
     def form_valid(self, form):
         messages.success(
             self.request,
-            "Felicidades su registro se ha completado satisfactoriamente, por favor registrese en las charlas")
+            _("Congratulations, your registration has been completed successfully, please enroll into the speeches"))
         form.instance.user = self.request.user
         form.instance.event = EventECSL.objects.filter(current=True).first()
 
@@ -341,7 +341,7 @@ class BecasCreate(CreateView):
 
         if error or not inscription:
             messages.success(
-                self.request, "Lo lamentamos, primero actualiza tus datos y luego procede con el registro")
+                self.request, _("Sorry, first you have to update your data and then proceed with the registration"))
             return redirect(reverse_lazy('index'))
 
         beca = Becas.objects.filter(user=request.user).first()
@@ -352,7 +352,7 @@ class BecasCreate(CreateView):
 
     def get_success_url(self):
         messages.success(
-            self.request, "Hemos recibido su solicitud de beca satisfactoriamente")
+            self.request, _("We have received your scholarship application successfully"))
         return reverse_lazy('index')
 
 
