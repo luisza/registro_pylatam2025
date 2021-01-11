@@ -226,13 +226,13 @@ class Becas(models.Model):
 
 
 class EventECSL(models.Model):
-    logo = models.ImageField(verbose_name="Logo", null=True, upload_to='img/logos/',
+    logo = models.ImageField(verbose_name=_("Logo"), null=True, upload_to='img/logos/',
                              blank=False)
-    start_date = models.DateField(verbose_name="Fecha inicio", null=True)
-    end_date = models.DateField(verbose_name="Fecha finalización", null=True)
-    location = models.CharField(max_length=50, null=True)
-    description = models.TextField(verbose_name="Descripción", null=True)
-    current = models.BooleanField(default=False)
+    start_date = models.DateField(verbose_name=_("Start Date"), null=True)
+    end_date = models.DateField(verbose_name=_("End Date"), null=True)
+    location = models.CharField(max_length=50, null=True, verbose_name=_("Location"))
+    description = models.TextField(verbose_name=_("Description"), null=True)
+    current = models.BooleanField(default=False, verbose_name=_("Current"))
 
     def __str__(self):
         return "Encuentro centroamericano de Software Libre " + str(self.start_date.year)

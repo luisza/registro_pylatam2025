@@ -8,6 +8,7 @@ import hashlib
 import urllib
 from django.http.response import JsonResponse, HttpResponseRedirect
 from django.views import generic
+from django.utils.translation import ugettext_lazy as _
 
 
 # Create your views here.
@@ -22,8 +23,8 @@ class SpeechListView(generic.ListView):
         event = EventECSL.objects.filter(current=True).first()
         if not self.request.user.is_authenticated and event:
             messages.warning(
-                self.request, "Lo lamentamos, tienes que estar registrado como usuario de sistema para poder enviar una"
-                              " solicitud de charla")
+                self.request, _("We are sorry! You have to be registered as a system user to be able to send"
+                              "a proposal speech"))
             return redirect(reverse_lazy('index'))
         elif not event:
             return redirect(reverse('index'))
