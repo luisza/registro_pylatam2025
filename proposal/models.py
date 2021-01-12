@@ -49,7 +49,7 @@ class Speech(models.Model):
     title = models.TextField(verbose_name=_("Speech Title"))
     description = models.TextField(verbose_name=_("Description"))
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE,
-                              verbose_name=_("Eje temático"))
+                              verbose_name=_("Topic"))
     audience = models.TextField(verbose_name=_("Audience"))
     skill_level = models.PositiveIntegerField(
         choices=SKILL_LEVEL.choices, default=SKILL_LEVEL.EVERYONE,
@@ -59,9 +59,9 @@ class Speech(models.Model):
     speech_type = models.ForeignKey(SpeechType, on_delete=models.CASCADE, verbose_name=_("Speech Type"))
 
     presentacion = models.FileField(upload_to='presentaciones/',
-                                    verbose_name=_("Presentación"),
+                                    verbose_name=_("Presentation"),
                                     null=True, blank=True)
-    event = models.ForeignKey(EventECSL, default="", on_delete=models.CASCADE)
+    event = models.ForeignKey(EventECSL, default="", on_delete=models.CASCADE, verbose_name=_("Event"))
 
     @property
     def speaker_name(self):

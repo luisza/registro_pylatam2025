@@ -1,7 +1,6 @@
 body {
     margin: 0;
     margin-bottom: 40px;
-
 }
 
 footer {
@@ -46,3 +45,9 @@ i:hover {
 .contact-ul {
     padding-top: 10px;
 }
+
+a {
+    color: #0085b2;
+    text-decoration: none;
+}
+

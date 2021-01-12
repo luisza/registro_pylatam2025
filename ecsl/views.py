@@ -1,3 +1,5 @@
+import random
+
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.base import TemplateView
@@ -13,6 +15,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from paypal.standard.forms import PayPalPaymentsForm
 from django.views.decorators.csrf import csrf_exempt
+from django.template.defaultfilters import date as _date
 
 from django.core.mail import send_mail
 # Create your views here.
@@ -77,8 +80,7 @@ class Index(TemplateView):
 
         context['event_name'] = str(current_event)
         context['event_logo'] = current_event.logo
-        date = current_event.start_date.strftime('%B') + " " + current_event.start_date.strftime('%-d')
-        date += " - " + current_event.end_date.strftime('%B') + " " + current_event.end_date.strftime('%-d') + ", " + current_event.end_date.strftime('%Y')
+        date = _("from %(start)s to %(end)s")%{'start': current_event.start_date.strftime("%B %-d"),'end': current_event.end_date.strftime("%B %-d, %Y")}
         context['event_dates'] = date
         context['event_location'] = current_event.location
         context['event_description'] = current_event.description
@@ -171,13 +173,13 @@ class CreateRegister(CreateView):
 
         if error or not inscription:
             messages.success(
-                self.request, "Lo lamentamos, primero actualiza tus datos y luego procede con el registro")
+                self.request, _("Sorry, first you have to update your data and then proceed with the registration"))
             return redirect(reverse('index'))
 
 
         if Payment.objects.all().count() > settings.MAX_INSCRIPTION:
             messages.warning(
-                self.request, "Lo lamentamos, ya no hay más espacio disponible")
+                self.request, _("Sorry, there are no more spaces available"))
             return redirect(reverse('index'))
 
         return CreateView.dispatch(self, request, *args, **kwargs)
@@ -185,7 +187,7 @@ class CreateRegister(CreateView):
     def form_valid(self, form):
         messages.success(
             self.request,
-            "Felicidades su registro se ha completado satisfactoriamente, por favor registrese en las charlas")
+            _("Congratulations, your registration has been completed successfully, please enroll into the speeches"))
         form.instance.user = self.request.user
         form.instance.event = EventECSL.objects.filter(current=True).first()
 
@@ -257,35 +259,43 @@ def contact(request):
                        ['not-reply@ecsl2017.softwarelibre.ca'],
                        fail_silently=False
                        )):
-                messages.success(request, 'Tu mensaje ha sido enviado con exito')
+                messages.success(request, _('Thank! Your message was sent successfully'))
     return redirect(reverse('contact-us'))
 
 
 def process_payment(request, text):
     order = ''
     host = request.get_host()
+    inscription = request.user.inscription
     price = Package.objects.filter(name=text).first()
     current_event = EventECSL.objects.filter(current=True).first()
-    invoice= str(request.user) + '-ECSL-' + current_event.start_date.strftime("%Y")
+    number = random.randint(1000, 9999)
+    invoice= str(request.user) + '-ECSL-' + str(current_event.start_date.year) + str(number)
+    item ='ECSL-' + str(current_event.start_date.year) + str(inscription.id)
     paypal_dict = {
         'business': settings.PAYPAL_RECEIVER_EMAIL,
         'amount': price.price,
-        'item_name': 'Pago de evento',
+        'item_name': item,
         'invoice': invoice,
         'currency_code': 'USD',
-        'notify_url': 'http://{}{}'.format(host,
+        'notify_url': 'https//{}{}'.format(host,
                                            reverse('paypal-ipn')),
         'return_url': 'http://{}{}'.format(host,
                                            reverse('payment_done')),
-        'cancel_return': 'http://{}{}'.format(host,
+        'cancel_return': 'https//{}{}'.format(host,
                                               reverse('payment_cancelled')),
     }
 
-    p_Option = PaymentOption.objects.filter(name='Paypal').first()
-    payment = Payment(user=request.user, confirmado=False, event=current_event, option=p_Option)
-    payment.save()
-
-    form = PayPalPaymentsForm(initial=paypal_dict)
+    alreadyPaid = Payment.objects.filter(user=request.user).first()
+    if alreadyPaid:
+        messages.success(
+            request, _("No action, you already paid for this event"))
+        return redirect(reverse_lazy('index'))
+    else:
+        p_Option = PaymentOption.objects.filter(name='Paypal').first()
+        payment = Payment(user=request.user, confirmado=False, event=current_event, option=p_Option)
+        payment.save()
+        form = PayPalPaymentsForm(initial=paypal_dict)
     return render(request, 'ecsl/process_payment.html', {'order': order, 'form': form, 'price' : price})
 
 
@@ -295,7 +305,7 @@ def payment_done(request):
     inscription.status = 2
     inscription.save()
 
-    payment =request.user.payment
+    payment = Payment.objects.filter(user=request.user).first()
     payment.confirmado = True
     payment.save()
     return render(request, 'ecsl/payment_done.html')
@@ -331,7 +341,7 @@ class BecasCreate(CreateView):
 
         if error or not inscription:
             messages.success(
-                self.request, "Lo lamentamos, primero actualiza tus datos y luego procede con el registro")
+                self.request, _("Sorry, first you have to update your data and then proceed with the registration"))
             return redirect(reverse_lazy('index'))
 
         beca = Becas.objects.filter(user=request.user).first()
@@ -342,7 +352,7 @@ class BecasCreate(CreateView):
 
     def get_success_url(self):
         messages.success(
-            self.request, "Hemos recibido su solicitud de beca satisfactoriamente")
+            self.request, _("We have received your scholarship application successfully"))
         return reverse_lazy('index')
 
 

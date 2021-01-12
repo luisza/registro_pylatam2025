@@ -125,7 +125,7 @@ class Inscription(models.Model):
     observaciones_del_viaje = models.TextField(
         null=True, blank=True, help_text="Si viaja en avión agregue el número de vuelo.")
     aparecer_en_participantes = models.BooleanField(default=True)
-    event = models.ForeignKey('EventECSL', on_delete=models.CASCADE, null=True)
+    event = models.ForeignKey('EventECSL', on_delete=models.CASCADE, null=True, verbose_name=_("Event"))
 
     @property
     def name(self):
@@ -154,7 +154,7 @@ class Package(models.Model):
 
 class Payment(models.Model):
 
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         User, on_delete=models.CASCADE, verbose_name=_('Usuario'))
     option = models.ForeignKey(PaymentOption,
                                on_delete=models.CASCADE, verbose_name=_('Opción de pago'))
@@ -162,7 +162,7 @@ class Payment(models.Model):
         'Id de transacción'), help_text="Identificación de transacción o código de referencia")
     invoice = models.FileField(upload_to="invoices/")
     confirmado = models.BooleanField(default=False)
-    event = models.ForeignKey('EventECSL', on_delete=models.CASCADE, null=True)
+    event = models.ForeignKey('EventECSL', on_delete=models.CASCADE, null=True, verbose_name=_("Event"))
     package = models.ForeignKey(Package, on_delete=models.CASCADE, null=True, verbose_name=_("Paquete"))
 
 
@@ -192,7 +192,7 @@ class Patrocinadores(models.Model):
     web = models.URLField(verbose_name=_('Web'))
     logo = models.ImageField(verbose_name=_('logo'), upload_to='logos/')
     patrocin = models.SmallIntegerField(choices=TYPES)
-    event = models.ManyToManyField('EventECSL')
+    event = models.ManyToManyField('EventECSL', verbose_name=_("Event"))
 
 
 class Becas(models.Model):
@@ -214,7 +214,7 @@ class Becas(models.Model):
     observaciones = models.TextField(
         verbose_name="¿Alguna observación adicional?")
     estado = models.SmallIntegerField(choices=ESTADOS, default=0)
-    event = models.ForeignKey('EventECSL', on_delete=models.CASCADE, null=True)
+    event = models.ForeignKey('EventECSL', on_delete=models.CASCADE, null=True, verbose_name=_("Event"))
 
 
     def __str__(self):
@@ -226,17 +226,17 @@ class Becas(models.Model):
 
 
 class EventECSL(models.Model):
-    logo = models.ImageField(verbose_name="Logo", null=True, upload_to='img/logos/',
+    logo = models.ImageField(verbose_name=_("Logo"), null=True, upload_to='img/logos/',
                              blank=False)
-    start_date = models.DateField(verbose_name="Fecha inicio", null=True)
-    end_date = models.DateField(verbose_name="Fecha finalización", null=True)
-    location = models.CharField(max_length=50, null=True)
-    description = models.TextField(verbose_name="Descripción", null=True)
-    current = models.BooleanField(default=False)
+    start_date = models.DateField(verbose_name=_("Start Date"), null=True)
+    end_date = models.DateField(verbose_name=_("End Date"), null=True)
+    location = models.CharField(max_length=50, null=True, verbose_name=_("Location"))
+    description = models.TextField(verbose_name=_("Description"), null=True)
+    current = models.BooleanField(default=False, verbose_name=_("Current"))
 
     def __str__(self):
-        return "Encuentro centroamericano de Software Libre " + str(self.start_date.year)
+        return _("Central American Free Software Meeting ") + str(self.start_date.year)
 
     class Meta:
-        verbose_name = "Evento"
-        verbose_name_plural = "Eventos"
+        verbose_name = _("Event")
+        verbose_name_plural = _("Events")
