@@ -19,7 +19,7 @@ source venv/bin/activate
 
 Clone el repositorio 
 
-`git clone https://gitlab.com/solvotraining/ecsl.git`
+`git clone https://gitlab.com/slca/ecsl-registro.git`
 
 Cambie de directorio al proyecto
 
