@@ -1,0 +1,8 @@
+#!/bin/bash
+
+NAME="beat_ecsl"                                  # Name of the application
+DJANGODIR=/ecsl            # Django project directory
+DJANGO_SETTINGS_MODULE=ECSL.settings             # which settings file should Django use
+DJANGO_WSGI_MODULE=ECSL.wsgi                     # WSGI module name
+
+exec  celery -A ECSL beat  --schedule django_celery_beat.schedulers:DatabaseScheduler --loglevel=INFO --pidfile="/run/bead_`date  +"%Y%m%d%H%M%S"`.pid"

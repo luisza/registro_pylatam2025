@@ -46,3 +46,25 @@ En otra terminal con el entorno activado ejecute:
 
 ## Notas de interés 
 
+
+Trabajando con docker 
+
+Cree la imagen del sistema: 
+
+`docker build -t registroecsl .`
+
+Cambie a la carpeta 'docker' y ejecute:
+
+`docker-compose up -d`
+
+Una vez iniciado puede crear un usuario ejecutando:
+
+```
+docker-compose exec registro bash
+python manage.py createsuperuser
+```
+
+Acceda al servicio http://localhost:8080, Nota: La primera ejecución dura un poco en cargar
+
+Puede ejecutar `supervisorctl status` para verificar si la instalación está correcta
+

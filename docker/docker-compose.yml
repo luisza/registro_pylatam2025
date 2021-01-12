@@ -1,0 +1,48 @@
+version: '2'
+services:
+  rabbitmq:
+    image: rabbitmq:3
+    container_name: "ecsl_rabbitmq"
+    networks:
+      - ecslapps
+    ports:
+      - 5672:5672
+    environment:
+      RABBITMQ_DEFAULT_USER: ecsl
+      RABBITMQ_DEFAULT_PASS: ecsl
+      RABBITMQ_DEFAULT_VHOST: ecslvhost
+
+  db:
+    image: mariadb
+    container_name: "ecsl_db"
+    environment:
+      MYSQL_ROOT_PASSWORD: ecslpassword
+      MYSQL_DATABASE: ecsl
+      MYSQL_USER: ecsl
+      MYSQL_PASSWORD: ecsl
+    networks:
+      - ecslapps
+  
+  registro:
+    image: registroecsl
+    container_name: "ecsl_registro"
+    environment:
+      CELERY_BROKER_URL: "amqp://ecsl:ecsl@rabbitmq:5672/ecslvhost"
+      DB_HOST: db
+      EMAIL_HOST: demoemail
+    networks:
+      - ecslapps
+    ports:
+      - 8080:80
+
+  demoemail:
+    image: mailhog/mailhog
+    container_name: "demoemail"
+    ports:
+      - 8025:8025
+    networks:
+      - ecslapps
+
+networks:
+  ecslapps:
+
