@@ -359,5 +359,5 @@ class BecasCreate(CreateView):
 class BecasDetail(DetailView):
     model = Becas
     fields = [
-        'razon', 'aportes_a_la_comunidad', 'tiempo', 'observaciones'
+       'estado', 'razon', 'aportes_a_la_comunidad', 'tiempo', 'observaciones'
     ]

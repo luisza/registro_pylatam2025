@@ -13,6 +13,15 @@
     <div class="container">
         <div class="row">
             <div class="col-md-3">
+                <strong> {% trans 'State' %} </strong>
+            </div>
+            <div class="col-md-9 ">
+                {{ object.get_estado_display }}
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-3">
                 <strong> {% trans 'Reasons for applying to the scholarship' %} </strong>
             </div>
             <div class="col-md-9 ">
