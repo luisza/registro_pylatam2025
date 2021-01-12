@@ -68,3 +68,4 @@ Acceda al servicio http://localhost:8080, Nota: La primera ejecución dura un po
 
 Puede ejecutar `supervisorctl status` para verificar si la instalación está correcta
 
+El correo llega a la dirección http://localhost:8025/
