@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'django_celery_beat',
+    'django_celery_results',
     'paypal.standard.ipn',
 ]
 PAYPAL_RECEIVER_EMAIL = 'sb-npkcq4593155@business.example.com'
@@ -197,7 +198,7 @@ ASYNC_NOTIFICATION_TEXT_AREA_WIDGET = 'ckeditor.widgets.CKEditorWidget'
 ASYNC_NOTIFICATION_MAX_PER_MAIL = 5
 
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'db+mysql://guest:guest@localhost:5672/ecsl')
-CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', 'db+mysql://guest:guest@localhost:5672/ecslresult')
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', 'django-db')
 DJANGO_CELERY_RESULTS_TASK_ID_MAX_LENGTH=191
 
 LOGGING = {
