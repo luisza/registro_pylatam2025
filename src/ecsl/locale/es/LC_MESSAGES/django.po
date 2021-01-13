@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ECSL V1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-11 17:27-0600\n"
+"POT-Creation-Date: 2021-01-12 15:29-0600\n"
 "PO-Revision-Date: 2017-06-04 17:12-0600\n"
 "Last-Translator: Luis Zárate <luis.zarate@solvosoft.com>\n"
 "Language-Team: ES <ES@li.org>\n"
@@ -105,7 +105,7 @@ msgstr ""
 "ECSL por favor comente en este espacio."
 
 #: ecsl/models.py:128 ecsl/models.py:165 ecsl/models.py:195 ecsl/models.py:217
-#: ecsl/models.py:241 proposal/models.py:64
+#: ecsl/models.py:247 proposal/models.py:64
 msgid "Event"
 msgstr "Evento"
 
@@ -165,11 +165,31 @@ msgstr "Descripción"
 msgid "Current"
 msgstr "Evento Actual"
 
+#: ecsl/models.py:236
+msgid "First organizer"
+msgstr "Primer organizador"
+
+#: ecsl/models.py:237
+msgid "Second organizer"
+msgstr "Segundo organizador"
+
 #: ecsl/models.py:238
+msgid "Certificate Header Image"
+msgstr "Imagen cabecera certificado"
+
+#: ecsl/models.py:239 ecsl/models.py:241
+msgid "Heigth 70px, Width 800px"
+msgstr "Altura 70px, Ancho 800px"
+
+#: ecsl/models.py:240
+msgid "Certificate Footer Image"
+msgstr "Imagen pie de página certificado"
+
+#: ecsl/models.py:244
 msgid "Central American Free Software Meeting "
 msgstr "Encuentro Centroamericano de Software Libre "
 
-#: ecsl/models.py:242
+#: ecsl/models.py:248
 #, fuzzy
 #| msgid "Event"
 msgid "Events"
@@ -602,18 +622,24 @@ msgid "Scholarship Detail"
 msgstr "Detalles de beca"
 
 #: ecsl/templates/ecsl/becas_detail.html:16
+#, fuzzy
+#| msgid "Name"
+msgid "State"
+msgstr "Nombre"
+
+#: ecsl/templates/ecsl/becas_detail.html:25
 msgid "Reasons for applying to the scholarship"
 msgstr "Razones para aplicar por la beca"
 
-#: ecsl/templates/ecsl/becas_detail.html:25
+#: ecsl/templates/ecsl/becas_detail.html:34
 msgid "Community Contributions"
 msgstr "Aportes a la comunidad"
 
-#: ecsl/templates/ecsl/becas_detail.html:34
+#: ecsl/templates/ecsl/becas_detail.html:43
 msgid "Time involved in Free Software"
 msgstr "Tiempo involucrado/a en el Software Libre"
 
-#: ecsl/templates/ecsl/becas_detail.html:43
+#: ecsl/templates/ecsl/becas_detail.html:52
 msgid "Additional observations"
 msgstr "Observaciones adicionales"
 
@@ -627,7 +653,6 @@ msgstr "Mi perfil"
 
 #: ecsl/templates/ecsl/inscription_form.html:19
 #: proposal/templates/proposal/speech_form.html:11
-#: proposal/templates/speech/speech_form.html.py:11
 msgid "Save"
 msgstr "Guardar"
 
@@ -779,32 +804,26 @@ msgid "Presentation"
 msgstr "Presentación"
 
 #: proposal/templates/proposal/speech_list.html:8
-#: proposal/templates/speech/speech_list.html.py:8
 msgid "Add"
 msgstr "Agregar"
 
 #: proposal/templates/proposal/speech_list.html:20
-#: proposal/templates/speech/speech_list.html.py:18
 msgid "Edit"
 msgstr "Editar"
 
 #: proposal/templates/proposal/speech_list.html:23
-#: proposal/templates/speech/speech_list.html.py:21
 msgid "Delete"
 msgstr "Eliminar"
 
 #: proposal/templates/proposal/speech_list.html:36
-#: proposal/templates/speech/speech_list.html.py:32
 msgid "Previous"
 msgstr "Anterior"
 
 #: proposal/templates/proposal/speech_list.html:41
-#: proposal/templates/speech/speech_list.html.py:37
 msgid "Page"
 msgstr "Página"
 
 #: proposal/templates/proposal/speech_list.html:46
-#: proposal/templates/speech/speech_list.html.py:42
 msgid "Next"
 msgstr "Siguiente"
 
@@ -939,11 +958,6 @@ msgstr ""
 #~| msgid "Last name"
 #~ msgid "Last Name"
 #~ msgstr "Apellidos"
-
-#, fuzzy
-#~| msgid "Name"
-#~ msgid "State"
-#~ msgstr "Nombre"
 
 #, fuzzy
 #~| msgid "Last name"

@@ -233,6 +233,12 @@ class EventECSL(models.Model):
     location = models.CharField(max_length=50, null=True, verbose_name=_("Location"))
     description = models.TextField(verbose_name=_("Description"), null=True)
     current = models.BooleanField(default=False, verbose_name=_("Current"))
+    organizer1 = models.CharField(max_length=25, null=True, verbose_name=_("First organizer"))
+    organizer2 = models.CharField(max_length=25, null=True, verbose_name=_("Second organizer"))
+    certificate_Header = models.ImageField(verbose_name=_("Certificate Header Image"), null=True, upload_to='img/logos/',
+                             blank=True, help_text=_("Heigth 70px, Width 800px"))
+    certificate_Footer = models.ImageField(verbose_name=_("Certificate Footer Image"), null=True, upload_to='img/logos/',
+                             blank=True, help_text=_("Heigth 70px, Width 800px"))
 
     def __str__(self):
         return _("Central American Free Software Meeting ") + str(self.start_date.year)
