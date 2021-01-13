@@ -15,8 +15,13 @@ from ecsl.pdf import render_pdf
 
 
 def action_pdf_certificaciones(modeladmin, request, queryset):
+    current_event = EventECSL.objects.filter(current=True).first()
+    logo = current_event.logo
     return render_pdf(request, "certificados.pdf", 'ecsl/certificaciones.html', context={
-        'object_list': queryset
+        'object_list': queryset,
+        'event': current_event,
+        'event_logo': logo
+
     })
 
 

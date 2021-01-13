@@ -1,4 +1,6 @@
 {% load static %}
+{% load i18n %}
+
 <html>
 <style type="text/css">
 @page {
@@ -17,30 +19,36 @@
 	     width: 21.5cm; top: 26cm; height: 2cm;
 	}
 }
+
 body{
 font-size: 2em;
 }
 </style>
 <body>
-<div id="header_content">
-	<img  src="{% include 'ecsl/pdf_header.html' %}" alt="logo" />
+<div id="header_content" >
+    {% if event.certificate_Header %}
+        <img  src="{{ event.certificate_Header.url }}" alt="logo" />
+    {% endif %}
 </div>
-<div id="content" > 
+
+
+<div id="content" >
 <br>
 {% for insciption in object_list %}
 <div >
 <center>
 <p>
 
-Software Libre Centroamérica (SL-CA) y el comité organizador del noveno encuentro centroamericano de Software Libre (ECSL 2017) otorgan el presente <strong>certificado de participación</strong> a:
+Software Libre Centroamérica (SL-CA) y el comité organizador del Encuentro Centroamericano de Software Libre (ECSL
+    {{ event.start_date.year }}) otorgan el presente <strong>certificado de participación</strong> a:
 </p>
 <h1 style="color:#709f2c; font-size: 3em">{{ insciption.user.get_full_name }}</h1>
 
 <p>
-Por su destacado aporte a la comunidad centroamericana durante el ECSL 2017.</p>
+Por su destacado aporte a la comunidad centroamericana durante el ECSL {{ event.start_date.year }}.</p>
 <br>
 <p>
-Dado en la ciudad de San José, Costa Rica, a los 22 días del més del Julio de 2017
+Dado en la ciudad de {{ event.location }}, el dia {{ event.start_date }}
 </p>
 
 </center>
@@ -48,8 +56,8 @@ Dado en la ciudad de San José, Costa Rica, a los 22 días del més del Julio de
 <div style="font-size: 1em;">
 <br><br>
 _______________________ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_______________________  <br>
-Carolina Flores Hine&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Kimbery Muñoz Araya   <br>
-Comité organizador del ECSL 2017 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Comité organizador del ECSL 2017 <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ event.organizer1}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ event.organizer2}}   <br>
+Comité organizador del ECSL {{ event.start_date.year }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Comité organizador del ECSL {{ event.start_date.year }} <br>
 
 </div>
 {% if not foorloop.last%}
@@ -57,8 +65,11 @@ Comité organizador del ECSL 2017 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs
 {% endif %}
 {% endfor %}
 </div>
-<div id="footer_content"> 
-<img  src="{% include 'ecsl/pdf_footer.html' %}" alt="logo" />
+<div id="footer_content">
+    {% if event.certificate_Footer %}
+        <img  src="{{ event.certificate_Footer.url }}" alt="logo" />
+    {% endif %}
 </div>
 </body>
 </html>
+
