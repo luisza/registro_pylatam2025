@@ -276,10 +276,12 @@ def process_payment(request, text):
     host = request.get_host()
     inscription = request.user.inscription
     price = Package.objects.filter(name=text).first()
+
     if not price:
         messages.success(
             request, _("Invalid Package"))
         return redirect(reverse_lazy('index'))
+
     current_event = EventECSL.objects.filter(current=True).first()
     number = random.randint(1000, 9999)
     invoice= str(request.user) + '-ECSL-' + str(current_event.start_date.year) + str(number)
@@ -299,6 +301,16 @@ def process_payment(request, text):
     }
 
     alreadyPaid = Payment.objects.filter(user=request.user, event=current_event).first()
+
+    def priceCheck(value):
+        if value <= 0.00:
+            p_Option = PaymentOption.objects.filter(name='Paypal').first()
+            payment = Payment(user=request.user, confirmado=True, event=current_event, option=p_Option, package=price)
+            payment.save()
+            messages.success(
+                request, _("You registration is complete"))
+            return redirect(reverse_lazy('index'))
+
     if alreadyPaid and alreadyPaid.confirmado==True:
         messages.success(
             request, _("No action, you already paid for this event"))
@@ -306,6 +318,25 @@ def process_payment(request, text):
     else:
         if alreadyPaid and alreadyPaid.confirmado==False and  alreadyPaid.option.name == 'Paypal':
             alreadyPaid.delete()
+
+            priceCheck(price.price)
+            # if price.price <= 0.00:
+            #     p_Option = PaymentOption.objects.filter(name='Paypal').first()
+            #     payment = Payment(user=request.user, confirmado=True, event=current_event, option=p_Option, package=price)
+            #     payment.save()
+            #     messages.success(
+            #         request, _("You registration is complete"))
+            #     return redirect(reverse_lazy('index'))
+
+        priceCheck(price.price)
+        # if price.price <= 0.00:
+        #     p_Option = PaymentOption.objects.filter(name='Paypal').first()
+        #     payment = Payment(user=request.user, confirmado=True, event=current_event, option=p_Option, package=price)
+        #     payment.save()
+        #     messages.success(
+        #         request, _("You registration is complete"))
+        #     return redirect(reverse_lazy('index'))
+
         p_Option = PaymentOption.objects.filter(name='Paypal').first()
         payment = Payment(user=request.user, confirmado=False, event=current_event, option=p_Option, package=price)
         payment.save()
