@@ -190,6 +190,7 @@ class CreateRegister(CreateView):
             _("Congratulations, your registration has been completed successfully, please enroll into the speeches"))
         form.instance.user = self.request.user
         form.instance.event = EventECSL.objects.filter(current=True).first()
+        # form.instance.package = self.request.package
 
         response = super(CreateRegister, self).form_valid(form)
         send_mail('Nuevo pago de inscripción',
@@ -272,6 +273,7 @@ def contact(request):
 
 
 def process_payment(request, text):
+    print(text)
     order = ''
     host = request.get_host()
     inscription = request.user.inscription
@@ -303,7 +305,7 @@ def process_payment(request, text):
         if alreadyPaid and alreadyPaid.confirmado==False and  alreadyPaid.option.name == 'Paypal':
             alreadyPaid.delete()
         p_Option = PaymentOption.objects.filter(name='Paypal').first()
-        payment = Payment(user=request.user, confirmado=False, event=current_event, option=p_Option)
+        payment = Payment(user=request.user, confirmado=False, event=current_event, option=p_Option, package=price)
         payment.save()
         form = PayPalPaymentsForm(initial=paypal_dict)
     return render(request, 'ecsl/process_payment.html', {'order': order, 'form': form, 'price' : price})
