@@ -190,7 +190,6 @@ class CreateRegister(CreateView):
             _("Congratulations, your registration has been completed successfully, please enroll into the speeches"))
         form.instance.user = self.request.user
         form.instance.event = EventECSL.objects.filter(current=True).first()
-        # form.instance.package = self.request.package
 
         response = super(CreateRegister, self).form_valid(form)
         send_mail('Nuevo pago de inscripción',
@@ -273,11 +272,14 @@ def contact(request):
 
 
 def process_payment(request, text):
-    print(text)
     order = ''
     host = request.get_host()
     inscription = request.user.inscription
     price = Package.objects.filter(name=text).first()
+    if not price:
+        messages.success(
+            request, _("Invalid Package"))
+        return redirect(reverse_lazy('index'))
     current_event = EventECSL.objects.filter(current=True).first()
     number = random.randint(1000, 9999)
     invoice= str(request.user) + '-ECSL-' + str(current_event.start_date.year) + str(number)
@@ -297,7 +299,7 @@ def process_payment(request, text):
     }
 
     alreadyPaid = Payment.objects.filter(user=request.user, event=current_event).first()
-    if alreadyPaid and alreadyPaid.confirmado==True: #existe pago y esta confirmado
+    if alreadyPaid and alreadyPaid.confirmado==True:
         messages.success(
             request, _("No action, you already paid for this event"))
         return redirect(reverse_lazy('index'))

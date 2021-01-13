@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ECSL V1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-13 13:00-0600\n"
+"POT-Creation-Date: 2021-01-13 14:25-0600\n"
 "PO-Revision-Date: 2017-06-04 17:12-0600\n"
 "Last-Translator: Luis Zárate <luis.zarate@solvosoft.com>\n"
 "Language-Team: ES <ES@li.org>\n"
@@ -714,7 +714,7 @@ msgstr "Perfil ha sido creado satisfactoriamente, por favor registre el evento"
 msgid "Profile updated successfully"
 msgstr "Perfil actualizado satisfactoriamente"
 
-#: ecsl/views.py:176 ecsl/views.py:354
+#: ecsl/views.py:176 ecsl/views.py:358
 msgid ""
 "Sorry, first you have to update your data and then proceed with the "
 "registration"
@@ -733,9 +733,9 @@ msgstr ""
 "Felicidades su registro se ha completado satisfactoriamente, por favor "
 "regístrese en las charlas"
 
-#: ecsl/views.py:229 ecsl/views.py:300
+#: ecsl/views.py:229 ecsl/views.py:304
 msgid "No action, you already paid for this event"
-msgstr "No hubo transacción, ya se pago por este evento"
+msgstr "No hubo transacción, ya se pagó por este evento"
 
 #: ecsl/views.py:232
 msgid "Register updated successfully"
@@ -745,7 +745,11 @@ msgstr "Registro actualizado satisfactoriamente"
 msgid "Thank! Your message was sent successfully"
 msgstr "Gracias! Mensaje enviado con éxito"
 
-#: ecsl/views.py:365
+#: ecsl/views.py:281
+msgid "Invalid Package"
+msgstr "Paquete inválido"
+
+#: ecsl/views.py:369
 msgid "We have received your scholarship application successfully"
 msgstr "Hemos recibido su solicitud de beca satisfactoriamente"
 
