@@ -302,14 +302,6 @@ def process_payment(request, text):
 
     alreadyPaid = Payment.objects.filter(user=request.user, event=current_event).first()
 
-    def priceCheck(value):
-        if value <= 0.00:
-            p_Option = PaymentOption.objects.filter(name='Paypal').first()
-            payment = Payment(user=request.user, confirmado=True, event=current_event, option=p_Option, package=price)
-            payment.save()
-            messages.success(
-                request, _("You registration is complete"))
-            return redirect(reverse_lazy('index'))
 
     if alreadyPaid and alreadyPaid.confirmado==True:
         messages.success(
@@ -319,23 +311,21 @@ def process_payment(request, text):
         if alreadyPaid and alreadyPaid.confirmado==False and  alreadyPaid.option.name == 'Paypal':
             alreadyPaid.delete()
 
-            priceCheck(price.price)
-            # if price.price <= 0.00:
-            #     p_Option = PaymentOption.objects.filter(name='Paypal').first()
-            #     payment = Payment(user=request.user, confirmado=True, event=current_event, option=p_Option, package=price)
-            #     payment.save()
-            #     messages.success(
-            #         request, _("You registration is complete"))
-            #     return redirect(reverse_lazy('index'))
+            if price.price <= 0.00:
+                p_Option = PaymentOption.objects.filter(name='Paypal').first()
+                payment = Payment(user=request.user, confirmado=True, event=current_event, option=p_Option, package=price)
+                payment.save()
+                messages.success(
+                    request, _("You registration is complete, this package is free"))
+                return redirect(reverse_lazy('index'))
 
-        priceCheck(price.price)
-        # if price.price <= 0.00:
-        #     p_Option = PaymentOption.objects.filter(name='Paypal').first()
-        #     payment = Payment(user=request.user, confirmado=True, event=current_event, option=p_Option, package=price)
-        #     payment.save()
-        #     messages.success(
-        #         request, _("You registration is complete"))
-        #     return redirect(reverse_lazy('index'))
+        if price.price <= 0.00:
+            p_Option = PaymentOption.objects.filter(name='Paypal').first()
+            payment = Payment(user=request.user, confirmado=True, event=current_event, option=p_Option, package=price)
+            payment.save()
+            messages.success(
+                request, _("You registration is complete, this package is free"))
+            return redirect(reverse_lazy('index'))
 
         p_Option = PaymentOption.objects.filter(name='Paypal').first()
         payment = Payment(user=request.user, confirmado=False, event=current_event, option=p_Option, package=price)
