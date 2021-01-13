@@ -221,6 +221,14 @@ class PaymentUpdate(UpdateView):
         return UpdateView.dispatch(self, request, *args, **kwargs)
 
     def form_valid(self, form):
+        current_event = EventECSL.objects.filter(current=True).first()
+        alreadyPaid = Payment.objects.filter(user=self.request.user, event=current_event).first()
+
+        if alreadyPaid and alreadyPaid.confirmado==True and alreadyPaid.option.name == 'Paypal':
+            messages.success(
+                self.request, _("No action, you already paid for this event"))
+            return redirect(reverse_lazy('index'))
+
         messages.success(self.request, _('Register updated successfully'))
         response = UpdateView.form_valid(self, form)
         send_mail('Cambio en la suscripción de %s' % (self.object.user.get_full_name(),),
@@ -286,12 +294,14 @@ def process_payment(request, text):
                                               reverse('payment_cancelled')),
     }
 
-    alreadyPaid = Payment.objects.filter(user=request.user).first()
-    if alreadyPaid:
+    alreadyPaid = Payment.objects.filter(user=request.user, event=current_event).first()
+    if alreadyPaid and alreadyPaid.confirmado==True: #existe pago y esta confirmado
         messages.success(
             request, _("No action, you already paid for this event"))
         return redirect(reverse_lazy('index'))
     else:
+        if alreadyPaid and alreadyPaid.confirmado==False and  alreadyPaid.option.name == 'Paypal':
+            alreadyPaid.delete()
         p_Option = PaymentOption.objects.filter(name='Paypal').first()
         payment = Payment(user=request.user, confirmado=False, event=current_event, option=p_Option)
         payment.save()
