@@ -308,24 +308,19 @@ def process_payment(request, text):
             request, _("No action, you already paid for this event"))
         return redirect(reverse_lazy('index'))
     else:
-        if alreadyPaid and alreadyPaid.confirmado==False and  alreadyPaid.option.name == 'Paypal':
-            alreadyPaid.delete()
-
-            if price.price <= 0.00:
-                p_Option = PaymentOption.objects.filter(name='Paypal').first()
-                payment = Payment(user=request.user, confirmado=True, event=current_event, option=p_Option, package=price)
-                payment.save()
-                messages.success(
-                    request, _("You registration is complete, this package is free"))
-                return redirect(reverse_lazy('index'))
 
         if price.price <= 0.00:
+            if alreadyPaid and alreadyPaid.confirmado == False and alreadyPaid.option.name == 'Paypal':
+                alreadyPaid.delete()
             p_Option = PaymentOption.objects.filter(name='Paypal').first()
             payment = Payment(user=request.user, confirmado=True, event=current_event, option=p_Option, package=price)
             payment.save()
             messages.success(
                 request, _("You registration is complete, this package is free"))
             return redirect(reverse_lazy('index'))
+
+        if alreadyPaid and alreadyPaid.confirmado==False and  alreadyPaid.option.name == 'Paypal':
+            alreadyPaid.delete()
 
         p_Option = PaymentOption.objects.filter(name='Paypal').first()
         payment = Payment(user=request.user, confirmado=False, event=current_event, option=p_Option, package=price)
