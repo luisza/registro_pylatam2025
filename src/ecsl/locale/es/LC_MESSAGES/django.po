@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ECSL V1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-14 10:57-0600\n"
+"POT-Creation-Date: 2021-01-14 11:30-0600\n"
 "PO-Revision-Date: 2017-06-04 17:12-0600\n"
 "Last-Translator: Luis Zárate <luis.zarate@solvosoft.com>\n"
 "Language-Team: ES <ES@li.org>\n"
@@ -825,7 +825,7 @@ msgstr ""
 "regístrese en las charlas"
 
 #: ecsl/views.py:234 ecsl/views.py:322
-msgid "No action, you already paid for this event"
+msgid "There was no transaction, you already paid for this event"
 msgstr "No hubo transacción, ya se pagó por este evento"
 
 #: ecsl/views.py:237
@@ -848,7 +848,7 @@ msgstr "Paquete inválido"
 
 #: ecsl/views.py:333
 msgid "You registration is complete, this package is free"
-msgstr "EL registro esta listo, el paquete es gratuito"
+msgstr "El registro está listo, el paquete es gratuito"
 
 #: ecsl/views.py:399
 #, python-format
@@ -958,6 +958,11 @@ msgstr ""
 msgid "We are sorry! The proposal speech period is not active"
 msgstr ""
 "Lo sentimos! No estamos en periodo de envíos de propuestas para charlas"
+
+#, fuzzy
+#~| msgid "There was no transaction, you already paid for this event"
+#~ msgid "No action, you already paid for this event"
+#~ msgstr "No hubo transacción, ya se pagó por este evento"
 
 #, fuzzy
 #~| msgid "Central American Free Software Meeting "

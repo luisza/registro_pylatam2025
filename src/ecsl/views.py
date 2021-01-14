@@ -231,7 +231,7 @@ class PaymentUpdate(UpdateView):
 
         if alreadyPaid and alreadyPaid.confirmado==True and alreadyPaid.option.name == 'Paypal':
             messages.success(
-                self.request, _("No action, you already paid for this event"))
+                self.request, _("There was no transaction, you already paid for this event"))
             return redirect(reverse_lazy('index'))
 
         messages.success(self.request, _('Register updated successfully'))
@@ -319,7 +319,7 @@ def process_payment(request, text):
 
     if alreadyPaid and alreadyPaid.confirmado==True:
         messages.success(
-            request, _("No action, you already paid for this event"))
+            request, _("There was no transaction, you already paid for this event"))
         return redirect(reverse_lazy('index'))
     else:
 
