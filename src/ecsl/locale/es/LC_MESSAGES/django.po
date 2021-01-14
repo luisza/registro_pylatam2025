@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ECSL V1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-14 10:17-0600\n"
+"POT-Creation-Date: 2021-01-14 10:29-0600\n"
 "PO-Revision-Date: 2017-06-04 17:12-0600\n"
 "Last-Translator: Luis Zárate <luis.zarate@solvosoft.com>\n"
 "Language-Team: ES <ES@li.org>\n"
@@ -405,6 +405,17 @@ msgstr "días."
 #: ecsl/templates/django_registration/activation_email_subject.txt:2
 msgid "[CAFSM]Activation link"
 msgstr "[ECSL]Enlace de activación"
+
+#: ecsl/templates/django_registration/activation_failed.html:4
+#: ecsl/templates/django_registration/activation_failed.html:6
+msgid "Register Failed"
+msgstr "Registro Fallido"
+
+#: ecsl/templates/django_registration/activation_failed.html:8
+msgid "There was a problem registering this user, please go to the index page"
+msgstr ""
+"Hubo un problema registrando a este usuario,por favor vuelva a la página "
+"principal."
 
 #: ecsl/templates/django_registration/admin_approve.html:4
 msgid "Approval Failure"
@@ -948,6 +959,11 @@ msgstr ""
 
 #~ msgid "Notification Period"
 #~ msgstr "Notificación de periodo"
+
+#, fuzzy
+#~| msgid "Account Activated"
+#~ msgid "Account Failed"
+#~ msgstr "Cuenta activa"
 
 #, fuzzy
 #~| msgid "Skill level required"
