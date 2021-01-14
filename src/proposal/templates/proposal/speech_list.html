@@ -2,11 +2,13 @@
 {% load i18n %}
 
 {% block content %}
+    {% if period %}
+        <a class="btn btn-info"
+           href="{% url 'proposal:create' %}">
 
-    <a class="btn btn-info"
-       href="{% url 'proposal:create' %}">
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> {% trans 'Add' %} </a>
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> {% trans 'Add' %} </a>
 
+    {% endif %}
     <br> <br>
     <ul class="list-group">
         {% for object in object_list %}

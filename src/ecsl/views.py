@@ -1,6 +1,4 @@
 import random
-
-from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.base import TemplateView
 from django.urls.base import reverse, reverse_lazy
@@ -15,8 +13,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from paypal.standard.forms import PayPalPaymentsForm
 from django.views.decorators.csrf import csrf_exempt
-from django.template.defaultfilters import date as _date
-
+from datetime import date
+from captcha.fields import CaptchaField
+from django.core.mail import EmailMessage, send_mail
 from django.core.mail import send_mail
 # Create your views here.
 
@@ -35,19 +34,20 @@ class Index(TemplateView):
         current_event = EventECSL.objects.filter(current=True).first()
         if not current_event:
             return redirect('no-events')
-        else:
-            return super(Index, self).dispatch(request, *args, **kwargs)
+        return super(Index, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
+        proposal = None
         current_event = EventECSL.objects.filter(current=True).first()
 
         context = TemplateView.get_context_data(self, **kwargs)
         if self.request.user.is_authenticated:
-            proposal = None
             try:
                 proposal = self.request.user.speech_set.count()
                 if proposal > 0:
-                    proposal = reverse("speech:proposal_speech_list")
+                    proposal = True
+                else:
+                    proposal = False
             except Exception as e:
                 pass
             beca = Becas.objects.filter(user=self.request.user).first()
@@ -78,9 +78,14 @@ class Index(TemplateView):
 
         }
 
+        if current_event.checking_period:
+            context['period'] = current_event.checking_period
+        elif proposal:
+            context['period'] = True
         context['event_name'] = str(current_event)
         context['event_logo'] = current_event.logo
-        date = _("from %(start)s to %(end)s")%{'start': current_event.start_date.strftime("%B %-d"),'end': current_event.end_date.strftime("%B %-d, %Y")}
+        date = _("from %(start)s to %(end)s") % {'start': current_event.start_date.strftime("%B %-d"),
+                                                 'end': current_event.end_date.strftime("%B %-d, %Y")}
         context['event_dates'] = date
         context['event_location'] = current_event.location
         context['event_description'] = current_event.description
@@ -176,8 +181,8 @@ class CreateRegister(CreateView):
                 self.request, _("Sorry, first you have to update your data and then proceed with the registration"))
             return redirect(reverse('index'))
 
-
-        if Payment.objects.all().count() > settings.MAX_INSCRIPTION:
+        event = EventECSL.objects.filter(current=True).first()
+        if Payment.objects.filter(event=event).count() >= event.max_inscription:
             messages.warning(
                 self.request, _("Sorry, there are no more spaces available"))
             return redirect(reverse('index'))
@@ -221,6 +226,14 @@ class PaymentUpdate(UpdateView):
         return UpdateView.dispatch(self, request, *args, **kwargs)
 
     def form_valid(self, form):
+        current_event = EventECSL.objects.filter(current=True).first()
+        alreadyPaid = Payment.objects.filter(user=self.request.user, event=current_event).first()
+
+        if alreadyPaid and alreadyPaid.confirmado==True and alreadyPaid.option.name == 'Paypal':
+            messages.success(
+                self.request, _("There was no transaction, you already paid for this event"))
+            return redirect(reverse_lazy('index'))
+
         messages.success(self.request, _('Register updated successfully'))
         response = UpdateView.form_valid(self, form)
         send_mail('Cambio en la suscripción de %s' % (self.object.user.get_full_name(),),
@@ -236,8 +249,12 @@ class PaymentUpdate(UpdateView):
         return response
 
 
+class CustomContactFormCaptcha(ContactForm):
+    captcha = CaptchaField()
+
+
 def contactUs(request):
-    form = ContactForm()
+    form = CustomContactFormCaptcha()
 
     if request.user.is_authenticated:
         form.fields['Name'].initial = request.user.username
@@ -251,15 +268,20 @@ def contactUs(request):
 
 def contact(request):
     if request.method == 'POST':
-        form = ContactForm(request.POST)
+        form = CustomContactFormCaptcha(request.POST)
         if form.is_valid():
-            if (send_mail(form.cleaned_data.get("Subject"),
-                       'Nombre:' + form.cleaned_data.get('Name') + '\n' + form.cleaned_data.get("Message"),
-                       form.cleaned_data.get("Email"),
-                       ['not-reply@ecsl2017.softwarelibre.ca'],
-                       fail_silently=False
-                       )):
-                messages.success(request, _('Thank! Your message was sent successfully'))
+            if (EmailMessage(
+                    form.cleaned_data.get("Subject"),
+                    'Nombre:' + form.cleaned_data.get('Name') + '\n' + form.cleaned_data.get("Message"),
+                    settings.DEFAULT_FROM_EMAIL,
+                    [request.user.email],
+                    headers={'Reply-To': request.user.email},
+            ).send()):
+                messages.success(request, _('Thanks! Your message was sent successfully'))
+        else:
+            messages.success(request, _('Wrong captcha, try again'))
+            form.captcha = ""
+            return render(request, 'contact/contact_us.html', {'form': form})
     return redirect(reverse('contact-us'))
 
 
@@ -268,10 +290,16 @@ def process_payment(request, text):
     host = request.get_host()
     inscription = request.user.inscription
     price = Package.objects.filter(name=text).first()
+
+    if not price:
+        messages.success(
+            request, _("Invalid Package"))
+        return redirect(reverse_lazy('index'))
+
     current_event = EventECSL.objects.filter(current=True).first()
     number = random.randint(1000, 9999)
-    invoice= str(request.user) + '-ECSL-' + str(current_event.start_date.year) + str(number)
-    item ='ECSL-' + str(current_event.start_date.year) + str(inscription.id)
+    invoice = f"{request.user} -ECSL- {current_event.start_date.year} - {number}"
+    item = 'ECSL-' + str(current_event.start_date.year) + str(inscription.id)
     paypal_dict = {
         'business': settings.PAYPAL_RECEIVER_EMAIL,
         'amount': price.price,
@@ -286,17 +314,33 @@ def process_payment(request, text):
                                               reverse('payment_cancelled')),
     }
 
-    alreadyPaid = Payment.objects.filter(user=request.user).first()
-    if alreadyPaid:
+    alreadyPaid = Payment.objects.filter(user=request.user, event=current_event).first()
+
+
+    if alreadyPaid and alreadyPaid.confirmado==True:
         messages.success(
-            request, _("No action, you already paid for this event"))
+            request, _("There was no transaction, you already paid for this event"))
         return redirect(reverse_lazy('index'))
     else:
+
+        if price.price <= 0.00:
+            if alreadyPaid and alreadyPaid.confirmado == False and alreadyPaid.option.name == 'Paypal':
+                alreadyPaid.delete()
+            p_Option = PaymentOption.objects.filter(name='Paypal').first()
+            payment = Payment(user=request.user, confirmado=True, event=current_event, option=p_Option, package=price)
+            payment.save()
+            messages.success(
+                request, _("You registration is complete, this package is free"))
+            return redirect(reverse_lazy('index'))
+
+        if alreadyPaid and alreadyPaid.confirmado==False and  alreadyPaid.option.name == 'Paypal':
+            alreadyPaid.delete()
+
         p_Option = PaymentOption.objects.filter(name='Paypal').first()
-        payment = Payment(user=request.user, confirmado=False, event=current_event, option=p_Option)
+        payment = Payment(user=request.user, confirmado=False, event=current_event, option=p_Option, package=price)
         payment.save()
         form = PayPalPaymentsForm(initial=paypal_dict)
-    return render(request, 'ecsl/process_payment.html', {'order': order, 'form': form, 'price' : price})
+    return render(request, 'ecsl/process_payment.html', {'order': order, 'form': form, 'price': price})
 
 
 @csrf_exempt
@@ -329,6 +373,7 @@ class BecasCreate(CreateView):
     def form_valid(self, form):
         beca = form.save(commit=False)
         beca.user = self.request.user
+        beca.event = EventECSL.objects.filter(current=True).first()
         beca.save()
         return super().form_valid(form)
 
@@ -347,8 +392,17 @@ class BecasCreate(CreateView):
         beca = Becas.objects.filter(user=request.user).first()
         if beca:
             return redirect("becas-detail", pk=beca.pk)
-        return super(BecasCreate, self).dispatch(request, *args, **kwargs)
 
+        event = EventECSL.objects.filter(current=True).first()
+        if not event.is_beca_active:
+            messages.success(
+                request, _("Sorry, but the scholarship application period is not available at the time. "
+                           "Application period: %(start)s - %(end)s") % {
+                             'start': event.beca_start.strftime("%b %-d, %Y")
+                             , 'end': event.beca_end.strftime("%b %-d, %Y")})
+            return redirect(reverse_lazy('index'))
+
+        return super(BecasCreate, self).dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         messages.success(
@@ -359,5 +413,13 @@ class BecasCreate(CreateView):
 class BecasDetail(DetailView):
     model = Becas
     fields = [
-       'estado', 'razon', 'aportes_a_la_comunidad', 'tiempo', 'observaciones'
+        'estado', 'razon', 'aportes_a_la_comunidad', 'tiempo', 'observaciones'
     ]
+
+    def dispatch(self, request, *args, **kwargs):
+        beca = Becas.objects.filter(pk=kwargs['pk']).first()
+        if not beca or beca.user.id != request.user.id:
+            messages.success(
+                request, _("Sorry, but the scholarship application you are looking for does not exist"))
+            return redirect(reverse_lazy('index'))
+        return super(BecasDetail, self).dispatch(request, *args, **kwargs)

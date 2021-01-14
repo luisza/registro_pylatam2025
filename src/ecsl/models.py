@@ -1,8 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
-
-# Create your models here.
+from django.utils import timezone
+from datetime import date
 
 
 class PaymentOption(models.Model):
@@ -233,6 +233,39 @@ class EventECSL(models.Model):
     location = models.CharField(max_length=50, null=True, verbose_name=_("Location"))
     description = models.TextField(verbose_name=_("Description"), null=True)
     current = models.BooleanField(default=False, verbose_name=_("Current"))
+    organizer1 = models.CharField(max_length=25, null=True, verbose_name=_("First organizer"))
+    organizer2 = models.CharField(max_length=25, null=True, verbose_name=_("Second organizer"))
+    certificate_Header = models.ImageField(verbose_name=_("Certificate Header Image"), null=True, upload_to='img/logos/',
+                             blank=True, help_text=_("Height 70px, Width 800px"))
+    certificate_Footer = models.ImageField(verbose_name=_("Certificate Footer Image"), null=True, upload_to='img/logos/',
+                             blank=True, help_text=_("Height 70px, Width 800px"))
+    phone_event = models.CharField(max_length=15, null=True, verbose_name=_("Phone"))
+    start_date_proposal = models.DateField(verbose_name=_("Start Date Proposal"), null=True)
+    end_date_proposal = models.DateField(verbose_name=_("End Date Proposal"), null=True)
+    email_event = models.CharField(max_length=50, null=True, verbose_name=_('Email Event'))
+    beca_start = models.DateField(verbose_name=_("Scholarship application start period"), null=True)
+    beca_end = models.DateField(verbose_name=_("Scholarship application end period"), null=True)
+    max_inscription = models.IntegerField(default=250, null=True, verbose_name=_("Maximum Inscriptions"))
+
+    @property
+    def is_beca_active(self):
+        return self.beca_start <= date.today() <= self.beca_end and self.current
+
+    @property
+    def checking_period(self):
+        current_date = timezone.localtime().date()
+        if self.start_date_proposal <= current_date and current_date <= self.end_date_proposal:
+            return True
+        else:
+            return False
+
+    @property
+    def checking_start_date(self):
+        current_date = timezone.localtime().date()
+        if self.start_date_proposal == current_date:
+            return True
+        else:
+            return False
 
     def __str__(self):
         return _("Central American Free Software Meeting ") + str(self.start_date.year)

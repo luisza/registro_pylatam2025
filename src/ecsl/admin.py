@@ -1,10 +1,9 @@
 from django.contrib import admin
-
 # Register your models here.
 from ecsl.models import Inscription, Gustos, PaymentOption, Payment, Becas, EventECSL, Package
-from ecsl.csv_export import export_payment, export_afiliation,\
-    export_stats_afiliation, export_payment_option_stats, export_stats_payments,\
-    _export_stats_payments, export_gustos_manias_afiliation,\
+from ecsl.csv_export import export_payment, export_afiliation, \
+    export_stats_afiliation, export_payment_option_stats, export_stats_payments, \
+    _export_stats_payments, export_gustos_manias_afiliation, \
     export_gustos_manias_afiliation2
 from django.core.mail import send_mail
 from ajax_select import make_ajax_form
@@ -15,8 +14,13 @@ from ecsl.pdf import render_pdf
 
 
 def action_pdf_certificaciones(modeladmin, request, queryset):
+    current_event = EventECSL.objects.filter(current=True).first()
+    logo = current_event.logo
     return render_pdf(request, "certificados.pdf", 'ecsl/certificaciones.html', context={
-        'object_list': queryset
+        'object_list': queryset,
+        'event': current_event,
+        'event_logo': logo
+
     })
 
 
@@ -62,18 +66,17 @@ def action_export_alimentary_restriction(modeladmin, request, queryset):
 
 
 def action_reenviar_notificacion(modeladmin, request, queryset):
-
     for obj in queryset:
         send_mail('Cambio en la suscripción de %s' % (obj.user.get_full_name(),),
                   'Hola, %s ha pagado la inscripción con la opción %s y el código de identificación %s' % (
-            obj.user.get_full_name(),
-            obj.option,
-            obj.codigo_de_referencia
-        ),
-            'not-reply@ecsl2017.softwarelibre.ca',
-            [obj.option.email],
-            fail_silently=False
-        )
+                      obj.user.get_full_name(),
+                      obj.option,
+                      obj.codigo_de_referencia
+                  ),
+                  'not-reply@ecsl2017.softwarelibre.ca',
+                  [obj.option.email],
+                  fail_silently=False
+                  )
 
 
 def action_stats_all_afiliation(modeladmin, request, queryset):
@@ -114,10 +117,10 @@ def action_enviar_correo_inscripcion(modeladmin, request, queryset):
                                  context={
                                      'inscripcion': inscripcion,
                                      'usuario': inscripcion.user,
-        },
-            enqueued=True,
-            user=request.user,
-            upfile=None)
+                                 },
+                                 enqueued=True,
+                                 user=request.user,
+                                 upfile=None)
     messages.success(request, 'Mensajes enviados con éxito')
 
 
@@ -129,7 +132,6 @@ action_reenviar_notificacion.short_description = "Reenviar notificación de pago
 action_export_payment_option_stats.short_description = "Estadisticas según tipo de pago"
 action_export_stats_payments.short_description = "Estadísticas de pagos"
 action_stats_all_afiliation.short_description = "Estadisticas todos los afiliados"
-
 
 action_export_gustos.short_description = "Exportar Gustos"
 action_export_condicion_salud.short_description = "Exportar Condiciones de salud"
@@ -153,6 +155,11 @@ class InscripcionAdmin(admin.ModelAdmin):
                action_export_alimentary_restriction,
                action_pdf_certificaciones]
     form = form = make_ajax_form(Inscription, {'user': 'users'})
+
+
+@admin.register(EventECSL)
+class EventEcsl(admin.ModelAdmin):
+    pass
 
 
 @admin.register(Payment)
@@ -183,7 +190,4 @@ class PaymentAdmin(admin.ModelAdmin):
 admin.site.register(Gustos)
 admin.site.register(PaymentOption)
 admin.site.register(Becas)
-admin.site.register(EventECSL)
 admin.site.register(Package)
-
-admin.site.site_header = "ECSL Administración"

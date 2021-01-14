@@ -1,5 +1,6 @@
 {% load static %}
 {% load i18n %}
+{% load event_tag %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -92,13 +93,13 @@
                         <a>
                             <i class="fas fa-phone-square contact-container"></i>
                         </a>
-                        <label>00-00-00-00</label>
+                            <label>{% phone %}</label>
                     </li>
                     <li>
                         <a>
                             <i class="fas fa-map-marker-alt"></i>
                         </a>
-                        <label>San Jose, Costa Rica</label>
+                            <label>{% location %}</label>
                     </li>
                 </ul>
             </div>

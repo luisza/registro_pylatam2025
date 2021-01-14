@@ -37,6 +37,7 @@ else:
 
 INSTALLED_APPS = [
     'ecsl',
+    'captcha',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -168,7 +169,6 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', None)
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'Registro ECSL <not-reply@softwarelibre.ca>')
 
 
-MAX_INSCRIPTION = 250
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
     'django.contrib.auth.hashers.BCryptPasswordHasher',
@@ -191,6 +191,10 @@ CELERYBEAT_SCHEDULE = {
     'send_daily_emails': {
         'task': 'async_notifications.tasks.send_daily',
         'schedule': crontab(minute='*/10',),
+    },
+    'send_midnight': {
+        'task': 'ecsl.tasks.checking_proposal_date',
+        'schedule': crontab(minute=0, hour=0),
     },
 }
 
