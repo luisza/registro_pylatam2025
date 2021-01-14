@@ -226,6 +226,14 @@ class PaymentUpdate(UpdateView):
         return UpdateView.dispatch(self, request, *args, **kwargs)
 
     def form_valid(self, form):
+        current_event = EventECSL.objects.filter(current=True).first()
+        alreadyPaid = Payment.objects.filter(user=self.request.user, event=current_event).first()
+
+        if alreadyPaid and alreadyPaid.confirmado==True and alreadyPaid.option.name == 'Paypal':
+            messages.success(
+                self.request, _("There was no transaction, you already paid for this event"))
+            return redirect(reverse_lazy('index'))
+
         messages.success(self.request, _('Register updated successfully'))
         response = UpdateView.form_valid(self, form)
         send_mail('Cambio en la suscripción de %s' % (self.object.user.get_full_name(),),
@@ -282,6 +290,12 @@ def process_payment(request, text):
     host = request.get_host()
     inscription = request.user.inscription
     price = Package.objects.filter(name=text).first()
+
+    if not price:
+        messages.success(
+            request, _("Invalid Package"))
+        return redirect(reverse_lazy('index'))
+
     current_event = EventECSL.objects.filter(current=True).first()
     number = random.randint(1000, 9999)
     invoice = f"{request.user} -ECSL- {current_event.start_date.year} - {number}"
@@ -300,14 +314,30 @@ def process_payment(request, text):
                                               reverse('payment_cancelled')),
     }
 
-    alreadyPaid = Payment.objects.filter(user=request.user).first()
-    if alreadyPaid:
+    alreadyPaid = Payment.objects.filter(user=request.user, event=current_event).first()
+
+
+    if alreadyPaid and alreadyPaid.confirmado==True:
         messages.success(
-            request, _("No action, you already paid for this event"))
+            request, _("There was no transaction, you already paid for this event"))
         return redirect(reverse_lazy('index'))
     else:
+
+        if price.price <= 0.00:
+            if alreadyPaid and alreadyPaid.confirmado == False and alreadyPaid.option.name == 'Paypal':
+                alreadyPaid.delete()
+            p_Option = PaymentOption.objects.filter(name='Paypal').first()
+            payment = Payment(user=request.user, confirmado=True, event=current_event, option=p_Option, package=price)
+            payment.save()
+            messages.success(
+                request, _("You registration is complete, this package is free"))
+            return redirect(reverse_lazy('index'))
+
+        if alreadyPaid and alreadyPaid.confirmado==False and  alreadyPaid.option.name == 'Paypal':
+            alreadyPaid.delete()
+
         p_Option = PaymentOption.objects.filter(name='Paypal').first()
-        payment = Payment(user=request.user, confirmado=False, event=current_event, option=p_Option)
+        payment = Payment(user=request.user, confirmado=False, event=current_event, option=p_Option, package=price)
         payment.save()
         form = PayPalPaymentsForm(initial=paypal_dict)
     return render(request, 'ecsl/process_payment.html', {'order': order, 'form': form, 'price': price})

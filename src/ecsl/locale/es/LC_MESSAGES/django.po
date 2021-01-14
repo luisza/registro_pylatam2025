@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ECSL V1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-14 10:29-0600\n"
+"POT-Creation-Date: 2021-01-14 11:30-0600\n"
 "PO-Revision-Date: 2017-06-04 17:12-0600\n"
 "Last-Translator: Luis Zárate <luis.zarate@solvosoft.com>\n"
 "Language-Team: ES <ES@li.org>\n"
@@ -696,6 +696,8 @@ msgid "Scholarship Detail"
 msgstr "Detalles de beca"
 
 #: ecsl/templates/ecsl/becas_detail.html:16
+#, fuzzy
+#| msgid "Name"
 msgid "State"
 msgstr "Estado"
 
@@ -803,7 +805,7 @@ msgstr "Perfil ha sido creado satisfactoriamente, por favor registre el evento"
 msgid "Profile updated successfully"
 msgstr "Perfil actualizado satisfactoriamente"
 
-#: ecsl/views.py:181 ecsl/views.py:359
+#: ecsl/views.py:181 ecsl/views.py:389
 msgid ""
 "Sorry, first you have to update your data and then proceed with the "
 "registration"
@@ -822,23 +824,33 @@ msgstr ""
 "Felicidades su registro se ha completado satisfactoriamente, por favor "
 "regístrese en las charlas"
 
-#: ecsl/views.py:229
+#: ecsl/views.py:234 ecsl/views.py:322
+msgid "There was no transaction, you already paid for this event"
+msgstr "No hubo transacción, ya se pagó por este evento"
+
+#: ecsl/views.py:237
 msgid "Register updated successfully"
 msgstr "Registro actualizado satisfactoriamente"
 
-#: ecsl/views.py:272
+#: ecsl/views.py:280
+#, fuzzy
+#| msgid "Thank! Your message was sent successfully"
 msgid "Thanks! Your message was sent successfully"
-msgstr "¡Gracias! Mensaje enviado con éxito"
+msgstr "Gracias! Mensaje enviado con éxito"
 
-#: ecsl/views.py:274
+#: ecsl/views.py:282
 msgid "Wrong captcha, try again"
 msgstr "Captcha inválido, intente de nuevo"
 
-#: ecsl/views.py:306
-msgid "No action, you already paid for this event"
-msgstr "No hubo transacción, ya se pago por este evento"
+#: ecsl/views.py:296
+msgid "Invalid Package"
+msgstr "Paquete inválido"
 
-#: ecsl/views.py:369
+#: ecsl/views.py:333
+msgid "You registration is complete, this package is free"
+msgstr "El registro está listo, el paquete es gratuito"
+
+#: ecsl/views.py:399
 #, python-format
 msgid ""
 "Sorry, but the scholarship application period is not available at the time. "
@@ -847,11 +859,11 @@ msgstr ""
 "Lo lamentamos, pero el período para solicitar una beca no está disponible "
 "por el momento. Período para aplicar: %(start)s - %(end)s"
 
-#: ecsl/views.py:379
+#: ecsl/views.py:409
 msgid "We have received your scholarship application successfully"
 msgstr "Hemos recibido su solicitud de beca satisfactoriamente"
 
-#: ecsl/views.py:393
+#: ecsl/views.py:423
 msgid ""
 "Sorry, but the scholarship application you are looking for does not exist"
 msgstr "Lo lamentamos, pero la solicitud de beca que está buscando no existe"
@@ -948,6 +960,11 @@ msgstr ""
 "Lo sentimos! No estamos en periodo de envíos de propuestas para charlas"
 
 #, fuzzy
+#~| msgid "There was no transaction, you already paid for this event"
+#~ msgid "No action, you already paid for this event"
+#~ msgstr "No hubo transacción, ya se pagó por este evento"
+
+#, fuzzy
 #~| msgid "Central American Free Software Meeting "
 #~ msgid "Central American Free Software Meeting"
 #~ msgstr "Encuentro Centroamericano de Software Libre "
@@ -1007,6 +1024,11 @@ msgstr ""
 
 #, fuzzy
 #~| msgid "intermediate"
+#~ msgid "Interval Period"
+#~ msgstr "Intermedio"
+
+#, fuzzy
+#~| msgid "intermediate"
 #~ msgid "interval"
 #~ msgstr "Intermedio"
 
@@ -1053,6 +1075,11 @@ msgstr ""
 #, fuzzy
 #~| msgid "Name"
 #~ msgid "Task Named Arguments"
+#~ msgstr "Nombre"
+
+#, fuzzy
+#~| msgid "Name"
+#~ msgid "Task State"
 #~ msgstr "Nombre"
 
 #, fuzzy
