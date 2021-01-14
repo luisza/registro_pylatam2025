@@ -80,7 +80,7 @@ class ContactForm(forms.Form):
         max_length=50,
         widget=forms.TextInput(
             attrs={
-                'placeholder': 'Name',
+                'placeholder': _('Name'),
                 'class': 'form-control',
             }
         )
@@ -92,7 +92,7 @@ class ContactForm(forms.Form):
         max_length=50,
         widget=forms.EmailInput(
             attrs={
-                'placeholder': 'Email',
+                'placeholder': _('Email'),
                 'class': 'form-control',
             }
         )
@@ -104,7 +104,7 @@ class ContactForm(forms.Form):
         max_length=150,
         widget=forms.TextInput(
             attrs={
-                'placeholder': 'Subject',
+                'placeholder': _('Subject'),
                 'class': 'form-control',
             }
         )
@@ -114,7 +114,7 @@ class ContactForm(forms.Form):
         label=False,
         widget=forms.Textarea(
             attrs={
-                'placeholder': 'Message',
+                'placeholder': _('Message'),
                 'class': 'form-control',
             }
         )

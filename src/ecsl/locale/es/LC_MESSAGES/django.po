@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ECSL V1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-13 15:17-0600\n"
+"POT-Creation-Date: 2021-01-14 10:29-0600\n"
 "PO-Revision-Date: 2017-06-04 17:12-0600\n"
 "Last-Translator: Luis Zárate <luis.zarate@solvosoft.com>\n"
 "Language-Team: ES <ES@li.org>\n"
@@ -18,7 +18,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.6.10\n"
 
-#: ecsl/charlas.py:97 ecsl/charlas.py:143
+#: ecsl/charlas.py:77
+msgid "Sorry, we need an event to display the schedule"
+msgstr "Lo sentimos, pero necesitamos eventos para desplegar la agenda."
+
+#: ecsl/charlas.py:105 ecsl/charlas.py:151
 msgid "The payment is still pending to be confirmed"
 msgstr "El pago aún esta pendiente de confirmar."
 
@@ -29,6 +33,22 @@ msgstr "Nombre"
 #: ecsl/forms.py:13
 msgid "Last name"
 msgstr "Apellidos"
+
+#: ecsl/forms.py:83 proposal/models.py:9 proposal/models.py:21
+msgid "Name"
+msgstr "Nombre"
+
+#: ecsl/forms.py:95
+msgid "Email"
+msgstr "Correo"
+
+#: ecsl/forms.py:107
+msgid "Subject"
+msgstr "Asunto"
+
+#: ecsl/forms.py:117
+msgid "Message"
+msgstr "Mensaje"
 
 #: ecsl/models.py:9 ecsl/models.py:24 ecsl/models.py:35 ecsl/models.py:191
 #: proposal/models.py:93
@@ -105,7 +125,7 @@ msgstr ""
 "ECSL por favor comente en este espacio."
 
 #: ecsl/models.py:128 ecsl/models.py:165 ecsl/models.py:195 ecsl/models.py:217
-#: ecsl/models.py:247 proposal/models.py:64
+#: ecsl/models.py:274 proposal/models.py:64
 msgid "Event"
 msgstr "Evento"
 
@@ -155,7 +175,7 @@ msgstr "Fecha Final"
 
 #: ecsl/models.py:233
 msgid "Location"
-msgstr "Registro"
+msgstr "Sede"
 
 #: ecsl/models.py:234 proposal/models.py:50
 msgid "Description"
@@ -178,46 +198,89 @@ msgid "Certificate Header Image"
 msgstr "Imagen cabecera certificado"
 
 #: ecsl/models.py:239 ecsl/models.py:241
-msgid "Heigth 70px, Width 800px"
+msgid "Height 70px, Width 800px"
 msgstr "Altura 70px, Ancho 800px"
 
 #: ecsl/models.py:240
 msgid "Certificate Footer Image"
 msgstr "Imagen pie de página certificado"
 
+#: ecsl/models.py:242
+msgid "Phone"
+msgstr "Teléfono"
+
+#: ecsl/models.py:243
+msgid "Start Date Proposal"
+msgstr "Fecha Inicio de propuestas"
+
 #: ecsl/models.py:244
+msgid "End Date Proposal"
+msgstr "Fecha Final de propuestas"
+
+#: ecsl/models.py:245
+msgid "Email Event"
+msgstr "Correo del Evento"
+
+#: ecsl/models.py:246
+msgid "Scholarship application start period"
+msgstr "Inicio de período para solicitar beca"
+
+#: ecsl/models.py:247
+msgid "Scholarship application end period"
+msgstr "Finalización de período para solicitar beca"
+
+#: ecsl/models.py:248
+msgid "Maximum Inscriptions"
+msgstr "Inscripciones máximas"
+
+#: ecsl/models.py:271 ecsl/templates/index.html:8
 msgid "Central American Free Software Meeting "
 msgstr "Encuentro Centroamericano de Software Libre "
 
-#: ecsl/models.py:248
-#, fuzzy
-#| msgid "Event"
+#: ecsl/models.py:275
 msgid "Events"
-msgstr "Evento"
+msgstr "Eventos"
 
-#: ecsl/templates/base.html:35
+#: ecsl/tasks.py:23
+#, python-format
+msgid ""
+"Dear user, we want to inform you that the speech proposals period for ECSL "
+"%(ecsl)s %(year)s is active from %(start)s to %(end)s.Please follow this "
+"link to teh speech from request:"
+msgstr ""
+"Estimado(a):\n"
+"Le informamos que el período para la recepción de propuestas del ECSL "
+"%(ecsl)s %(year)s está activo\n"
+"del %(start)s al %(end)s.\n"
+"Siga el siguiente enlace hacia el formulario de propuestas para charlas:"
+
+#: ecsl/tasks.py:32
+msgid "Proposal Speech Period ECSL-{}"
+msgstr "Periodo de propuestas"
+
+#: ecsl/templates/base.html:36
 msgid "Register"
 msgstr "Registro"
 
-#: ecsl/templates/base.html:46
+#: ecsl/templates/base.html:47
 msgid "User:"
 msgstr "Usuario:"
 
-#: ecsl/templates/base.html:51
+#: ecsl/templates/base.html:52
 msgid "Profile"
 msgstr "Perfil"
 
-#: ecsl/templates/base.html:53
+#: ecsl/templates/base.html:54
 #: ecsl/templates/django_registration/password_change_form.html:4
 #: ecsl/templates/django_registration/password_change_form.html:10
 msgid "Change password"
 msgstr "Cambiar contraseña"
 
-#: ecsl/templates/base.html:55
+#: ecsl/templates/base.html:56
 msgid "Log out"
 msgstr "Salir"
 
-#: ecsl/templates/base.html:58
+#: ecsl/templates/base.html:59
 msgid "Log in"
 msgstr "Iniciar sesión"
 
@@ -235,7 +298,7 @@ msgstr "Enviar"
 
 #: ecsl/templates/django_registration/activate.html:5
 msgid "Account Activation Error"
-msgstr "Error en la cuenta de activación"
+msgstr "Error en la activación de la cuenta"
 
 #: ecsl/templates/django_registration/activate.html:6
 msgid "There was a problem activating your account. For more help please email"
@@ -343,6 +406,17 @@ msgstr "días."
 msgid "[CAFSM]Activation link"
 msgstr "[ECSL]Enlace de activación"
 
+#: ecsl/templates/django_registration/activation_failed.html:4
+#: ecsl/templates/django_registration/activation_failed.html:6
+msgid "Register Failed"
+msgstr "Registro Fallido"
+
+#: ecsl/templates/django_registration/activation_failed.html:8
+msgid "There was a problem registering this user, please go to the index page"
+msgstr ""
+"Hubo un problema registrando a este usuario,por favor vuelva a la página "
+"principal."
+
 #: ecsl/templates/django_registration/admin_approve.html:4
 msgid "Approval Failure"
 msgstr "Aprobación fallida"
@@ -375,7 +449,7 @@ msgstr ""
 
 #: ecsl/templates/django_registration/admin_approve_complete_email.html:14
 msgid "log in."
-msgstr "Iniciar sesión."
+msgstr "iniciar sesión."
 
 #: ecsl/templates/django_registration/admin_approve_complete_email.txt:2
 msgid ""
@@ -462,7 +536,7 @@ msgstr "Contraseña cambiada"
 
 #: ecsl/templates/django_registration/password_change_done.html:7
 msgid "Password successfully changed!"
-msgstr "Contraseña cambiada satisfactoriamente"
+msgstr "¡Contraseña cambiada satisfactoriamente!"
 
 #: ecsl/templates/django_registration/password_reset_complete.html:4
 msgid "Password reset complete"
@@ -470,7 +544,7 @@ msgstr "Reinicio de contraseña completo"
 
 #: ecsl/templates/django_registration/password_reset_complete.html:8
 msgid "Your password has been reset!"
-msgstr "Su contraseña ha sido cambiada"
+msgstr "¡Su contraseña ha sido cambiada!"
 
 #: ecsl/templates/django_registration/password_reset_complete.html:9
 #, python-format
@@ -625,7 +699,7 @@ msgstr "Detalles de beca"
 #, fuzzy
 #| msgid "Name"
 msgid "State"
-msgstr "Nombre"
+msgstr "Estado"
 
 #: ecsl/templates/ecsl/becas_detail.html:25
 msgid "Reasons for applying to the scholarship"
@@ -647,7 +721,7 @@ msgstr "Observaciones adicionales"
 msgid "Create Scholarship"
 msgstr "Crear beca"
 
-#: ecsl/templates/ecsl/inscription_form.html:10
+#: ecsl/templates/ecsl/inscription_form.html:10 ecsl/templates/index.html:37
 msgid "My profile"
 msgstr "Mi perfil"
 
@@ -681,51 +755,68 @@ msgstr "Registrarse con Paypal."
 msgid "Pay with paypal."
 msgstr "Pagar con Paypal."
 
+#: ecsl/templates/index.html:40 ecsl/templates/index.html:60
+#: ecsl/templates/registration/login.html:27
+msgid "Sign Up"
+msgstr "Registrarme"
+
+#: ecsl/templates/index.html:43
+msgid "Scholarship"
+msgstr "Becas"
+
+#: ecsl/templates/index.html:48
+msgid "My speeches"
+msgstr "Mis exposiciones"
+
+#: ecsl/templates/index.html:52
+msgid "My agenda"
+msgstr "Mi agenda"
+
+#: ecsl/templates/index.html:56 ecsl/templates/registration/login.html:11
+msgid "Login"
+msgstr "Iniciar sesión"
+
+#: ecsl/templates/index.html:65
+msgid "Agenda"
+msgstr "Agenda"
+
 #: ecsl/templates/no_events.html:18
 msgid "Sorry, but there are no events at the time."
 msgstr "Lo sentimos, pero no hay eventos por el momento."
-
-#: ecsl/templates/registration/login.html:11
-msgid "Login"
-msgstr "Iniciar sesión"
 
 #: ecsl/templates/registration/login.html:25
 msgid "Having trouble logging in?"
 msgstr "¿Problemas al iniciar sesión?"
 
-#: ecsl/templates/registration/login.html:27
-msgid "Sign Up"
-msgstr "Registrarme"
-
 #: ecsl/templates/registration/login.html:28
 msgid "Forgot your password?"
 msgstr "¿Olvidó su contraseña?"
 
-#: ecsl/views.py:83
+#: ecsl/views.py:87
 #, python-format
 msgid "from %(start)s to %(end)s"
 msgstr "From %(start)s to %(end)s"
 
-#: ecsl/views.py:100
+#: ecsl/views.py:105
 msgid "Profile created successfully, please register in the event"
 msgstr "Perfil ha sido creado satisfactoriamente, por favor registre el evento"
 
-#: ecsl/views.py:139
+#: ecsl/views.py:144
 msgid "Profile updated successfully"
 msgstr "Perfil actualizado satisfactoriamente"
 
-#: ecsl/views.py:176 ecsl/views.py:379
+#: ecsl/views.py:181 ecsl/views.py:359
 msgid ""
 "Sorry, first you have to update your data and then proceed with the "
 "registration"
 msgstr ""
 "Lo lamentamos, primero actualiza tus datos y luego procede con el registro"
 
-#: ecsl/views.py:182
+#: ecsl/views.py:187
 msgid "Sorry, there are no more spaces available"
 msgstr "Lo lamentamos, ya no hay más espacio disponible"
 
-#: ecsl/views.py:190
+#: ecsl/views.py:195
 msgid ""
 "Congratulations, your registration has been completed successfully, please "
 "enroll into the speeches"
@@ -750,7 +841,24 @@ msgid "Invalid Package"
 msgstr "Paquete inválido"
 
 #: ecsl/views.py:319 ecsl/views.py:327
+#: ecsl/views.py:274
+msgid "Wrong captcha, try again"
+msgstr "Captcha inválido, intente de nuevo"
 
+#: ecsl/views.py:306
+msgid "No action, you already paid for this event"
+msgstr "No hubo transacción, ya se pago por este evento"
+
+#: ecsl/views.py:369
+#, python-format
+msgid ""
+"Sorry, but the scholarship application period is not available at the time. "
+"Application period: %(start)s - %(end)s"
+msgstr ""
+"Lo lamentamos, pero el período para solicitar una beca no está disponible "
+"por el momento. Período para aplicar: %(start)s - %(end)s"
+
+#: ecsl/views.py:379
 msgid "You registration is complete, this package is free"
 msgstr "EL registro esta listo, el paquete es gratuito"
 
@@ -759,9 +867,10 @@ msgstr "EL registro esta listo, el paquete es gratuito"
 msgid "We have received your scholarship application successfully"
 msgstr "Hemos recibido su solicitud de beca satisfactoriamente"
 
-#: proposal/models.py:9 proposal/models.py:21
-msgid "Name"
-msgstr "Nombre"
+#: ecsl/views.py:393
+msgid ""
+"Sorry, but the scholarship application you are looking for does not exist"
+msgstr "Lo lamentamos, pero la solicitud de beca que está buscando no existe"
 
 #: proposal/models.py:40
 msgid "everyone"
@@ -813,27 +922,27 @@ msgstr "Tipo de charla"
 msgid "Presentation"
 msgstr "Presentación"
 
-#: proposal/templates/proposal/speech_list.html:8
+#: proposal/templates/proposal/speech_list.html:9
 msgid "Add"
 msgstr "Agregar"
 
-#: proposal/templates/proposal/speech_list.html:20
+#: proposal/templates/proposal/speech_list.html:22
 msgid "Edit"
 msgstr "Editar"
 
-#: proposal/templates/proposal/speech_list.html:23
+#: proposal/templates/proposal/speech_list.html:25
 msgid "Delete"
 msgstr "Eliminar"
 
-#: proposal/templates/proposal/speech_list.html:36
+#: proposal/templates/proposal/speech_list.html:38
 msgid "Previous"
 msgstr "Anterior"
 
-#: proposal/templates/proposal/speech_list.html:41
+#: proposal/templates/proposal/speech_list.html:43
 msgid "Page"
 msgstr "Página"
 
-#: proposal/templates/proposal/speech_list.html:46
+#: proposal/templates/proposal/speech_list.html:48
 msgid "Next"
 msgstr "Siguiente"
 
@@ -841,13 +950,36 @@ msgstr "Siguiente"
 msgid "Are you sure you want to delete"
 msgstr "Está seguro que desea eliminar"
 
-#: proposal/views.py:26
+#: proposal/views.py:34 proposal/views.py:93
 msgid ""
 "We are sorry! You have to be registered as a system user to be able to senda "
 "proposal speech"
 msgstr ""
 "Lo sentimos ! Para poder enviar una propuesta de charla tiene que estar "
 "registrado como usuario en nuestro sistema."
+
+#: proposal/views.py:50 proposal/views.py:109
+msgid "We are sorry! The proposal speech period is not active"
+msgstr ""
+"Lo sentimos! No estamos en periodo de envíos de propuestas para charlas"
+
+#, fuzzy
+#~| msgid "Central American Free Software Meeting "
+#~ msgid "Central American Free Software Meeting"
+#~ msgstr "Encuentro Centroamericano de Software Libre "
+
+#, fuzzy
+#~| msgid "My profile"
+#~ msgid "My profiel"
+#~ msgstr "Mi perfil"
+
+#~ msgid "Notification Period"
+#~ msgstr "Notificación de periodo"
+
+#, fuzzy
+#~| msgid "Account Activated"
+#~ msgid "Account Failed"
+#~ msgstr "Cuenta activa"
 
 #, fuzzy
 #~| msgid "Skill level required"

@@ -64,8 +64,8 @@ urlpatterns = [
     re_path(r'becas/detail/(?P<pk>\d+)$', views.BecasDetail.as_view(), name="becas-detail"),
     path('contact/', views.contactUs, name='contact-us'),
     path('contact/send/', views.contact, name='contact'),
-
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  #+ views.becas
+    path('captcha/', include('captcha.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  #+ views.becas
 
 
 if settings.DEBUG:
