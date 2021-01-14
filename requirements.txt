@@ -15,3 +15,4 @@ django-celery-results==2.0.0
 xhtml2pdf==0.2.5
 django-markitup==4.0.0 
 django-paypal
+django-simple-captcha
