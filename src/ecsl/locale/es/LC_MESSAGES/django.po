@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ECSL V1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-14 09:34-0600\n"
+"POT-Creation-Date: 2021-01-14 10:17-0600\n"
 "PO-Revision-Date: 2017-06-04 17:12-0600\n"
 "Last-Translator: Luis Zárate <luis.zarate@solvosoft.com>\n"
 "Language-Team: ES <ES@li.org>\n"
@@ -18,7 +18,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.6.10\n"
 
-#: ecsl/charlas.py:97 ecsl/charlas.py:143
+#: ecsl/charlas.py:77
+msgid "Sorry, we need an event to display the schedule"
+msgstr "Lo sentimos, pero necesitamos eventos para desplegar la agenda."
+
+#: ecsl/charlas.py:105 ecsl/charlas.py:151
 msgid "The payment is still pending to be confirmed"
 msgstr "El pago aún esta pendiente de confirmar."
 
