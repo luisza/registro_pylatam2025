@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 
 # Create your models here.
 
@@ -239,6 +240,26 @@ class EventECSL(models.Model):
                              blank=True, help_text=_("Heigth 70px, Width 800px"))
     certificate_Footer = models.ImageField(verbose_name=_("Certificate Footer Image"), null=True, upload_to='img/logos/',
                              blank=True, help_text=_("Heigth 70px, Width 800px"))
+    phone_event = models.CharField(max_length=15, null=True, verbose_name=_("Phone"))
+    start_date_proposal = models.DateField(verbose_name=_("Start Date Proposal"), null=True)
+    end_date_proposal = models.DateField(verbose_name=_("End Date Proposal"), null=True)
+    email_event = models.CharField(max_length=50, null=True, verbose_name=_('Email Event'))
+
+    @property
+    def checking_period(self):
+        current_date = timezone.localtime().date()
+        if self.start_date_proposal <= current_date and current_date <= self.end_date_proposal:
+            return True
+        else:
+            return False
+
+    @property
+    def checking_start_date(self):
+        current_date = timezone.localtime().date()
+        if self.start_date_proposal == current_date:
+            return True
+        else:
+            return False
 
     def __str__(self):
         return _("Central American Free Software Meeting ") + str(self.start_date.year)

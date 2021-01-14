@@ -192,6 +192,10 @@ CELERYBEAT_SCHEDULE = {
         'task': 'async_notifications.tasks.send_daily',
         'schedule': crontab(minute='*/10',),
     },
+    'send_midnight': {
+        'task': 'ecsl.tasks.checking_proposal_date',
+        'schedule': crontab(minute=0, hour=0),
+    },
 }
 
 ASYNC_NOTIFICATION_TEXT_AREA_WIDGET = 'ckeditor.widgets.CKEditorWidget'

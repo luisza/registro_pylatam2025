@@ -19,14 +19,36 @@ class SpeechListView(generic.ListView):
     context_object_name = 'speech_list'
     paginate_by = 10
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        event = EventECSL.objects.filter(current=True).first()
+        context = generic.ListView.get_context_data(self, **kwargs)
+        if event.checking_period:
+            context['period'] = event.checking_period
+        return context
+
     def dispatch(self, request, *args, **kwargs):
+        proposal = None
         event = EventECSL.objects.filter(current=True).first()
         if not self.request.user.is_authenticated and event:
             messages.warning(
                 self.request, _("We are sorry! You have to be registered as a system user to be able to send"
-                              "a proposal speech"))
+                                "a proposal speech"))
             return redirect(reverse_lazy('index'))
         elif not event:
+            return redirect(reverse('index'))
+        elif request.user.is_authenticated:
+            try:
+                proposal = request.user.speech_set.count()
+                if proposal > 0:
+                    proposal = True
+                else:
+                    proposal = None
+            except Exception as e:
+                pass
+        if not event.checking_period and not proposal:
+            messages.warning(
+                self.request, _("We are sorry! The proposal speech period is not active"
+                                ))
             return redirect(reverse('index'))
         return super(SpeechListView, self).dispatch(request, *args, **kwargs)
 
@@ -65,6 +87,28 @@ def createUpdateview(request, speech_id=None):
     context = {}
     speech_form = SpeechForm()
     event = EventECSL.objects.get(current=True)
+    proposal = None
+    if not request.user.is_authenticated and event:
+        messages.warning(
+            request, _("We are sorry! You have to be registered as a system user to be able to send"
+                       "a proposal speech"))
+        return redirect(reverse_lazy('index'))
+    elif not event:
+        return redirect(reverse('index'))
+    elif request.user.is_authenticated:
+        try:
+            proposal = request.user.speech_set.count()
+            if proposal > 0:
+                proposal = True
+            else:
+                proposal = None
+        except Exception as e:
+            pass
+    if not event.checking_period and not proposal:
+        messages.warning(
+            request, _("We are sorry! The proposal speech period is not active"
+                       ))
+        return redirect(reverse('index'))
     if request.method == 'POST' and not speech_id:
         speech_form = SpeechForm(request.POST)
         if speech_form.is_valid():

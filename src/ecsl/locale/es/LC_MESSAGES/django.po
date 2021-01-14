@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ECSL V1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-12 15:29-0600\n"
+"POT-Creation-Date: 2021-01-14 08:08-0600\n"
 "PO-Revision-Date: 2017-06-04 17:12-0600\n"
 "Last-Translator: Luis Zárate <luis.zarate@solvosoft.com>\n"
 "Language-Team: ES <ES@li.org>\n"
@@ -30,57 +30,73 @@ msgstr "Nombre"
 msgid "Last name"
 msgstr "Apellidos"
 
-#: ecsl/models.py:9 ecsl/models.py:24 ecsl/models.py:35 ecsl/models.py:191
+#: ecsl/forms.py:83 proposal/models.py:9 proposal/models.py:21
+msgid "Name"
+msgstr "Nombre"
+
+#: ecsl/forms.py:95
+msgid "Email"
+msgstr "Correo"
+
+#: ecsl/forms.py:107
+msgid "Subject"
+msgstr "Asunto"
+
+#: ecsl/forms.py:117
+msgid "Message"
+msgstr "Mensaje"
+
+#: ecsl/models.py:10 ecsl/models.py:25 ecsl/models.py:36 ecsl/models.py:192
 #: proposal/models.py:93
 msgid "Nombre"
 msgstr "Nombre"
 
-#: ecsl/models.py:11
+#: ecsl/models.py:12
 msgid "Identificación"
 msgstr "Identificación"
 
-#: ecsl/models.py:12
+#: ecsl/models.py:13
 msgid "Opción de envío"
 msgstr "Opción de envío"
 
-#: ecsl/models.py:80 ecsl/models.py:158 ecsl/models.py:207
+#: ecsl/models.py:81 ecsl/models.py:159 ecsl/models.py:208
 #: proposal/models.py:46
 msgid "Usuario"
 msgstr "Usuario"
 
-#: ecsl/models.py:83
+#: ecsl/models.py:84
 msgid "Identificación en su país/pasaporte"
 msgstr "Identificación en su país"
 
-#: ecsl/models.py:86
+#: ecsl/models.py:87
 msgid "Dirección en su país"
 msgstr "Dirección en su país"
 
-#: ecsl/models.py:89
+#: ecsl/models.py:90
 msgid "Fecha de Nacimiento"
 msgstr "Fecha de Nacimiento"
 
-#: ecsl/models.py:91
+#: ecsl/models.py:92
 msgid "Institución"
 msgstr "Institución"
 
-#: ecsl/models.py:93
+#: ecsl/models.py:94
 msgid "Género"
 msgstr "Género"
 
-#: ecsl/models.py:95
+#: ecsl/models.py:96
 msgid "Nacionalidad"
 msgstr "Nacionalidad"
 
-#: ecsl/models.py:97
+#: ecsl/models.py:98
 msgid "Si marcó otro indique el país de procedencia"
 msgstr "Si marcó otro indique el país de procedencia"
 
-#: ecsl/models.py:100
+#: ecsl/models.py:101
 msgid "Encuentros anteriores en los que ha participado"
 msgstr "Encuentros anteriores en los que ha participado"
 
-#: ecsl/models.py:102
+#: ecsl/models.py:103
 msgid ""
 "¿Tiene alguna necesidad específica de alimentación y hospedaje o alguna "
 "condición de salud especial?."
@@ -88,15 +104,15 @@ msgstr ""
 "¿Tiene alguna necesidad específica de alimentación y hospedaje o alguna "
 "condición de salud especial?."
 
-#: ecsl/models.py:104
+#: ecsl/models.py:105
 msgid "Condiciones de Salud"
 msgstr "Condiciones de Salud"
 
-#: ecsl/models.py:110
+#: ecsl/models.py:111
 msgid "Alguna otra observación sobre sus gustos, usos, costumbres y manías."
 msgstr "Alguna otra observación sobre sus gustos, usos, costumbres y manías."
 
-#: ecsl/models.py:114
+#: ecsl/models.py:115
 msgid ""
 "Si tiene algún comentario y/o si quiere colaborar con la organización del 9° "
 "ECSL por favor comente en este espacio."
@@ -104,120 +120,151 @@ msgstr ""
 "Si tiene algún comentario y/o si quiere colaborar con la organización del 9° "
 "ECSL por favor comente en este espacio."
 
-#: ecsl/models.py:128 ecsl/models.py:165 ecsl/models.py:195 ecsl/models.py:217
-#: ecsl/models.py:247 proposal/models.py:64
+#: ecsl/models.py:129 ecsl/models.py:166 ecsl/models.py:196 ecsl/models.py:218
+#: ecsl/models.py:268 proposal/models.py:64
 msgid "Event"
 msgstr "Evento"
 
-#: ecsl/models.py:143
+#: ecsl/models.py:144
 msgid "nombre"
 msgstr "Nombre"
 
-#: ecsl/models.py:144
+#: ecsl/models.py:145
 msgid "descripción"
 msgstr "Descripción"
 
-#: ecsl/models.py:145
+#: ecsl/models.py:146
 msgid "precio"
 msgstr "precio"
 
-#: ecsl/models.py:160
+#: ecsl/models.py:161
 msgid "Opción de pago"
 msgstr "Opción de pago"
 
-#: ecsl/models.py:162
+#: ecsl/models.py:163
 msgid "Id de transacción"
 msgstr "Id de transacción"
 
-#: ecsl/models.py:166
+#: ecsl/models.py:167
 msgid "Paquete"
 msgstr "Paquete"
 
-#: ecsl/models.py:192
+#: ecsl/models.py:193
 msgid "Web"
 msgstr "Web"
 
-#: ecsl/models.py:193
+#: ecsl/models.py:194
 msgid "logo"
 msgstr "Logo"
 
-#: ecsl/models.py:229
+#: ecsl/models.py:230
 msgid "Logo"
 msgstr "Logotipo"
 
-#: ecsl/models.py:231
+#: ecsl/models.py:232
 msgid "Start Date"
 msgstr "Fecha Inicio"
 
-#: ecsl/models.py:232
+#: ecsl/models.py:233
 msgid "End Date"
 msgstr "Fecha Final"
 
-#: ecsl/models.py:233
+#: ecsl/models.py:234
 msgid "Location"
 msgstr "Registro"
 
-#: ecsl/models.py:234 proposal/models.py:50
+#: ecsl/models.py:235 proposal/models.py:50
 msgid "Description"
 msgstr "Descripción"
 
-#: ecsl/models.py:235
+#: ecsl/models.py:236
 msgid "Current"
 msgstr "Evento Actual"
 
-#: ecsl/models.py:236
+#: ecsl/models.py:237
 msgid "First organizer"
 msgstr "Primer organizador"
 
-#: ecsl/models.py:237
+#: ecsl/models.py:238
 msgid "Second organizer"
 msgstr "Segundo organizador"
 
-#: ecsl/models.py:238
+#: ecsl/models.py:239
 msgid "Certificate Header Image"
 msgstr "Imagen cabecera certificado"
 
-#: ecsl/models.py:239 ecsl/models.py:241
+#: ecsl/models.py:240 ecsl/models.py:242
 msgid "Heigth 70px, Width 800px"
 msgstr "Altura 70px, Ancho 800px"
 
-#: ecsl/models.py:240
+#: ecsl/models.py:241
 msgid "Certificate Footer Image"
 msgstr "Imagen pie de página certificado"
 
+#: ecsl/models.py:243
+msgid "Phone"
+msgstr "Teléfono"
+
 #: ecsl/models.py:244
+msgid "Start Date Proposal"
+msgstr "Fecha Inicio de propuestas"
+
+#: ecsl/models.py:245
+msgid "End Date Proposal"
+msgstr "Fecha Final de propuestas"
+
+#: ecsl/models.py:246
+msgid "Email Event"
+msgstr "Correo del Evento"
+
+#: ecsl/models.py:265 ecsl/templates/index.html:8
 msgid "Central American Free Software Meeting "
 msgstr "Encuentro Centroamericano de Software Libre "
 
-#: ecsl/models.py:248
-#, fuzzy
-#| msgid "Event"
+#: ecsl/models.py:269
 msgid "Events"
 msgstr "Evento"
 
-#: ecsl/templates/base.html:35
+#: ecsl/tasks.py:23
+#, python-format
+msgid ""
+"Dear user, we want to inform you that the speech proposals period for ECSL "
+"%(ecsl)s %(year)s is active from %(start)s to %(end)s.Please follow this "
+"link to teh speech from request:"
+msgstr ""
+"Estimado(a):\n"
+"Le informamos que el período para la recepción de propuestas del ECSL "
+"%(ecsl)s %(year)s está activo\n"
+"del %(start)s al %(end)s.\n"
+"Siga el siguiente enlace hacia el formulario de propuestas para charlas:"
+
+#: ecsl/tasks.py:32
+msgid "Proposal Speech Period ECSL-{}"
+msgstr "Periodo de propuestas"
+
+#: ecsl/templates/base.html:36
 msgid "Register"
 msgstr "Registro"
 
-#: ecsl/templates/base.html:46
+#: ecsl/templates/base.html:47
 msgid "User:"
 msgstr "Usuario:"
 
-#: ecsl/templates/base.html:51
+#: ecsl/templates/base.html:52
 msgid "Profile"
 msgstr "Perfil"
 
-#: ecsl/templates/base.html:53
+#: ecsl/templates/base.html:54
 #: ecsl/templates/django_registration/password_change_form.html:4
 #: ecsl/templates/django_registration/password_change_form.html:10
 msgid "Change password"
 msgstr "Cambiar contraseña"
 
-#: ecsl/templates/base.html:55
+#: ecsl/templates/base.html:56
 msgid "Log out"
 msgstr "Salir"
 
-#: ecsl/templates/base.html:58
+#: ecsl/templates/base.html:59
 msgid "Log in"
 msgstr "Iniciar sesión"
 
@@ -647,7 +694,7 @@ msgstr "Observaciones adicionales"
 msgid "Create Scholarship"
 msgstr "Crear beca"
 
-#: ecsl/templates/ecsl/inscription_form.html:10
+#: ecsl/templates/ecsl/inscription_form.html:10 ecsl/templates/index.html:37
 msgid "My profile"
 msgstr "Mi perfil"
 
@@ -681,51 +728,68 @@ msgstr "Registrarse con Paypal."
 msgid "Pay with paypal."
 msgstr "Pagar con Paypal."
 
+#: ecsl/templates/index.html:40 ecsl/templates/index.html:60
+#: ecsl/templates/registration/login.html:27
+msgid "Sign Up"
+msgstr "Registrarme"
+
+#: ecsl/templates/index.html:43
+msgid "Scholarship"
+msgstr "Becas"
+
+#: ecsl/templates/index.html:48
+msgid "My speeches"
+msgstr "Mis exposiciones"
+
+#: ecsl/templates/index.html:52
+msgid "My agenda"
+msgstr "Mi agenda"
+
+#: ecsl/templates/index.html:56 ecsl/templates/registration/login.html:11
+msgid "Login"
+msgstr "Iniciar sesión"
+
+#: ecsl/templates/index.html:65
+msgid "Agenda"
+msgstr "Agenda"
+
 #: ecsl/templates/no_events.html:18
 msgid "Sorry, but there are no events at the time."
 msgstr "Lo sentimos, pero no hay eventos por el momento."
-
-#: ecsl/templates/registration/login.html:11
-msgid "Login"
-msgstr "Iniciar sesión"
 
 #: ecsl/templates/registration/login.html:25
 msgid "Having trouble logging in?"
 msgstr "¿Problemas al iniciar sesión?"
 
-#: ecsl/templates/registration/login.html:27
-msgid "Sign Up"
-msgstr "Registrarme"
-
 #: ecsl/templates/registration/login.html:28
 msgid "Forgot your password?"
 msgstr "¿Olvidó su contraseña?"
 
-#: ecsl/views.py:83
+#: ecsl/views.py:85
 #, python-format
 msgid "from %(start)s to %(end)s"
 msgstr "From %(start)s to %(end)s"
 
-#: ecsl/views.py:100
+#: ecsl/views.py:102
 msgid "Profile created successfully, please register in the event"
 msgstr "Perfil ha sido creado satisfactoriamente, por favor registre el evento"
 
-#: ecsl/views.py:139
+#: ecsl/views.py:141
 msgid "Profile updated successfully"
 msgstr "Perfil actualizado satisfactoriamente"
 
-#: ecsl/views.py:176 ecsl/views.py:344
+#: ecsl/views.py:178 ecsl/views.py:346
 msgid ""
 "Sorry, first you have to update your data and then proceed with the "
 "registration"
 msgstr ""
 "Lo lamentamos, primero actualiza tus datos y luego procede con el registro"
 
-#: ecsl/views.py:182
+#: ecsl/views.py:184
 msgid "Sorry, there are no more spaces available"
 msgstr "Lo lamentamos, ya no hay más espacio disponible"
 
-#: ecsl/views.py:190
+#: ecsl/views.py:192
 msgid ""
 "Congratulations, your registration has been completed successfully, please "
 "enroll into the speeches"
@@ -733,25 +797,21 @@ msgstr ""
 "Felicidades su registro se ha completado satisfactoriamente, por favor "
 "regístrese en las charlas"
 
-#: ecsl/views.py:224
+#: ecsl/views.py:226
 msgid "Register updated successfully"
 msgstr "Registro actualizado satisfactoriamente"
 
-#: ecsl/views.py:262
+#: ecsl/views.py:264
 msgid "Thank! Your message was sent successfully"
 msgstr "Gracias! Mensaje enviado con éxito"
 
-#: ecsl/views.py:292
+#: ecsl/views.py:294
 msgid "No action, you already paid for this event"
 msgstr "No hubo transacción, ya se pago por este evento"
 
-#: ecsl/views.py:355
+#: ecsl/views.py:357
 msgid "We have received your scholarship application successfully"
 msgstr "Hemos recibido su solicitud de beca satisfactoriamente"
-
-#: proposal/models.py:9 proposal/models.py:21
-msgid "Name"
-msgstr "Nombre"
 
 #: proposal/models.py:40
 msgid "everyone"
@@ -803,27 +863,27 @@ msgstr "Tipo de charla"
 msgid "Presentation"
 msgstr "Presentación"
 
-#: proposal/templates/proposal/speech_list.html:8
+#: proposal/templates/proposal/speech_list.html:9
 msgid "Add"
 msgstr "Agregar"
 
-#: proposal/templates/proposal/speech_list.html:20
+#: proposal/templates/proposal/speech_list.html:22
 msgid "Edit"
 msgstr "Editar"
 
-#: proposal/templates/proposal/speech_list.html:23
+#: proposal/templates/proposal/speech_list.html:25
 msgid "Delete"
 msgstr "Eliminar"
 
-#: proposal/templates/proposal/speech_list.html:36
+#: proposal/templates/proposal/speech_list.html:38
 msgid "Previous"
 msgstr "Anterior"
 
-#: proposal/templates/proposal/speech_list.html:41
+#: proposal/templates/proposal/speech_list.html:43
 msgid "Page"
 msgstr "Página"
 
-#: proposal/templates/proposal/speech_list.html:46
+#: proposal/templates/proposal/speech_list.html:48
 msgid "Next"
 msgstr "Siguiente"
 
@@ -831,13 +891,31 @@ msgstr "Siguiente"
 msgid "Are you sure you want to delete"
 msgstr "Está seguro que desea eliminar"
 
-#: proposal/views.py:26
+#: proposal/views.py:34 proposal/views.py:93
 msgid ""
 "We are sorry! You have to be registered as a system user to be able to senda "
 "proposal speech"
 msgstr ""
 "Lo sentimos ! Para poder enviar una propuesta de charla tiene que estar "
 "registrado como usuario en nuestro sistema."
+
+#: proposal/views.py:50 proposal/views.py:109
+msgid "We are sorry! The proposal speech period is not active"
+msgstr ""
+"Lo sentimos! No estamos en periodo de envíos de propuestas para charlas"
+
+#, fuzzy
+#~| msgid "Central American Free Software Meeting "
+#~ msgid "Central American Free Software Meeting"
+#~ msgstr "Encuentro Centroamericano de Software Libre "
+
+#, fuzzy
+#~| msgid "My profile"
+#~ msgid "My profiel"
+#~ msgstr "Mi perfil"
+
+#~ msgid "Notification Period"
+#~ msgstr "Notificación de periodo"
 
 #, fuzzy
 #~| msgid "Skill level required"
@@ -878,11 +956,6 @@ msgstr ""
 #~| msgid "novice"
 #~ msgid "nov"
 #~ msgstr "Básico"
-
-#, fuzzy
-#~| msgid "intermediate"
-#~ msgid "Interval Period"
-#~ msgstr "Intermedio"
 
 #, fuzzy
 #~| msgid "intermediate"
@@ -932,11 +1005,6 @@ msgstr ""
 #, fuzzy
 #~| msgid "Name"
 #~ msgid "Task Named Arguments"
-#~ msgstr "Nombre"
-
-#, fuzzy
-#~| msgid "Name"
-#~ msgid "Task State"
 #~ msgstr "Nombre"
 
 #, fuzzy

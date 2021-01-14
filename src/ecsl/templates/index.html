@@ -1,26 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% load i18n %}
 {% block content %}
 
     <div class="container">
-
         <div class="row">
-
-            <div class="col-md-8"><h1>Encuentro centroamericano de Software Libre </h1></div>
+            <div class="col-md-8"><h1>{% trans 'Central American Free Software Meeting ' %}</h1></div>
 
             <div class="col-md-2 ">
-                <div class="text-center ">
-                    <h4 class="text-warning">Descarga el app *actualizada 11-07</h4>
-                    <a class="text-info" href="https://ecsl2017.softwarelibre.ca/static/ecsl2017.apk"> Android 5.x o
-                        superior</a>
-                    <a class="text-info" href="https://ecsl2017.softwarelibre.ca/static/ecsl2017_4.x.apk"> Android 4.1 o
-                        superior</a>
 
-                    <a href="https://nubila.tech/"> <img href="https://nubila.tech/img/ico-nubila.png"/> Cortesía de
-                        nubila </a>
-
-                </div>
             </div>
         </div>
 
@@ -45,18 +33,37 @@
                     <div class="col-md-2">
                         <div class="btn-group-vertical">
                             {% if request.user.is_authenticated %}
-                                <a class="btn btn-default" href="{% url 'profile' %}">Mis datos</a>
-                                <a class="btn btn-warning" href="{% url 'payment' %}">Registro</a>
-                                <a class="btn btn-success" href="{% url 'becas-create' %}"> Becas </a>
-                                <a class="btn btn-default" href="{% url 'proposal:speech-list' %}">Mis exposiciones</a>
-                                <a class="btn btn-danger" href="{% url 'mi_agenda' %}"> Mi Agenda</a>
+                                <a class="btn btn-default" href="{% url 'profile' %}">
+                                    <i class="fas fa-id-card"></i> {% trans 'My profile' %}
+                                </a>
+                                <a class="btn btn-warning" href="{% url 'payment' %}">
+                                    <i class="fas fa-user-plus"></i> {% trans 'Sign Up' %}
+                                </a>
+                                <a class="btn btn-success" href="{% url 'becas-create' %}">
+                                    <i class="fas fa-money-check-alt"></i> {% trans 'Scholarship' %}
+                                </a>
+                                {% if period %}
+                                    <a class="btn btn-default"
+                                       href="{% url 'proposal:speech-list' %}">
+                                        <i class="fas fa-chalkboard-teacher"></i> {% trans 'My speeches' %}
+                                    </a>
+                                {% endif %}
+                                <a class="btn btn-danger" href="{% url 'mi_agenda' %}">
+                                    <i class="fas fa-calendar-week"></i> {% trans 'My agenda' %}
+                                </a>
                             {% else %}
-                                <a class="btn btn-info" href="{% url 'login' %}">Iniciar sesión</a>
+                                <a class="btn btn-info" href="{% url 'login' %}">
+                                    <i class="fas fa-sign-in-alt"></i> {% trans 'Login' %}
+                                </a>
                                 <a class="btn btn-default"
-                                   href="{% url 'django_registration_register' %}">Registrarme</a>
+                                   href="{% url 'django_registration_register' %}">
+                                    <i class="fas fa-user-plus"></i> {% trans 'Sign Up' %}
+                                </a>
 
                             {% endif %}
-                            <a class="btn btn-info" href="{% url 'list_charlas' %}">Agenda</a>
+                            <a class="btn btn-info" href="{% url 'list_charlas' %}">
+                               <i class="fas fa-calendar-alt"></i> {% trans 'Agenda' %}
+                            </a>
 
                         </div>
                     </div>
@@ -88,7 +95,6 @@
                 disfrute con nosotros. </h2>
         </div>
     </div>
-
 
     </div>
 
