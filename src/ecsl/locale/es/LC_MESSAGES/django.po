@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ECSL V1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-14 08:08-0600\n"
+"POT-Creation-Date: 2021-01-14 09:34-0600\n"
 "PO-Revision-Date: 2017-06-04 17:12-0600\n"
 "Last-Translator: Luis Zárate <luis.zarate@solvosoft.com>\n"
 "Language-Team: ES <ES@li.org>\n"
@@ -46,57 +46,57 @@ msgstr "Asunto"
 msgid "Message"
 msgstr "Mensaje"
 
-#: ecsl/models.py:10 ecsl/models.py:25 ecsl/models.py:36 ecsl/models.py:192
+#: ecsl/models.py:9 ecsl/models.py:24 ecsl/models.py:35 ecsl/models.py:191
 #: proposal/models.py:93
 msgid "Nombre"
 msgstr "Nombre"
 
-#: ecsl/models.py:12
+#: ecsl/models.py:11
 msgid "Identificación"
 msgstr "Identificación"
 
-#: ecsl/models.py:13
+#: ecsl/models.py:12
 msgid "Opción de envío"
 msgstr "Opción de envío"
 
-#: ecsl/models.py:81 ecsl/models.py:159 ecsl/models.py:208
+#: ecsl/models.py:80 ecsl/models.py:158 ecsl/models.py:207
 #: proposal/models.py:46
 msgid "Usuario"
 msgstr "Usuario"
 
-#: ecsl/models.py:84
+#: ecsl/models.py:83
 msgid "Identificación en su país/pasaporte"
 msgstr "Identificación en su país"
 
-#: ecsl/models.py:87
+#: ecsl/models.py:86
 msgid "Dirección en su país"
 msgstr "Dirección en su país"
 
-#: ecsl/models.py:90
+#: ecsl/models.py:89
 msgid "Fecha de Nacimiento"
 msgstr "Fecha de Nacimiento"
 
-#: ecsl/models.py:92
+#: ecsl/models.py:91
 msgid "Institución"
 msgstr "Institución"
 
-#: ecsl/models.py:94
+#: ecsl/models.py:93
 msgid "Género"
 msgstr "Género"
 
-#: ecsl/models.py:96
+#: ecsl/models.py:95
 msgid "Nacionalidad"
 msgstr "Nacionalidad"
 
-#: ecsl/models.py:98
+#: ecsl/models.py:97
 msgid "Si marcó otro indique el país de procedencia"
 msgstr "Si marcó otro indique el país de procedencia"
 
-#: ecsl/models.py:101
+#: ecsl/models.py:100
 msgid "Encuentros anteriores en los que ha participado"
 msgstr "Encuentros anteriores en los que ha participado"
 
-#: ecsl/models.py:103
+#: ecsl/models.py:102
 msgid ""
 "¿Tiene alguna necesidad específica de alimentación y hospedaje o alguna "
 "condición de salud especial?."
@@ -104,15 +104,15 @@ msgstr ""
 "¿Tiene alguna necesidad específica de alimentación y hospedaje o alguna "
 "condición de salud especial?."
 
-#: ecsl/models.py:105
+#: ecsl/models.py:104
 msgid "Condiciones de Salud"
 msgstr "Condiciones de Salud"
 
-#: ecsl/models.py:111
+#: ecsl/models.py:110
 msgid "Alguna otra observación sobre sus gustos, usos, costumbres y manías."
 msgstr "Alguna otra observación sobre sus gustos, usos, costumbres y manías."
 
-#: ecsl/models.py:115
+#: ecsl/models.py:114
 msgid ""
 "Si tiene algún comentario y/o si quiere colaborar con la organización del 9° "
 "ECSL por favor comente en este espacio."
@@ -120,110 +120,122 @@ msgstr ""
 "Si tiene algún comentario y/o si quiere colaborar con la organización del 9° "
 "ECSL por favor comente en este espacio."
 
-#: ecsl/models.py:129 ecsl/models.py:166 ecsl/models.py:196 ecsl/models.py:218
-#: ecsl/models.py:268 proposal/models.py:64
+#: ecsl/models.py:128 ecsl/models.py:165 ecsl/models.py:195 ecsl/models.py:217
+#: ecsl/models.py:274 proposal/models.py:64
 msgid "Event"
 msgstr "Evento"
 
-#: ecsl/models.py:144
+#: ecsl/models.py:143
 msgid "nombre"
 msgstr "Nombre"
 
-#: ecsl/models.py:145
+#: ecsl/models.py:144
 msgid "descripción"
 msgstr "Descripción"
 
-#: ecsl/models.py:146
+#: ecsl/models.py:145
 msgid "precio"
 msgstr "precio"
 
-#: ecsl/models.py:161
+#: ecsl/models.py:160
 msgid "Opción de pago"
 msgstr "Opción de pago"
 
-#: ecsl/models.py:163
+#: ecsl/models.py:162
 msgid "Id de transacción"
 msgstr "Id de transacción"
 
-#: ecsl/models.py:167
+#: ecsl/models.py:166
 msgid "Paquete"
 msgstr "Paquete"
 
-#: ecsl/models.py:193
+#: ecsl/models.py:192
 msgid "Web"
 msgstr "Web"
 
-#: ecsl/models.py:194
+#: ecsl/models.py:193
 msgid "logo"
 msgstr "Logo"
 
-#: ecsl/models.py:230
+#: ecsl/models.py:229
 msgid "Logo"
 msgstr "Logotipo"
 
-#: ecsl/models.py:232
+#: ecsl/models.py:231
 msgid "Start Date"
 msgstr "Fecha Inicio"
 
-#: ecsl/models.py:233
+#: ecsl/models.py:232
 msgid "End Date"
 msgstr "Fecha Final"
 
-#: ecsl/models.py:234
+#: ecsl/models.py:233
 msgid "Location"
-msgstr "Registro"
+msgstr "Sede"
 
-#: ecsl/models.py:235 proposal/models.py:50
+#: ecsl/models.py:234 proposal/models.py:50
 msgid "Description"
 msgstr "Descripción"
 
-#: ecsl/models.py:236
+#: ecsl/models.py:235
 msgid "Current"
 msgstr "Evento Actual"
 
-#: ecsl/models.py:237
+#: ecsl/models.py:236
 msgid "First organizer"
 msgstr "Primer organizador"
 
-#: ecsl/models.py:238
+#: ecsl/models.py:237
 msgid "Second organizer"
 msgstr "Segundo organizador"
 
-#: ecsl/models.py:239
+#: ecsl/models.py:238
 msgid "Certificate Header Image"
 msgstr "Imagen cabecera certificado"
 
-#: ecsl/models.py:240 ecsl/models.py:242
-msgid "Heigth 70px, Width 800px"
+#: ecsl/models.py:239 ecsl/models.py:241
+msgid "Height 70px, Width 800px"
 msgstr "Altura 70px, Ancho 800px"
 
-#: ecsl/models.py:241
+#: ecsl/models.py:240
 msgid "Certificate Footer Image"
 msgstr "Imagen pie de página certificado"
 
-#: ecsl/models.py:243
+#: ecsl/models.py:242
 msgid "Phone"
 msgstr "Teléfono"
 
-#: ecsl/models.py:244
+#: ecsl/models.py:243
 msgid "Start Date Proposal"
 msgstr "Fecha Inicio de propuestas"
 
-#: ecsl/models.py:245
+#: ecsl/models.py:244
 msgid "End Date Proposal"
 msgstr "Fecha Final de propuestas"
 
-#: ecsl/models.py:246
+#: ecsl/models.py:245
 msgid "Email Event"
 msgstr "Correo del Evento"
 
-#: ecsl/models.py:265 ecsl/templates/index.html:8
+#: ecsl/models.py:246
+msgid "Scholarship application start period"
+msgstr "Inicio de período para solicitar beca"
+
+#: ecsl/models.py:247
+msgid "Scholarship application end period"
+msgstr "Finalización de período para solicitar beca"
+
+#: ecsl/models.py:248
+msgid "Maximum Inscriptions"
+msgstr "Inscripciones máximas"
+
+#: ecsl/models.py:271 ecsl/templates/index.html:8
 msgid "Central American Free Software Meeting "
 msgstr "Encuentro Centroamericano de Software Libre "
 
-#: ecsl/models.py:269
+#: ecsl/models.py:275
 msgid "Events"
-msgstr "Evento"
+msgstr "Eventos"
 
 #: ecsl/tasks.py:23
 #, python-format
@@ -282,7 +294,7 @@ msgstr "Enviar"
 
 #: ecsl/templates/django_registration/activate.html:5
 msgid "Account Activation Error"
-msgstr "Error en la cuenta de activación"
+msgstr "Error en la activación de la cuenta"
 
 #: ecsl/templates/django_registration/activate.html:6
 msgid "There was a problem activating your account. For more help please email"
@@ -422,7 +434,7 @@ msgstr ""
 
 #: ecsl/templates/django_registration/admin_approve_complete_email.html:14
 msgid "log in."
-msgstr "Iniciar sesión."
+msgstr "iniciar sesión."
 
 #: ecsl/templates/django_registration/admin_approve_complete_email.txt:2
 msgid ""
@@ -509,7 +521,7 @@ msgstr "Contraseña cambiada"
 
 #: ecsl/templates/django_registration/password_change_done.html:7
 msgid "Password successfully changed!"
-msgstr "Contraseña cambiada satisfactoriamente"
+msgstr "¡Contraseña cambiada satisfactoriamente!"
 
 #: ecsl/templates/django_registration/password_reset_complete.html:4
 msgid "Password reset complete"
@@ -517,7 +529,7 @@ msgstr "Reinicio de contraseña completo"
 
 #: ecsl/templates/django_registration/password_reset_complete.html:8
 msgid "Your password has been reset!"
-msgstr "Su contraseña ha sido cambiada"
+msgstr "¡Su contraseña ha sido cambiada!"
 
 #: ecsl/templates/django_registration/password_reset_complete.html:9
 #, python-format
@@ -669,10 +681,8 @@ msgid "Scholarship Detail"
 msgstr "Detalles de beca"
 
 #: ecsl/templates/ecsl/becas_detail.html:16
-#, fuzzy
-#| msgid "Name"
 msgid "State"
-msgstr "Nombre"
+msgstr "Estado"
 
 #: ecsl/templates/ecsl/becas_detail.html:25
 msgid "Reasons for applying to the scholarship"
@@ -765,31 +775,31 @@ msgstr "¿Problemas al iniciar sesión?"
 msgid "Forgot your password?"
 msgstr "¿Olvidó su contraseña?"
 
-#: ecsl/views.py:85
+#: ecsl/views.py:87
 #, python-format
 msgid "from %(start)s to %(end)s"
 msgstr "From %(start)s to %(end)s"
 
-#: ecsl/views.py:102
+#: ecsl/views.py:105
 msgid "Profile created successfully, please register in the event"
 msgstr "Perfil ha sido creado satisfactoriamente, por favor registre el evento"
 
-#: ecsl/views.py:141
+#: ecsl/views.py:144
 msgid "Profile updated successfully"
 msgstr "Perfil actualizado satisfactoriamente"
 
-#: ecsl/views.py:178 ecsl/views.py:346
+#: ecsl/views.py:181 ecsl/views.py:359
 msgid ""
 "Sorry, first you have to update your data and then proceed with the "
 "registration"
 msgstr ""
 "Lo lamentamos, primero actualiza tus datos y luego procede con el registro"
 
-#: ecsl/views.py:184
+#: ecsl/views.py:187
 msgid "Sorry, there are no more spaces available"
 msgstr "Lo lamentamos, ya no hay más espacio disponible"
 
-#: ecsl/views.py:192
+#: ecsl/views.py:195
 msgid ""
 "Congratulations, your registration has been completed successfully, please "
 "enroll into the speeches"
@@ -797,21 +807,39 @@ msgstr ""
 "Felicidades su registro se ha completado satisfactoriamente, por favor "
 "regístrese en las charlas"
 
-#: ecsl/views.py:226
+#: ecsl/views.py:229
 msgid "Register updated successfully"
 msgstr "Registro actualizado satisfactoriamente"
 
-#: ecsl/views.py:264
-msgid "Thank! Your message was sent successfully"
-msgstr "Gracias! Mensaje enviado con éxito"
+#: ecsl/views.py:272
+msgid "Thanks! Your message was sent successfully"
+msgstr "¡Gracias! Mensaje enviado con éxito"
 
-#: ecsl/views.py:294
+#: ecsl/views.py:274
+msgid "Wrong captcha, try again"
+msgstr "Captcha inválido, intente de nuevo"
+
+#: ecsl/views.py:306
 msgid "No action, you already paid for this event"
 msgstr "No hubo transacción, ya se pago por este evento"
 
-#: ecsl/views.py:357
+#: ecsl/views.py:369
+#, python-format
+msgid ""
+"Sorry, but the scholarship application period is not available at the time. "
+"Application period: %(start)s - %(end)s"
+msgstr ""
+"Lo lamentamos, pero el período para solicitar una beca no está disponible "
+"por el momento. Período para aplicar: %(start)s - %(end)s"
+
+#: ecsl/views.py:379
 msgid "We have received your scholarship application successfully"
 msgstr "Hemos recibido su solicitud de beca satisfactoriamente"
+
+#: ecsl/views.py:393
+msgid ""
+"Sorry, but the scholarship application you are looking for does not exist"
+msgstr "Lo lamentamos, pero la solicitud de beca que está buscando no existe"
 
 #: proposal/models.py:40
 msgid "everyone"
