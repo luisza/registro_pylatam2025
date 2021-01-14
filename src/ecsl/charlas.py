@@ -70,6 +70,14 @@ class Charlas(CharlaContext, ListView):
     model = BlockSchedule
     order_by = "start_time"
 
+    def dispatch(self, request, *args, **kwargs):
+        current_event = EventECSL.objects.filter(current=True).first()
+        if not current_event:
+            messages.success(
+                self.request, _("Sorry, we need an event to display the schedule"))
+            return redirect('sineventos/')
+        return super(Charlas, self).dispatch(request, *args, **kwargs)
+
 
 @method_decorator(login_required, name='dispatch')
 class MyAgenda(CharlaContext, ListView):
