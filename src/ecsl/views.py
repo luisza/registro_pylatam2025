@@ -1,6 +1,4 @@
 import random
-
-from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.base import TemplateView
 from django.urls.base import reverse, reverse_lazy
@@ -15,7 +13,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from paypal.standard.forms import PayPalPaymentsForm
 from django.views.decorators.csrf import csrf_exempt
-from django.template.defaultfilters import date as _date
 
 from django.core.mail import send_mail
 # Create your views here.
@@ -35,19 +32,20 @@ class Index(TemplateView):
         current_event = EventECSL.objects.filter(current=True).first()
         if not current_event:
             return redirect('no-events')
-        else:
-            return super(Index, self).dispatch(request, *args, **kwargs)
+        return super(Index, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
+        proposal = None
         current_event = EventECSL.objects.filter(current=True).first()
 
         context = TemplateView.get_context_data(self, **kwargs)
         if self.request.user.is_authenticated:
-            proposal = None
             try:
                 proposal = self.request.user.speech_set.count()
                 if proposal > 0:
-                    proposal = reverse("speech:proposal_speech_list")
+                    proposal = True
+                else:
+                    proposal = False
             except Exception as e:
                 pass
             beca = Becas.objects.filter(user=self.request.user).first()
@@ -78,6 +76,10 @@ class Index(TemplateView):
 
         }
 
+        if current_event.checking_period:
+            context['period'] = current_event.checking_period
+        elif proposal:
+            context['period'] = True
         context['event_name'] = str(current_event)
         context['event_logo'] = current_event.logo
         date = _("from %(start)s to %(end)s")%{'start': current_event.start_date.strftime("%B %-d"),'end': current_event.end_date.strftime("%B %-d, %Y")}
