@@ -86,6 +86,11 @@ class MyAgenda(CharlaContext, ListView):
     order_by = "start_time"
 
     def dispatch(self, request, *args, **kwargs):
+        current_event = EventECSL.objects.filter(current=True).first()
+        if not current_event:
+            messages.success(
+                self.request, _("Sorry, we need an event to display the schedule"))
+            return redirect('sineventos/')
         pago = Payment.objects.filter(user=request.user).first()
         error = False
         try:

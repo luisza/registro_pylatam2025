@@ -170,6 +170,11 @@ class CreateRegister(CreateView):
     success_url = reverse_lazy('index')
 
     def dispatch(self, request, *args, **kwargs):
+        current_event = EventECSL.objects.filter(current=True).first()
+        if not current_event:
+            messages.success(
+                self.request, _("Sorry, there is no event for you to register"))
+            return redirect('no-events')
         error = False
         try:
             inscription = request.user.inscription
@@ -221,6 +226,11 @@ class PaymentUpdate(UpdateView):
     success_url = reverse_lazy('index')
 
     def dispatch(self, request, *args, **kwargs):
+        current_event = EventECSL.objects.filter(current=True).first()
+        if not current_event:
+            messages.success(
+                self.request, _("Sorry, there is no event for you to register"))
+            return redirect('no-events')
         self.payment = get_object_or_404(Payment, pk=kwargs['pk'],
                                          user=request.user)
         return UpdateView.dispatch(self, request, *args, **kwargs)
