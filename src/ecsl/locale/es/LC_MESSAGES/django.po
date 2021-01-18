@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ECSL V1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-14 11:30-0600\n"
+"POT-Creation-Date: 2021-01-15 13:30-0600\n"
 "PO-Revision-Date: 2017-06-04 17:12-0600\n"
 "Last-Translator: Luis Zárate <luis.zarate@solvosoft.com>\n"
 "Language-Team: ES <ES@li.org>\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.6.10\n"
 
-#: ecsl/charlas.py:77
+#: ecsl/charlas.py:77 ecsl/charlas.py:92
 msgid "Sorry, we need an event to display the schedule"
 msgstr "Lo sentimos, pero necesitamos eventos para desplegar la agenda."
 
-#: ecsl/charlas.py:105 ecsl/charlas.py:151
+#: ecsl/charlas.py:110 ecsl/charlas.py:156
 msgid "The payment is still pending to be confirmed"
 msgstr "El pago aún esta pendiente de confirmar."
 
@@ -805,18 +805,23 @@ msgstr "Perfil ha sido creado satisfactoriamente, por favor registre el evento"
 msgid "Profile updated successfully"
 msgstr "Perfil actualizado satisfactoriamente"
 
-#: ecsl/views.py:181 ecsl/views.py:389
+#: ecsl/views.py:176 ecsl/views.py:232
+
+msgid "Sorry, there is no event for you to register"
+msgstr "Lo sentimos, pero no hay evento para que se pueda registrar"
+
+#: ecsl/views.py:186 ecsl/views.py:399
 msgid ""
 "Sorry, first you have to update your data and then proceed with the "
 "registration"
 msgstr ""
 "Lo lamentamos, primero actualiza tus datos y luego procede con el registro"
 
-#: ecsl/views.py:187
+#: ecsl/views.py:192
 msgid "Sorry, there are no more spaces available"
 msgstr "Lo lamentamos, ya no hay más espacio disponible"
 
-#: ecsl/views.py:195
+#: ecsl/views.py:200
 msgid ""
 "Congratulations, your registration has been completed successfully, please "
 "enroll into the speeches"
@@ -824,33 +829,33 @@ msgstr ""
 "Felicidades su registro se ha completado satisfactoriamente, por favor "
 "regístrese en las charlas"
 
-#: ecsl/views.py:234 ecsl/views.py:322
+#: ecsl/views.py:244 ecsl/views.py:332
 msgid "There was no transaction, you already paid for this event"
 msgstr "No hubo transacción, ya se pagó por este evento"
 
-#: ecsl/views.py:237
+#: ecsl/views.py:247
 msgid "Register updated successfully"
 msgstr "Registro actualizado satisfactoriamente"
 
-#: ecsl/views.py:280
+#: ecsl/views.py:290
 #, fuzzy
 #| msgid "Thank! Your message was sent successfully"
 msgid "Thanks! Your message was sent successfully"
 msgstr "Gracias! Mensaje enviado con éxito"
 
-#: ecsl/views.py:282
+#: ecsl/views.py:292
 msgid "Wrong captcha, try again"
 msgstr "Captcha inválido, intente de nuevo"
 
-#: ecsl/views.py:296
+#: ecsl/views.py:306
 msgid "Invalid Package"
 msgstr "Paquete inválido"
 
-#: ecsl/views.py:333
+#: ecsl/views.py:343
 msgid "You registration is complete, this package is free"
 msgstr "El registro está listo, el paquete es gratuito"
 
-#: ecsl/views.py:399
+#: ecsl/views.py:409
 #, python-format
 msgid ""
 "Sorry, but the scholarship application period is not available at the time. "
@@ -859,11 +864,11 @@ msgstr ""
 "Lo lamentamos, pero el período para solicitar una beca no está disponible "
 "por el momento. Período para aplicar: %(start)s - %(end)s"
 
-#: ecsl/views.py:409
+#: ecsl/views.py:419
 msgid "We have received your scholarship application successfully"
 msgstr "Hemos recibido su solicitud de beca satisfactoriamente"
 
-#: ecsl/views.py:423
+#: ecsl/views.py:433
 msgid ""
 "Sorry, but the scholarship application you are looking for does not exist"
 msgstr "Lo lamentamos, pero la solicitud de beca que está buscando no existe"
