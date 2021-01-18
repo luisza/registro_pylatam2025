@@ -240,8 +240,8 @@ class EventECSL(models.Model):
     certificate_Footer = models.ImageField(verbose_name=_("Certificate Footer Image"), null=True, upload_to='img/logos/',
                              blank=True, help_text=_("Height 70px, Width 800px"))
     phone_event = models.CharField(max_length=15, null=True, verbose_name=_("Phone"))
-    start_date_proposal = models.DateField(verbose_name=_("Start Date Proposal"), null=True)
-    end_date_proposal = models.DateField(verbose_name=_("End Date Proposal"), null=True)
+    start_date_proposal = models.DateField(verbose_name=_("Start Date Proposal"), blank=True, null=True)
+    end_date_proposal = models.DateField(verbose_name=_("End Date Proposal"), blank=True, null=True)
     email_event = models.CharField(max_length=50, null=True, verbose_name=_('Email Event'))
     beca_start = models.DateField(verbose_name=_("Scholarship application start period"), null=True)
     beca_end = models.DateField(verbose_name=_("Scholarship application end period"), null=True)
@@ -254,16 +254,22 @@ class EventECSL(models.Model):
     @property
     def checking_period(self):
         current_date = timezone.localtime().date()
-        if self.start_date_proposal <= current_date and current_date <= self.end_date_proposal:
-            return True
+        if self.start_date_proposal and self.end_date_proposal:
+            if self.start_date_proposal <= current_date and current_date <= self.end_date_proposal:
+                return True
+            else:
+                return False
         else:
             return False
 
     @property
     def checking_start_date(self):
         current_date = timezone.localtime().date()
-        if self.start_date_proposal == current_date:
-            return True
+        if self.start_date_proposal:
+            if self.start_date_proposal == current_date:
+                return True
+            else:
+                return False
         else:
             return False
 
