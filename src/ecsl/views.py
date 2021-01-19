@@ -13,11 +13,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from paypal.standard.forms import PayPalPaymentsForm
 from django.views.decorators.csrf import csrf_exempt
-from datetime import date
 from captcha.fields import CaptchaField
 from django.core.mail import EmailMessage, send_mail
-from django.core.mail import send_mail
-# Create your views here.
+from django.db.models import Count, Q
 
 
 def noEvents(request):
@@ -58,25 +56,25 @@ class Index(TemplateView):
             if proposal:
                 context['speech_url'] = proposal
 
-        context['numparticipantes'] = Payment.objects.all().count()
+        context['numparticipantes'] = Payment.objects.filter(event=current_event).count()
         context['genero'] = {
-            'masculino': Payment.objects.filter(user__inscription__gender='Masculino').count(),
-            'femenino': Payment.objects.filter(user__inscription__gender='Femenino').count(),
-            'otro': Payment.objects.filter(user__inscription__gender='Otro').count(),
+            'masculino': Payment.objects.filter(user__inscription__gender='Masculino', event=current_event).count(),
+            'femenino': Payment.objects.filter(user__inscription__gender='Femenino', event=current_event).count(),
+            'otro': Payment.objects.filter(user__inscription__gender='Otro', event=current_event).count(),
         }
 
-        context['pais'] = {
-
-            'panama': Payment.objects.filter(user__inscription__nationality='Panamá').count(),
-            'costarica': Payment.objects.filter(user__inscription__nationality='Costa Rica').count(),
-            'nicaragua': Payment.objects.filter(user__inscription__nationality='Nicaragua').count(),
-            'elsalvador': Payment.objects.filter(user__inscription__nationality='El Salvador').count(),
-            'guatemala': Payment.objects.filter(user__inscription__nationality='Guatemala').count(),
-            'honduras': Payment.objects.filter(user__inscription__nationality='Honduras').count(),
-            'belize': Payment.objects.filter(user__inscription__nationality='Belize').count(),
-            'otro': Payment.objects.filter(user__inscription__nationality='Otro').count(),
-
+        parms = {
+            'panama': Count('user__inscription__nationality', filter=Q(user__inscription__nationality='Panamá')),
+            'costarica': Count('user__inscription__nationality', filter=Q(user__inscription__nationality='Costa Rica')),
+            'nicaragua': Count('user__inscription__nationality', filter=Q(user__inscription__nationality='Nicaragua')),
+            'elsalvador': Count('user__inscription__nationality', filter=Q(user__inscription__nationality='El Salvador')),
+            'guatemala': Count('user__inscription__nationality', filter=Q(user__inscription__nationality='Guatemala')),
+            'honduras': Count('user__inscription__nationality', filter=Q(user__inscription__nationality='Honduras')),
+            'belize': Count('user__inscription__nationality', filter=Q(user__inscription__nationality='Belize')),
+            'otro': Count('user__inscription__nationality', filter=Q(user__inscription__nationality='Otro')),
         }
+
+        context['pais'] = Payment.objects.filter(event=current_event).aggregate(**parms)
 
         if current_event.checking_period:
             context['period'] = current_event.checking_period
@@ -239,7 +237,7 @@ class PaymentUpdate(UpdateView):
         current_event = EventECSL.objects.filter(current=True).first()
         alreadyPaid = Payment.objects.filter(user=self.request.user, event=current_event).first()
 
-        if alreadyPaid and alreadyPaid.confirmado==True and alreadyPaid.option.name == 'Paypal':
+        if alreadyPaid and alreadyPaid.confirmado == True and alreadyPaid.option.name == 'Paypal':
             messages.success(
                 self.request, _("There was no transaction, you already paid for this event"))
             return redirect(reverse_lazy('index'))
@@ -326,8 +324,7 @@ def process_payment(request, text):
 
     alreadyPaid = Payment.objects.filter(user=request.user, event=current_event).first()
 
-
-    if alreadyPaid and alreadyPaid.confirmado==True:
+    if alreadyPaid and alreadyPaid.confirmado == True:
         messages.success(
             request, _("There was no transaction, you already paid for this event"))
         return redirect(reverse_lazy('index'))
@@ -343,7 +340,7 @@ def process_payment(request, text):
                 request, _("You registration is complete, this package is free"))
             return redirect(reverse_lazy('index'))
 
-        if alreadyPaid and alreadyPaid.confirmado==False and  alreadyPaid.option.name == 'Paypal':
+        if alreadyPaid and alreadyPaid.confirmado == False and alreadyPaid.option.name == 'Paypal':
             alreadyPaid.delete()
 
         p_Option = PaymentOption.objects.filter(name='Paypal').first()
