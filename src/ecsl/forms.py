@@ -5,8 +5,9 @@ Created on 2 jun. 2017
 '''
 from django import forms
 from ecsl.models import Inscription, Payment, PaymentOption, EventECSL
+from proposal.models import SpeechSchedule, Topic, Speech, Register_Speech, \
+    BlockSchedule
 from django.utils.translation import ugettext_lazy as _
-
 
 class ProfileForm(forms.ModelForm):
     first_name = forms.CharField(label=_("First name"))
@@ -120,4 +121,10 @@ class ContactForm(forms.Form):
         )
     )
 
-
+class scheduleForm(forms.ModelForm):
+    is_speech = forms.BooleanField()
+    text = forms.CharField(max_length=250)
+    color = forms.CharField(max_length=10)
+    class Meta:
+        model= SpeechSchedule
+        fields= '__all__'

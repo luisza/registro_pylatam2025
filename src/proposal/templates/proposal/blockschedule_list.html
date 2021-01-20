@@ -31,6 +31,36 @@
 </style>
 
 <h2> Temáticas </h2>
+    <form method="post">
+        {% csrf_token %}
+        <label>Inicio</label>
+        {{ form.start_time}}
+        <label>Fin</label>
+        {{ form.end_time}}
+        <label>Speech</label>
+        {{form.speech}}
+        <label>Room</label>
+        {{ form.room}}
+        <label>Is_peech</label>
+        {{ form.is_speech}}
+        <label>Text</label>
+        {{ form.text}}
+        <label>Color</label>
+        {{ form.color}}
+        <input type="submit">
+    </form>
+
+    <ul>
+        {% for speech in speeches %}
+        <li class="draggable" value="{{ speech.pk }}">{{speech}}</li>
+        {% endfor %}
+    </ul>
+
+    <div id="droppable" class="ui-widget-header">
+        <p>Drop here</p>
+    </div>
+
+
 
 <div class="row">
  <div class="col-md-1"></div>
@@ -94,4 +124,21 @@
 	{% endfor %}
 
 <br><br>
+    
+
+{% endblock %}
+
+{% block js %}
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    $( ".draggable" ).draggable();
+    $( "#droppable" ).droppable({
+      drop: function( event, ui ) {
+        $("#id_speech").val(ui.draggable.val())
+     }
+    });
+  } );
+  </script>
 {% endblock %}

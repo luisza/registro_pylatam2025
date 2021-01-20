@@ -17,6 +17,7 @@ from ecsl.models import Payment, EventECSL
 from django.db.models.query_utils import Q
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
+from ecsl.forms import scheduleForm
 
 
 def dayAmout(date1, date2):
@@ -63,6 +64,8 @@ class CharlaContext:
         context['object_list'] = charlasDic["dia%s" % (dia)]
         context['dia'] = dia
         context['tipos'] = Topic.objects.all()
+        context['form'] = scheduleForm()
+        context['speeches'] = Speech.objects.all()
         return context
 
 
@@ -77,6 +80,32 @@ class Charlas(CharlaContext, ListView):
                 self.request, _("Sorry, we need an event to display the schedule"))
             return redirect('sineventos/')
         return super(Charlas, self).dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+           if request.method=='POST':
+            form = scheduleForm(request.POST)
+            print(form)
+            if form.is_valid():
+                speechSchedule = SpeechSchedule(start_time=form.cleaned_data['start_time'],
+                                                end_time=form.cleaned_data['end_time'],
+                                                speech=form.cleaned_data['speech'],
+                                                room=form.cleaned_data['room'])
+                speech = SpeechSchedule.objects.filter(room=speechSchedule.room,
+                                                       start_time__lte=speechSchedule.end_time,
+                                                       end_time__gte=speechSchedule.start_time).first()
+                if not speech and speechSchedule.start_time <= speechSchedule.end_time:
+                    speechSchedule.save()
+
+                blockSchedule = BlockSchedule(start_time=form.cleaned_data['start_time'],
+                                              end_time=form.cleaned_data['end_time'],
+                                              is_speech=form.cleaned_data['is_speech'],
+                                              text=form.cleaned_data['text'],
+                                              color=form.cleaned_data['color'])
+                block = BlockSchedule.objects.filter(start_time__lte=blockSchedule.end_time,
+                                                     end_time__gte=blockSchedule.start_time).first()
+                if not block and blockSchedule.start_time <= blockSchedule.end_time:
+                    blockSchedule.save()
+            return redirect(reverse('list_charlas'))
 
 
 @method_decorator(login_required, name='dispatch')
@@ -128,7 +157,8 @@ class CharlaDetail(DetailView):
 def register_user_to_speech(request, pk):
     current_event = EventECSL.objects.filter(current=True).first()
     speech = get_object_or_404(Speech, pk=pk)
-    schedule = get_object_or_404(SpeechSchedule, speech=speech)
+    fecha= datetime.datetime(int(request.GET['year']),int(request.GET['month']),int(request.GET['day']),int(request.GET['hour']),int(request.GET['minute']),int(request.GET['second']) )
+    schedule = get_object_or_404(SpeechSchedule, speech=speech, start_time=fecha)
     pago = Payment.objects.filter(user=request.user).first()
 
     try:
@@ -153,7 +183,7 @@ def register_user_to_speech(request, pk):
         return redirect(reverse('index'))
     if pago.confirmado == False:
         messages.error(
-            request,  _("The payment is still pending to be confirmed"))
+            request, _("The payment is still pending to be confirmed"))
         return redirect(reverse('list_charlas') + "?dia=%d" % (dia,))
 
     registros = Register_Speech.objects.filter(speech=schedule).count()
