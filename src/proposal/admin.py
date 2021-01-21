@@ -3,7 +3,7 @@ from django.contrib import admin, messages
 # Register your models here.
 
 from proposal.models import SpeechType, Topic, Speech, SpeechSchedule, Room,\
-    Register_Speech, BlockSchedule
+    Register_Speech, BlockSchedule, SpeechTime
 from django.http.response import HttpResponse
 import csv
 
@@ -279,3 +279,4 @@ admin.site.register(SpeechSchedule, ScheduleAdmin)
 admin.site.register(Room, RoomAdmin)
 admin.site.register([SpeechType, Topic])
 admin.site.register(BlockSchedule, BlockScheduleAdmin)
+admin.site.register(SpeechTime)

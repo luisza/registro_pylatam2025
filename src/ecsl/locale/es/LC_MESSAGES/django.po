@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ECSL V1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-15 13:30-0600\n"
+"POT-Creation-Date: 2021-01-20 17:07-0600\n"
 "PO-Revision-Date: 2017-06-04 17:12-0600\n"
 "Last-Translator: Luis Zárate <luis.zarate@solvosoft.com>\n"
 "Language-Team: ES <ES@li.org>\n"
@@ -18,40 +18,40 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.6.10\n"
 
-#: ecsl/charlas.py:77 ecsl/charlas.py:92
+#: ecsl/charlas.py:80 ecsl/charlas.py:121
 msgid "Sorry, we need an event to display the schedule"
 msgstr "Lo sentimos, pero necesitamos eventos para desplegar la agenda."
 
-#: ecsl/charlas.py:110 ecsl/charlas.py:156
+#: ecsl/charlas.py:139 ecsl/charlas.py:186
 msgid "The payment is still pending to be confirmed"
 msgstr "El pago aún esta pendiente de confirmar."
 
-#: ecsl/forms.py:12
+#: ecsl/forms.py:13
 msgid "First name"
 msgstr "Nombre"
 
-#: ecsl/forms.py:13
+#: ecsl/forms.py:14
 msgid "Last name"
 msgstr "Apellidos"
 
-#: ecsl/forms.py:83 proposal/models.py:9 proposal/models.py:21
+#: ecsl/forms.py:84 proposal/models.py:9 proposal/models.py:33
 msgid "Name"
 msgstr "Nombre"
 
-#: ecsl/forms.py:95
+#: ecsl/forms.py:96
 msgid "Email"
 msgstr "Correo"
 
-#: ecsl/forms.py:107
+#: ecsl/forms.py:108
 msgid "Subject"
 msgstr "Asunto"
 
-#: ecsl/forms.py:117
+#: ecsl/forms.py:118
 msgid "Message"
 msgstr "Mensaje"
 
 #: ecsl/models.py:9 ecsl/models.py:24 ecsl/models.py:35 ecsl/models.py:191
-#: proposal/models.py:93
+#: proposal/models.py:21 proposal/models.py:107
 msgid "Nombre"
 msgstr "Nombre"
 
@@ -64,7 +64,7 @@ msgid "Opción de envío"
 msgstr "Opción de envío"
 
 #: ecsl/models.py:80 ecsl/models.py:158 ecsl/models.py:207
-#: proposal/models.py:46
+#: proposal/models.py:58
 msgid "Usuario"
 msgstr "Usuario"
 
@@ -125,7 +125,7 @@ msgstr ""
 "ECSL por favor comente en este espacio."
 
 #: ecsl/models.py:128 ecsl/models.py:165 ecsl/models.py:195 ecsl/models.py:217
-#: ecsl/models.py:274 proposal/models.py:64
+#: ecsl/models.py:280 proposal/models.py:76
 msgid "Event"
 msgstr "Evento"
 
@@ -177,7 +177,7 @@ msgstr "Fecha Final"
 msgid "Location"
 msgstr "Sede"
 
-#: ecsl/models.py:234 proposal/models.py:50
+#: ecsl/models.py:234 proposal/models.py:62
 msgid "Description"
 msgstr "Descripción"
 
@@ -233,11 +233,11 @@ msgstr "Finalización de período para solicitar beca"
 msgid "Maximum Inscriptions"
 msgstr "Inscripciones máximas"
 
-#: ecsl/models.py:271 ecsl/templates/index.html:8
+#: ecsl/models.py:277 ecsl/templates/index.html:8
 msgid "Central American Free Software Meeting "
 msgstr "Encuentro Centroamericano de Software Libre "
 
-#: ecsl/models.py:275
+#: ecsl/models.py:281
 msgid "Events"
 msgstr "Eventos"
 
@@ -806,7 +806,6 @@ msgid "Profile updated successfully"
 msgstr "Perfil actualizado satisfactoriamente"
 
 #: ecsl/views.py:176 ecsl/views.py:232
-
 msgid "Sorry, there is no event for you to register"
 msgstr "Lo sentimos, pero no hay evento para que se pueda registrar"
 
@@ -873,55 +872,75 @@ msgid ""
 "Sorry, but the scholarship application you are looking for does not exist"
 msgstr "Lo lamentamos, pero la solicitud de beca que está buscando no existe"
 
-#: proposal/models.py:40
+#: proposal/models.py:21
+msgid "Basic speech"
+msgstr "Exposición básica"
+
+#: proposal/models.py:22
+msgid "Time (in minutes)"
+msgstr "Tiempo (en minutos)"
+
+#: proposal/models.py:28 proposal/models.py:29
+msgid "Activity Duration"
+msgstr "Duración de la actividad"
+
+#: proposal/models.py:52
 msgid "everyone"
 msgstr "Cualquiera"
 
-#: proposal/models.py:41
+#: proposal/models.py:53
 msgid "novice"
 msgstr "Básico"
 
-#: proposal/models.py:42
+#: proposal/models.py:54
 msgid "intermediate"
 msgstr "Intermedio"
 
-#: proposal/models.py:43
+#: proposal/models.py:55
 msgid "advanced"
 msgstr "Avanzado"
 
-#: proposal/models.py:48
+#: proposal/models.py:60
 msgid "Speaker_information"
 msgstr "Información del charlista"
 
-#: proposal/models.py:49
+#: proposal/models.py:61
 msgid "Speech Title"
 msgstr "Titulo de la charla"
 
-#: proposal/models.py:52
+#: proposal/models.py:64
 msgid "Topic"
 msgstr "Temas"
 
-#: proposal/models.py:53
+#: proposal/models.py:65
 msgid "Audience"
 msgstr "Audiencia"
 
-#: proposal/models.py:56
+#: proposal/models.py:68
 msgid "Skill level required"
 msgstr "Nivel de habilidad"
 
-#: proposal/models.py:58
+#: proposal/models.py:70
 msgid "Notes for audience"
 msgstr "Notas para la audiencia"
 
-#: proposal/models.py:59
+#: proposal/models.py:71
 msgid "Speech Type"
 msgstr "Tipo de charla"
 
-#: proposal/models.py:62
+#: proposal/models.py:74
 #, fuzzy
 #| msgid "Presentación"
 msgid "Presentation"
 msgstr "Presentación"
+
+#: proposal/models.py:77
+msgid "Duration"
+msgstr "Duración"
+
+#: proposal/models.py:78
+msgid "Duration Assigned"
+msgstr "Duración Asignada"
 
 #: proposal/templates/proposal/speech_list.html:9
 msgid "Add"
@@ -1006,11 +1025,6 @@ msgstr ""
 #~| msgid "Skill level required"
 #~ msgid "This field cannot be null."
 #~ msgstr "Nivel de habilidad"
-
-#, fuzzy
-#~| msgid "registration"
-#~ msgid "Duration"
-#~ msgstr "Registro"
 
 #, fuzzy
 #~| msgid "Web"
