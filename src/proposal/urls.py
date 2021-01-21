@@ -16,4 +16,8 @@ urlpatterns = [
     path('create/', views.createUpdateview, name='create'),
     path('<int:speech_id>/update/', views.createUpdateview, name='update'),
     path('<int:speech_id>/delete/', views.deleteView, name='delete'),
+    path('createTopic/', views.CreateTopic.as_view(), name='create-topic'),
+    path('createType/', views.CreateType.as_view(), name='create-type'),
+    path('filterSpeeches/', views.get_all_speeches, name='filter-speeches'),
+    path('createSpecial/', views.CreateSpecialActivity.as_view(), name='create-special'),
 ]

@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from ecsl.models import EventECSL
+
+
 # Create your models here.
 
 
@@ -41,7 +43,6 @@ class SpeechType(models.Model):
 
 
 class Speech(models.Model):
-
     class SKILL_LEVEL:
         EVERYONE = 1
         NOVICE = 2
@@ -161,6 +162,32 @@ class SpeechSchedule(models.Model):
         verbose_name_plural = "Horarios de actividades"
 
 
+class SpecialActivity(models.Model):
+    name = models.CharField(max_length=100, verbose_name=_('Nombre'))
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    message = models.TextField(null=True, blank=True, verbose_name=_("Message"))
+    room = models.ForeignKey('Room', on_delete=models.CASCADE, verbose_name=_("Room"))
+    event = models.ForeignKey(EventECSL, default="", on_delete=models.CASCADE, verbose_name=_("Event"))
+
+    def __str__(self):
+        return self.name
+
+    def get_speech(self, user=None):
+        query = SpeechSchedule.objects.filter(
+            start_time__gte=self.start_time,
+            start_time__lte=self.end_time,
+        )
+        if user:
+            query = query.filter(register_speech__user=user)
+
+        return query.order_by('start_time')
+
+    class Meta:
+        verbose_name = "Actividad Especial"
+        verbose_name_plural = "Actividades Especiales"
+
+
 class BlockSchedule(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
@@ -170,7 +197,7 @@ class BlockSchedule(models.Model):
 
     def __str__(self):
         return "%s %s" % (self.start_time.strftime("%Y-%m-%d %H:%M"),
-                          self.end_time.strftime("%Y-%m-%d %H:%M"), )
+                          self.end_time.strftime("%Y-%m-%d %H:%M"),)
 
     def get_speech(self, user=None):
         query = SpeechSchedule.objects.filter(

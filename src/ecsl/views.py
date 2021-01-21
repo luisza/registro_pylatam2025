@@ -17,6 +17,8 @@ from datetime import date
 from captcha.fields import CaptchaField
 from django.core.mail import EmailMessage, send_mail
 from django.core.mail import send_mail
+
+
 # Create your views here.
 
 
@@ -239,7 +241,7 @@ class PaymentUpdate(UpdateView):
         current_event = EventECSL.objects.filter(current=True).first()
         alreadyPaid = Payment.objects.filter(user=self.request.user, event=current_event).first()
 
-        if alreadyPaid and alreadyPaid.confirmado==True and alreadyPaid.option.name == 'Paypal':
+        if alreadyPaid and alreadyPaid.confirmado == True and alreadyPaid.option.name == 'Paypal':
             messages.success(
                 self.request, _("There was no transaction, you already paid for this event"))
             return redirect(reverse_lazy('index'))
@@ -326,8 +328,7 @@ def process_payment(request, text):
 
     alreadyPaid = Payment.objects.filter(user=request.user, event=current_event).first()
 
-
-    if alreadyPaid and alreadyPaid.confirmado==True:
+    if alreadyPaid and alreadyPaid.confirmado == True:
         messages.success(
             request, _("There was no transaction, you already paid for this event"))
         return redirect(reverse_lazy('index'))
@@ -343,7 +344,7 @@ def process_payment(request, text):
                 request, _("You registration is complete, this package is free"))
             return redirect(reverse_lazy('index'))
 
-        if alreadyPaid and alreadyPaid.confirmado==False and  alreadyPaid.option.name == 'Paypal':
+        if alreadyPaid and alreadyPaid.confirmado == False and alreadyPaid.option.name == 'Paypal':
             alreadyPaid.delete()
 
         p_Option = PaymentOption.objects.filter(name='Paypal').first()
