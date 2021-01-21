@@ -191,3 +191,4 @@ admin.site.register(Gustos)
 admin.site.register(PaymentOption)
 admin.site.register(Becas)
 admin.site.register(Package)
+

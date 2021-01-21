@@ -5,7 +5,7 @@ Created on 5 jun. 2017
 '''
 from django.views.generic.list import ListView
 from proposal.models import SpeechSchedule, Topic, Speech, Register_Speech, \
-    BlockSchedule
+    BlockSchedule, SpeechType, SpecialActivity
 import datetime
 from django.views.generic.detail import DetailView
 from django.shortcuts import get_object_or_404, redirect
@@ -18,6 +18,7 @@ from django.db.models.query_utils import Q
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from ecsl.forms import scheduleForm
+from proposal.forms import TopicForm, TypeForm, SpecialActivityForm
 
 
 def dayAmout(date1, date2):
@@ -59,13 +60,20 @@ class CharlaContext:
             # txt = str(day.day)+" de "+str(day.strftime('%B'))
             # days.append(txt)
             days.append(day)
-
+        if current_event:
+            speeches = Speech.objects.filter(event=current_event)
+            special = SpecialActivity.objects.filter(event=current_event)
         context['dayList'] = days
         context['object_list'] = charlasDic["dia%s" % (dia)]
         context['dia'] = dia
-        context['tipos'] = Topic.objects.all()
+        context['topics'] = Topic.objects.all()
+        context['types'] = SpeechType.objects.all()
         context['form'] = scheduleForm()
         context['speeches'] = Speech.objects.all()
+        context['topicForm'] = TopicForm()
+        context['typeForm'] = TypeForm()
+        context['specialForm'] = SpecialActivityForm()
+        context['specialActivity'] = special
         return context
 
 
@@ -157,7 +165,7 @@ class CharlaDetail(DetailView):
 def register_user_to_speech(request, pk):
     current_event = EventECSL.objects.filter(current=True).first()
     speech = get_object_or_404(Speech, pk=pk)
-    fecha= datetime.datetime(int(request.GET['year']),int(request.GET['month']),int(request.GET['day']),int(request.GET['hour']),int(request.GET['minute']),int(request.GET['second']) )
+    fecha = datetime.datetime(int(request.GET['year']),int(request.GET['month']),int(request.GET['day']),int(request.GET['hour']),int(request.GET['minute']),int(request.GET['second']) )
     schedule = get_object_or_404(SpeechSchedule, speech=speech, start_time=fecha)
     pago = Payment.objects.filter(user=request.user).first()
 

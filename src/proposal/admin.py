@@ -16,6 +16,7 @@ from async_notifications.register import update_template_context
 from async_notifications.utils import send_email_from_template
 from ecsl.pdf import render_pdf
 
+from proposal.models import SpecialActivity
 
 context = [
     ('inscripcion', '''Disponibles:  actividad.speaker_information,
@@ -44,15 +45,14 @@ def action_enviar_correo_charla(modeladmin, request, queryset):
                                  context={
                                      'actividad': prop,
                                      'usuario': prop.user,
-        },
-            enqueued=True,
-            user=request.user,
-            upfile=None)
+                                 },
+                                 enqueued=True,
+                                 user=request.user,
+                                 upfile=None)
     messages.success(request, 'Mensajes enviados con éxito')
 
 
 action_enviar_correo_charla.short_description = "Enviar correo a expositores"
-
 
 context = [
     ('inscripcion', '''Disponibles:  actividad.speaker_information,
@@ -89,10 +89,10 @@ def action_enviar_correo_charla_participantes(modeladmin, request, queryset):
         for participa in Register_Speech.objects.filter(speech__speech=prop):
             send_email_from_template("charla.participante", [prop.user.email],
                                      context={
-                                     'actividad': prop,
-                                     'usuario': participa.user,
-                                     'expositor': prop.user,
-                                     'agenda': participa.speech
+                                         'actividad': prop,
+                                         'usuario': participa.user,
+                                         'expositor': prop.user,
+                                         'agenda': participa.speech
                                      },
                                      enqueued=True,
                                      user=request.user,
@@ -144,8 +144,8 @@ def action_export_pdf_register_list(modeladmin, request, queryset):
 
     return render_pdf(request, 'lista_participantes.pdf',
                       'speech/lista_participantes_pdf.html', context={
-                          'object_list': query
-                      })
+            'object_list': query
+        })
 
 
 action_export_pdf_register_list.short_description = "Lista de participación pdf"
@@ -210,6 +210,7 @@ class SpeechAdmin(admin.ModelAdmin):
     def registrados_cuenta(self, instance):
         regs = Register_Speech.objects.filter(speech__speech=instance)
         return regs.count()
+
     registrados_cuenta.short_description = "# registrados"
 
     def en_agenda(self, instance):
@@ -220,11 +221,11 @@ class SpeechAdmin(admin.ModelAdmin):
             schedule.start_time.strftime("%b %d %H:%M"),
             schedule.end_time.strftime("%H:%M")
         )
+
     en_agenda.short_description = "Horario"
     en_agenda.admin_order_field = '-speechschedule__start_time'
 
     def get_registration_list(self, instance):
-
         regs = Register_Speech.objects.filter(speech__speech=instance)
 
         return format_html_join(
@@ -253,11 +254,10 @@ class ScheduleAdmin(admin.ModelAdmin):
 
 class BlockScheduleAdmin(admin.ModelAdmin):
     list_display = ('start_time', 'end_time', 'is_speech', 'text', 'color')
-    list_editable = ('color', )
+    list_editable = ('color',)
 
 
 def action_ud_esta_aqui(modeladmin, request, queryset):
-
     template_path = 'ecsl/ud_esta_aqui.html'
     context = {
         'object_list': queryset
@@ -274,6 +274,7 @@ class RoomAdmin(admin.ModelAdmin):
     actions = [action_ud_esta_aqui]
 
 
+admin.site.register(SpecialActivity)
 admin.site.register(Speech, SpeechAdmin)
 admin.site.register(SpeechSchedule, ScheduleAdmin)
 admin.site.register(Room, RoomAdmin)

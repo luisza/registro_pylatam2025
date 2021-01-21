@@ -3,142 +3,284 @@
 {% load registro_charla %}
 
 {% block content %}
-<style>
-.theader{
-	text-decoration: blond;
-	background-color: #98978b;
-	padding: 10px 2px;
-	text-align: center;
-	color: #fff;
-	margin-bottom: 5px;
-}
+    <style>
+        .theader {
+            text-decoration: blond;
+            background-color: #98978b;
+            padding: 10px 2px;
+            text-align: center;
+            color: #fff;
+            margin-bottom: 5px;
+        }
 
-.speech_row {
-	
-	padding: 10px 5px;
-	text-align: left;
-}
-.speech_row .row{
-	border: solid 1px #fff;
-	padding: 5px 0px;
-}
+        .speech_row {
 
-.text_row  {
-	padding: 10px 0px;
-	color: #fff;
-	font-weight: bold;
-}
-</style>
+            padding: 10px 5px;
+            text-align: left;
+        }
 
-<h2> Temáticas </h2>
-    <form method="post">
-        {% csrf_token %}
-        <label>Inicio</label>
-        {{ form.start_time}}
-        <label>Fin</label>
-        {{ form.end_time}}
-        <label>Speech</label>
-        {{form.speech}}
-        <label>Room</label>
-        {{ form.room}}
-        <label>Is_peech</label>
-        {{ form.is_speech}}
-        <label>Text</label>
-        {{ form.text}}
-        <label>Color</label>
-        {{ form.color}}
-        <input type="submit">
-    </form>
+        .speech_row .row {
+            border: solid 1px #fff;
+            padding: 5px 0px;
+        }
 
-    <ul>
-        {% for speech in speeches %}
-        <li class="draggable" value="{{ speech.pk }}">{{speech}}</li>
-        {% endfor %}
-    </ul>
+        .text_row {
+            padding: 10px 0px;
+            color: #fff;
+            font-weight: bold;
+        }
+    </style>
 
-    <div id="droppable" class="ui-widget-header">
-        <p>Drop here</p>
+    <div class="row">
+        <div class="col-sm-4">
+            <h2> Speeches </h2>
+            <hr>
+
+            <div class="card">
+                <div class="card-body">
+                    <div style="display: flex">
+                        <div class="input-group">
+                        <span class="input-group-btn">
+                            <a style="height: 40px;" data-toggle="modal"
+                               data-target="#topic-modal" class="btn btn-success"><i
+                                    class="fas fa-plus"></i></a>
+                  
+                        </span>
+                            <form id="filter" method="post">
+                                {% csrf_token %}
+
+                                <select class="btn btn-primary" style="width: 80%; text-overflow: ellipsis" name="topic"
+                                        id="topic">
+                                    {% for topic in topics %}
+                                        <option value={{ topic.id }}>{{ topic }}</option>
+                                    {% endfor %}
+                                </select>
+                        </div>
+
+                        <div class="input-group">
+                        <span class="input-group-btn">
+                            <a data-toggle="modal" data-target="#type-modal"
+                               style="height: 40px;" class="btn btn-success">
+                                <i class="fas fa-plus"></i></a>
+                        </span>
+
+                            <select style="width: 80%; text-overflow: ellipsis" class="btn btn-primary" name="type"
+                                    id="type">
+                                {% for type in types %}
+                                    <option value={{ type.id }}>{{ type }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <a onclick="send_filter()" id="search" class="btn btn-info" style="height: 40px"><i
+                                class="fas fa-search"></i></a>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+            <div class="jumbotron">
+                <ul id="speeches">
+                    {% for speech in speeches %}
+                        <li class="draggable">{{ speech }}</li>
+                    {% endfor %}
+                </ul>
+
+                <div id="droppable" class="ui-widget-header">
+                    <p>Drop here</p>
+                </div>
+            </div>
+            <div style="display: flex">
+                <h2> Special Activities</h2>
+                <div style="padding-top: 18px; margin-left: 10px">
+                    <a data-toggle="modal" data-target="#special-modal"
+                       style="height: 40px;" class="btn btn-success"><i class="fas fa-plus"></i></a>
+                </div>
+            </div>
+            <hr>
+            <div class="jumbotron">
+                <ul id="speeches">
+                    {% for special in specialActivity %}
+                        <li class="draggable">{{ special }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div id="topic-modal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">New Speech Topic</h4>
+                        </div>
+                        <div class="modal-body" style="text-align: center">
+                            <form action="proposal/createTopic/" method="post">
+                                 {% csrf_token %}
+                                <div class="jumbotron" style="display: inline-grid">
+                                    {{ topicForm }}
+                                    <hr>
+                                    <input class="btn btn-info" type="submit" value="{% trans 'Save' %}">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="type-modal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">New Speech Type</h4>
+                        </div>
+                        <div class="modal-body" style="text-align: center">
+                            <form action="proposal/createType/" method="post">
+                                {% csrf_token %}
+                                <div class="jumbotron" style="display: inline-grid">
+                                    {{ typeForm }}
+                                    <hr>
+                                    <input class="btn btn-info" type="submit" value="{% trans 'Save' %}">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="special-modal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">New Special Activity</h4>
+                        </div>
+                        <div class="modal-body" style="text-align: center">
+                            <form action="proposal/createSpecial/" method="post">
+                                {% csrf_token %}
+                                <div class="jumbotron" style="display: inline-grid;">
+                                    {{ specialForm }}
+                                    <hr>
+                                    <input class="btn btn-info" type="submit" value="{% trans 'Save' %}">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="col-sm-8">
+
+            <div class="row">
+                <div class="col-md-1"></div>
+                {% for tipo in tipos %}
+                    <div class="col-md-2" style="color: {{ tipo.color }}"> {{ tipo.name }} </div>
+                {% endfor %}
+            </div>
+
+            <hr>
+
+            <ul class="nav nav-tabs">
+                {% for d in dayList %}
+                    <li role="presentation" class="{% if dia ==  forloop.counter %} active {% endif %}">
+                        <a href="{% url 'list_charlas' %}?dia={{ forloop.counter }}">{{ d }}</a></li>
+                {% endfor %}
+
+
+            </ul>
+            <br><br>
+
+
+            <div class="row theader">
+                <div class="col-md-2">Horario</div>
+                <div class="col-md-5">Título</div>
+                <div class="col-md-2">Expositor/a responsable</div>
+                <div class="col-md-1">Salón</div>
+                <div class="col-md-2">Registro</div>
+            </div>
+
+            {% for obj in object_list %}
+
+                <div id="block_{{ obj.pk }}" class="row {% if obj.is_speech %}speech_row{% else %} text_row {% endif %}"
+                     style="background-color:{{ obj.color }}">
+
+                    {% if obj.is_speech %}
+                        {% for speech in obj.get_speech %}
+                            <div class="row">
+                                <div class="col-md-2">{{ speech.start_time | date:"P" }}
+                                    a {{ speech.end_time | date:"P" }}
+                                    <p style="color:{{ speech.speech.topic.color }}">
+                                        {{ speech.speech.speech_type.name }}
+                                    </p>
+                                    {{ speech.registros }}
+
+                                </div>
+                                <div class="col-md-5">
+
+                                    <a href="{% url 'detail_charla' speech.speech.pk %}"
+                                       target="_blank"> {{ speech.speech.title }} </a>
+                                </div>
+                                <div class="col-md-2">{{ speech.speech.user.get_full_name }}</div>
+                                <div class="col-md-1">{{ speech.room.name }}</div>
+                                <div class="col-md-2">  {% get_registro speech as nreg %} <a
+                                        href="{{ nreg.url }}"> {{ nreg.message }} </a></div>
+                            </div>
+                        {% endfor %}
+
+                    {% else %}
+
+                        <div class="col-md-2 text-center"> {{ obj.start_time | date:"P" }}
+                            a {{ obj.end_time | date:"P" }} </div>
+                        <div class="col-md-10 text-center"> {{ obj.text }}</div>
+
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <br><br>
+        </div>
     </div>
-
-
-
-<div class="row">
- <div class="col-md-1"></div>
-{% for tipo in tipos %}
- <div class="col-md-2" style="color: {{tipo.color}}"> {{tipo.name }} </div>
-{% endfor %}
-</div>
-
-<hr>
-
-<ul class="nav nav-tabs">
-    {% for d in dayList %}
-        <li role="presentation" class="{% if dia ==  forloop.counter  %} active {% endif %}">
-        <a href="{% url 'list_charlas' %}?dia={{ forloop.counter }}">{{ d }}</a></li>
-    {% endfor %}
-
-
-</ul>
-<br ><br>
-
-
-<div class="row theader">
-  <div class="col-md-2">Horario</div>
-  <div class="col-md-5">Título</div>
-  <div class="col-md-2">Expositor/a responsable</div>
-  <div class="col-md-1">Salón</div>
-  <div class="col-md-2">Registro</div>
-</div>
-
-	{% for obj in object_list %}
-		
-		<div id="block_{{obj.pk}}" class="row {% if obj.is_speech %}speech_row{% else %} text_row {%endif%}" style="background-color:{{obj.color}}">
-
-		{% if obj.is_speech %}
-		  {% for speech in obj.get_speech %}
-		  <div class="row">
-		  <div class="col-md-2">{{ speech.start_time | date:"P" }} a {{ speech.end_time | date:"P" }}
-		  		  	<p style="color:{{ speech.speech.topic.color}}">
-				{{ speech.speech.speech_type.name }}
-				</p>
-				{{speech.registros}}
-				
-		  </div>
-		  <div class="col-md-5">
-
-			<a href="{% url 'detail_charla' speech.speech.pk %}" target="_blank"> {{ speech.speech.title }} </a>
-		  </div>
-		  <div class="col-md-2">{{ speech.speech.user.get_full_name }}</div>
-		  <div class="col-md-1">{{ speech.room.name }}</div>
-		  <div class="col-md-2">  {% get_registro speech as nreg%}  <a href="{{nreg.url}}"> {{nreg.message}} </a> </div>
-		  </div>
-			{% endfor %}
-			
-		{% else %}
-		
-		<div class="col-md-2 text-center"> {{ obj.start_time | date:"P" }} a {{ obj.end_time | date:"P" }} </div>
-		<div class="col-md-10 text-center"> {{obj.text}}</div>
-		
-		{% endif %}
-		</div>	
-	{% endfor %}
-
-<br><br>
-    
-
 {% endblock %}
 
 {% block js %}
-  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  <script>
-  $( function() {
-    $( ".draggable" ).draggable();
-    $( "#droppable" ).droppable({
-      drop: function( event, ui ) {
-        $("#id_speech").val(ui.draggable.val())
-     }
-    });
-  } );
-  </script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $(function () {
+            $(".draggable").draggable();
+            $("#droppable").droppable({
+                drop: function (event, ui) {
+                    $(this)
+                        .addClass("ui-state-highlight")
+                        .find("p")
+                        .html("Dropped!");
+                }
+            });
+        });
+    </script>
+
+    <script>
+
+        function send_filter() {
+            $('#speeches').empty()
+            $.ajax({
+                url: "proposal/filterSpeeches/",
+                type: "post",
+                data: $("#filter").serialize(),
+                success: function (data) {
+                    result = JSON.parse(data.result)
+                    for (var i = 0; i < result.length; i++)
+                        $('#speeches').append('<li class="draggable"' +
+                            'value=' + Object.values(result[i])[1] + ' color=' + data.color[i] + '>' +
+                            Object.values(result[i]['fields'])[2] + '</li>')
+                    $('.draggable').draggable();
+                }
+            });
+        }
+
+
+    </script>
 {% endblock %}
