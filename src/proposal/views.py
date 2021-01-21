@@ -115,6 +115,7 @@ def createUpdateview(request, speech_id=None):
             form = speech_form.save(commit=False)
             form.user = request.user
             form.event = event
+            form.time_given = form.time_asked
             form.save()
     elif request.method == 'POST' and speech_id:
         speech = Speech.objects.filter(pk=speech_id).first()

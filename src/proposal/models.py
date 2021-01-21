@@ -17,6 +17,18 @@ class Topic(models.Model):
         verbose_name_plural = "Temáticas"
 
 
+class SpeechTime(models.Model):
+    name = models.CharField(max_length=40, verbose_name=_("Nombre"), default=_("Basic speech"))
+    time = models.IntegerField(default=10, verbose_name=_("Time (in minutes)"))
+
+    def __str__(self):
+        return f"%s (%d minutes)" % (self.name, self.time)
+
+    class Meta:
+        verbose_name = _("Activity Duration")
+        verbose_name_plural = _("Activity Duration")
+
+
 class SpeechType(models.Model):
     name = models.CharField(max_length=150, verbose_name=_("Name"))
 
@@ -62,6 +74,8 @@ class Speech(models.Model):
                                     verbose_name=_("Presentation"),
                                     null=True, blank=True)
     event = models.ForeignKey(EventECSL, default="", on_delete=models.CASCADE, verbose_name=_("Event"))
+    time_asked = models.ForeignKey(SpeechTime, null=True, on_delete=models.CASCADE, related_name='time_asked', verbose_name=_("Duration"))
+    time_given = models.ForeignKey(SpeechTime, null=True, on_delete=models.CASCADE, related_name='time_given', verbose_name=_("Duration Assigned"))
 
     @property
     def speaker_name(self):
