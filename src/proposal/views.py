@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from .forms import SpeechForm, TopicForm, TypeForm, SpecialActivityForm, RoomsCreateForm
 from django.urls import reverse, reverse_lazy
-from proposal.models import Speech, Room
+from proposal.models import Speech, Room, SpeechSchedule
 from ecsl.models import Payment, Inscription, EventECSL
 import hashlib
 import urllib
