@@ -82,6 +82,7 @@ class CharlaContext:
         context['dia'] = dia
         context['topics'] = Topic.objects.all()
         context['types'] = SpeechType.objects.all()
+        print(charlasDic["dia%s" % (dia)])
         context['diaActual']= days[dia-1]
         context['form'] = scheduleForm()
         context['speeches'] = speeches
@@ -111,30 +112,52 @@ class Charlas(CharlaContext, ListView):
 
     def post(self, request, *args, **kwargs):
         if request.method == 'POST':
+
+            if request.POST['form_id'] == 'delete':
+                block = BlockSchedule.objects.filter(id=request.POST['block']).first()
+                schedule = SpeechSchedule.objects.filter(start_time=block.start_time).first()
+                if block.is_speech:
+                    speech = schedule.speech
+                    speech.is_scheduled= False
+                    speech.save()
+                block.delete()
+                schedule.delete()
+
             form = scheduleForm(request.POST)
             if form.is_valid():
-                print(form.cleaned_data)
-                speech_can_be_saved = False
-                block_can_be_saved = False
+                blockValid=False
+                scheduleValid=False
                 speechSchedule = SpeechSchedule(start_time=form.cleaned_data['start_time'],
                                                 end_time=form.cleaned_data['end_time'],
                                                 speech=form.cleaned_data['speech'],
                                                 room=form.cleaned_data['room'])
                 speech = SpeechSchedule.objects.filter(room=speechSchedule.room,
-                                                       start_time__lte=speechSchedule.end_time,
-                                                       end_time__gte=speechSchedule.start_time).first()
-                if not speech and speechSchedule.start_time <= speechSchedule.end_time:
+                                                       start_time__lt=speechSchedule.end_time,
+                                                       end_time__gt=speechSchedule.start_time).first()
+                sameSpeech= SpeechSchedule.objects.filter(room=speechSchedule.room,
+                                                       start_time=speechSchedule.start_time,
+                                                       end_time=speechSchedule.end_time).first()
+                if not speech and not sameSpeech and speechSchedule.start_time <= speechSchedule.end_time:
                     speechSchedule.save()
+                    scheduleValid=True
 
                 blockSchedule = BlockSchedule(start_time=form.cleaned_data['start_time'],
                                               end_time=form.cleaned_data['end_time'],
                                               is_speech=form.cleaned_data['is_speech'],
                                               text=form.cleaned_data['text'],
                                               color=form.cleaned_data['color'])
-                block = BlockSchedule.objects.filter(start_time__lte=blockSchedule.end_time,
-                                                     end_time__gte=blockSchedule.start_time).first()
-                if not block and blockSchedule.start_time <= blockSchedule.end_time:
+                block = BlockSchedule.objects.filter(start_time__lt=blockSchedule.end_time,
+                                                     end_time__gt=blockSchedule.start_time).first()
+                sameBlock = BlockSchedule.objects.filter(start_time=blockSchedule.start_time,
+                                                     end_time=blockSchedule.end_time).first()
+                if not block and not sameBlock and blockSchedule.start_time <= blockSchedule.end_time:
                     blockSchedule.save()
+                    blockValid=True
+
+                if form.cleaned_data['is_speech'] and blockValid and scheduleValid:
+                    speech = Speech.objects.filter(id=form.cleaned_data['speech'].id).first()
+                    speech.is_scheduled = True
+                    speech.save()
 
 
             return redirect(reverse('list_charlas'))

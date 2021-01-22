@@ -113,32 +113,33 @@
                         <a onclick="send_filter()" id="search" class="btn btn-info" style="height: 40px"><i
                                 class="fas fa-search"></i></a>
                         </form>
-                        </div>
                     </div>
                 </div>
-                <div class="jumbotron">
-                    <ul id="speeches">
-                        {% for speech in speeches %}
-                            <li class="draggable" value="{{ speech.pk }}" color="{{ speech.topic.color }}"
-                                time="{{ speech.time_given.time }}" is_speech="1" desc="none">{{ speech}}</li>
-                        {% endfor %}
-                    </ul>
+            </div>
+            <div class="jumbotron">
+                <ul id="speeches">
+                    {% for speech in speeches %}
+                        <li class="draggable" value="{{ speech.pk }}" color="{{ speech.topic.color }}"
+                            time="{{ speech.time_given.time }}" is_speech="1" desc="none">{{ speech }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div style="display: flex">
+                <h2> {% trans 'Special Activities' %}</h2>
+                <div style="padding-top: 18px; margin-left: 10px">
+                    <a data-toggle="modal" data-target="#special-modal"
+                       style="height: 40px;" class="btn btn-success"><i class="fas fa-plus"></i></a>
                 </div>
-                <div style="display: flex">
-                    <h2> {% trans 'Special Activities' %}</h2>
-                    <div style="padding-top: 18px; margin-left: 10px">
-                        <a data-toggle="modal" data-target="#special-modal"
-                           style="height: 40px;" class="btn btn-success"><i class="fas fa-plus"></i></a>
-                    </div>
-                </div>
-                <hr>
-                <div class="jumbotron">
-                    <ul id="speeches">
-                        {% for special in specialActivity %}
-                            <li class="draggable" color="#ddd234" time="{{ special.time.time }}" is_speech="0" desc="{{ special.message }}">{{ special }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
+            </div>
+            <hr>
+            <div class="jumbotron">
+                <ul id="speeches">
+                    {% for special in specialActivity %}
+                        <li class="draggable" color="#ddd234" time="{{ special.time.time }}" is_speech="0"
+                            desc="{{ special.message }}">{{ special }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
 
             <div id="topic-modal" class="modal fade" role="dialog">
                 <div class="modal-dialog">
@@ -263,18 +264,30 @@
                                     </div>
                                     <div class="col-md-2">{{ speech.speech.user.get_full_name }}</div>
                                     <div class="col-md-1">{{ speech.room.name }}</div>
-                                    <div class="col-md-2">  {% get_registro speech as nreg %} <a
-                                            href="{{ nreg.url }}"> {{ nreg.message }} </a></div>
+                                    <div class="col-md-2" style="display: flex">  {% get_registro speech as nreg %} <a
+                                            href="{{ nreg.url }}"> {{ nreg.message }} </a>
+                                        <form method="post" style="margin-left: 10%">
+                                            {% csrf_token %}
+                                            <input name="form_id" value="delete" hidden>
+                                            <input name='block' value="{{ obj.pk }}" hidden>
+                                            <input type="submit" value="x" class="btn btn-danger btn-sm">
+                                        </form>
+                                    </div>
                                 </div>
                             {% endif %}
                         {% endfor %}
 
                     {% else %}
-
                         <div class="col-md-2 text-center"> {{ obj.start_time | date:"P" }}
                             a {{ obj.end_time | date:"P" }} </div>
-                        <div class="col-md-10 text-center"> {{ obj.text }}</div>
-
+                        <div class="col-md-10 text-center"> {{ obj.text }}
+                            <form method="post" style="float:right">
+                                {% csrf_token %}
+                                <input name="form_id" value="delete" hidden>
+                                <input name='block' value="{{ obj.pk }}" hidden>
+                                <input type="submit" value="x" class="btn btn-danger btn-sm">
+                            </form>
+                        </div>
                     {% endif %}
                 </div>
             {% endfor %}
@@ -359,30 +372,31 @@
     <p id="actualRoom" hidden>{{ room_id }}</p>
     <br><br>
 
-<div class="modal fade" role="dialog" id="room_modal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+    <div class="modal fade" role="dialog" id="room_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                     <h2 class="modal-title text-center">{% trans 'Create Room' %}</h2>
-            </div>
-            <div class="modal-body">
-                <form name="roomForm" action="proposal/createRoom/" method="post">
-                    {% csrf_token %}
-                    {{ room_form|bootstrap }}
-                    <input name="form_id" value="roomForm" hidden>
-                    <br>
-                    <div class="form-group text-center">
-                        <input type="submit" name="action" class="btn btn-primary" value="{% trans 'Save Room' %}">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans 'Close' %}</button>
-                    </div>
-                </form>
+                </div>
+                <div class="modal-body">
+                    <form name="roomForm" action="proposal/createRoom/" method="post">
+                        {% csrf_token %}
+                        {{ room_form|bootstrap }}
+                        <input name="form_id" value="roomForm" hidden>
+                        <br>
+                        <div class="form-group text-center">
+                            <input type="submit" name="action" class="btn btn-primary" value="{% trans 'Save Room' %}">
+                            <button type="button" class="btn btn-secondary"
+                                    data-dismiss="modal">{% trans 'Close' %}</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
 {% endblock %}
@@ -400,9 +414,9 @@
                     $("#id_start_time").val($("#actualDay").text() + " " + $(this).attr("hora"));
                     $("#id_end_time").val(addhoras($(this).attr("hora"), ui.draggable.attr("time")));
                     $("#id_color").val((ui.draggable.attr("color")));
-                    if (ui.draggable.attr("is_speech")==1){
+                    if (ui.draggable.attr("is_speech") == 1) {
                         $("#id_is_speech").prop("checked", true);
-                    }else{
+                    } else {
                         $("#id_is_speech").prop("checked", false);
                     }
                     $("#id_room").val($("#actualRoom").text());
@@ -420,7 +434,7 @@
             return (endtime)
         }
 
-        function send_filter(){
+        function send_filter() {
             $('#speeches').empty()
             $.ajax({
                 url: "proposal/filterSpeeches/",
@@ -439,7 +453,7 @@
                         for (var i = 0; i < result.length; i++)
                             $('#speeches').append('<li class="draggable"' +
                                 'value=' + Object.values(result[i])[1] + ' color=' + data.color[i] +
-                                  ' is_speech="1"' + 'desc="none"' + 'time=' + data.times[i] + '>' +
+                                ' is_speech="1"' + 'desc="none"' + 'time=' + data.times[i] + '>' +
                                 Object.values(result[i]['fields'])[2] + '</li>')
                         $('.draggable').draggable();
                     } else {
