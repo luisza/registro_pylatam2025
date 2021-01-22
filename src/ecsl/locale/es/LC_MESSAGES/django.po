@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ECSL V1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-20 17:07-0600\n"
+"POT-Creation-Date: 2021-01-21 22:03-0600\n"
 "PO-Revision-Date: 2017-06-04 17:12-0600\n"
 "Last-Translator: Luis Zárate <luis.zarate@solvosoft.com>\n"
 "Language-Team: ES <ES@li.org>\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.6.10\n"
 
-#: ecsl/charlas.py:80 ecsl/charlas.py:121
+#: ecsl/charlas.py:108 ecsl/charlas.py:153
 msgid "Sorry, we need an event to display the schedule"
 msgstr "Lo sentimos, pero necesitamos eventos para desplegar la agenda."
 
-#: ecsl/charlas.py:139 ecsl/charlas.py:186
+#: ecsl/charlas.py:171 ecsl/charlas.py:218
 msgid "The payment is still pending to be confirmed"
 msgstr "El pago aún esta pendiente de confirmar."
 
@@ -34,7 +34,8 @@ msgstr "Nombre"
 msgid "Last name"
 msgstr "Apellidos"
 
-#: ecsl/forms.py:84 proposal/models.py:9 proposal/models.py:33
+#: ecsl/forms.py:84 proposal/models.py:11 proposal/models.py:23
+#: proposal/models.py:35 proposal/models.py:166
 msgid "Name"
 msgstr "Nombre"
 
@@ -46,12 +47,12 @@ msgstr "Correo"
 msgid "Subject"
 msgstr "Asunto"
 
-#: ecsl/forms.py:118
+#: ecsl/forms.py:118 proposal/models.py:168
 msgid "Message"
 msgstr "Mensaje"
 
 #: ecsl/models.py:9 ecsl/models.py:24 ecsl/models.py:35 ecsl/models.py:191
-#: proposal/models.py:21 proposal/models.py:107
+#: proposal/models.py:109
 msgid "Nombre"
 msgstr "Nombre"
 
@@ -64,7 +65,7 @@ msgid "Opción de envío"
 msgstr "Opción de envío"
 
 #: ecsl/models.py:80 ecsl/models.py:158 ecsl/models.py:207
-#: proposal/models.py:58
+#: proposal/models.py:59
 msgid "Usuario"
 msgstr "Usuario"
 
@@ -125,7 +126,8 @@ msgstr ""
 "ECSL por favor comente en este espacio."
 
 #: ecsl/models.py:128 ecsl/models.py:165 ecsl/models.py:195 ecsl/models.py:217
-#: ecsl/models.py:280 proposal/models.py:76
+#: ecsl/models.py:280 proposal/models.py:77 proposal/models.py:112
+#: proposal/models.py:170
 msgid "Event"
 msgstr "Evento"
 
@@ -177,7 +179,7 @@ msgstr "Fecha Final"
 msgid "Location"
 msgstr "Sede"
 
-#: ecsl/models.py:234 proposal/models.py:62
+#: ecsl/models.py:234 proposal/models.py:63
 msgid "Description"
 msgstr "Descripción"
 
@@ -293,6 +295,7 @@ msgstr "Contáctenos"
 #: ecsl/templates/django_registration/resend_activation_form.html:10
 #: ecsl/templates/ecsl/becas_form.html:17
 #: ecsl/templates/registration/login.html:19
+#: proposal/templates/proposal/blockschedule_list.html:73
 msgid "Submit"
 msgstr "Enviar"
 
@@ -696,8 +699,6 @@ msgid "Scholarship Detail"
 msgstr "Detalles de beca"
 
 #: ecsl/templates/ecsl/becas_detail.html:16
-#, fuzzy
-#| msgid "Name"
 msgid "State"
 msgstr "Estado"
 
@@ -726,6 +727,9 @@ msgid "My profile"
 msgstr "Mi perfil"
 
 #: ecsl/templates/ecsl/inscription_form.html:19
+#: proposal/templates/proposal/blockschedule_list.html:156
+#: proposal/templates/proposal/blockschedule_list.html:177
+#: proposal/templates/proposal/blockschedule_list.html:197
 #: proposal/templates/proposal/speech_form.html:11
 msgid "Save"
 msgstr "Guardar"
@@ -792,35 +796,35 @@ msgstr "¿Problemas al iniciar sesión?"
 msgid "Forgot your password?"
 msgstr "¿Olvidó su contraseña?"
 
-#: ecsl/views.py:87
+#: ecsl/views.py:89
 #, python-format
 msgid "from %(start)s to %(end)s"
 msgstr "From %(start)s to %(end)s"
 
-#: ecsl/views.py:105
+#: ecsl/views.py:107
 msgid "Profile created successfully, please register in the event"
 msgstr "Perfil ha sido creado satisfactoriamente, por favor registre el evento"
 
-#: ecsl/views.py:144
+#: ecsl/views.py:146
 msgid "Profile updated successfully"
 msgstr "Perfil actualizado satisfactoriamente"
 
-#: ecsl/views.py:176 ecsl/views.py:232
+#: ecsl/views.py:178 ecsl/views.py:234
 msgid "Sorry, there is no event for you to register"
 msgstr "Lo sentimos, pero no hay evento para que se pueda registrar"
 
-#: ecsl/views.py:186 ecsl/views.py:399
+#: ecsl/views.py:188 ecsl/views.py:400
 msgid ""
 "Sorry, first you have to update your data and then proceed with the "
 "registration"
 msgstr ""
 "Lo lamentamos, primero actualiza tus datos y luego procede con el registro"
 
-#: ecsl/views.py:192
+#: ecsl/views.py:194
 msgid "Sorry, there are no more spaces available"
 msgstr "Lo lamentamos, ya no hay más espacio disponible"
 
-#: ecsl/views.py:200
+#: ecsl/views.py:202
 msgid ""
 "Congratulations, your registration has been completed successfully, please "
 "enroll into the speeches"
@@ -828,33 +832,31 @@ msgstr ""
 "Felicidades su registro se ha completado satisfactoriamente, por favor "
 "regístrese en las charlas"
 
-#: ecsl/views.py:244 ecsl/views.py:332
+#: ecsl/views.py:246 ecsl/views.py:333
 msgid "There was no transaction, you already paid for this event"
 msgstr "No hubo transacción, ya se pagó por este evento"
 
-#: ecsl/views.py:247
+#: ecsl/views.py:249
 msgid "Register updated successfully"
 msgstr "Registro actualizado satisfactoriamente"
 
-#: ecsl/views.py:290
-#, fuzzy
-#| msgid "Thank! Your message was sent successfully"
+#: ecsl/views.py:292
 msgid "Thanks! Your message was sent successfully"
 msgstr "Gracias! Mensaje enviado con éxito"
 
-#: ecsl/views.py:292
+#: ecsl/views.py:294
 msgid "Wrong captcha, try again"
 msgstr "Captcha inválido, intente de nuevo"
 
-#: ecsl/views.py:306
+#: ecsl/views.py:308
 msgid "Invalid Package"
 msgstr "Paquete inválido"
 
-#: ecsl/views.py:343
+#: ecsl/views.py:344
 msgid "You registration is complete, this package is free"
 msgstr "El registro está listo, el paquete es gratuito"
 
-#: ecsl/views.py:409
+#: ecsl/views.py:410
 #, python-format
 msgid ""
 "Sorry, but the scholarship application period is not available at the time. "
@@ -863,88 +865,135 @@ msgstr ""
 "Lo lamentamos, pero el período para solicitar una beca no está disponible "
 "por el momento. Período para aplicar: %(start)s - %(end)s"
 
-#: ecsl/views.py:419
+#: ecsl/views.py:420
 msgid "We have received your scholarship application successfully"
 msgstr "Hemos recibido su solicitud de beca satisfactoriamente"
 
-#: ecsl/views.py:433
+#: ecsl/views.py:434
 msgid ""
 "Sorry, but the scholarship application you are looking for does not exist"
 msgstr "Lo lamentamos, pero la solicitud de beca que está buscando no existe"
 
-#: proposal/models.py:21
+#: proposal/models.py:23
 msgid "Basic speech"
 msgstr "Exposición básica"
 
-#: proposal/models.py:22
+#: proposal/models.py:24
 msgid "Time (in minutes)"
 msgstr "Tiempo (en minutos)"
 
-#: proposal/models.py:28 proposal/models.py:29
+#: proposal/models.py:30 proposal/models.py:31
 msgid "Activity Duration"
 msgstr "Duración de la actividad"
 
-#: proposal/models.py:52
+#: proposal/models.py:53
 msgid "everyone"
 msgstr "Cualquiera"
 
-#: proposal/models.py:53
+#: proposal/models.py:54
 msgid "novice"
 msgstr "Básico"
 
-#: proposal/models.py:54
+#: proposal/models.py:55
 msgid "intermediate"
 msgstr "Intermedio"
 
-#: proposal/models.py:55
+#: proposal/models.py:56
 msgid "advanced"
 msgstr "Avanzado"
 
-#: proposal/models.py:60
+#: proposal/models.py:61
 msgid "Speaker_information"
 msgstr "Información del charlista"
 
-#: proposal/models.py:61
+#: proposal/models.py:62
 msgid "Speech Title"
 msgstr "Titulo de la charla"
 
-#: proposal/models.py:64
+#: proposal/models.py:65
 msgid "Topic"
 msgstr "Temas"
 
-#: proposal/models.py:65
+#: proposal/models.py:66
 msgid "Audience"
 msgstr "Audiencia"
 
-#: proposal/models.py:68
+#: proposal/models.py:69
 msgid "Skill level required"
 msgstr "Nivel de habilidad"
 
-#: proposal/models.py:70
+#: proposal/models.py:71
 msgid "Notes for audience"
 msgstr "Notas para la audiencia"
 
-#: proposal/models.py:71
+#: proposal/models.py:72
 msgid "Speech Type"
 msgstr "Tipo de charla"
 
-#: proposal/models.py:74
-#, fuzzy
-#| msgid "Presentación"
+#: proposal/models.py:75
 msgid "Presentation"
 msgstr "Presentación"
 
-#: proposal/models.py:77
+#: proposal/models.py:78
 msgid "Duration"
 msgstr "Duración"
 
-#: proposal/models.py:78
+#: proposal/models.py:79 proposal/models.py:167
 msgid "Duration Assigned"
 msgstr "Duración Asignada"
 
+#: proposal/models.py:80 proposal/models.py:171
+msgid "is Scheduled"
+msgstr "Agendado"
+
+#: proposal/models.py:110
+msgid "Spaces"
+msgstr "Cupo"
+
+#: proposal/models.py:111
+msgid "Map"
+msgstr "Mapa"
+
+#: proposal/models.py:169
+msgid "Room"
+msgstr "Sala"
+
+#: proposal/templates/proposal/blockschedule_list.html:78
+msgid "Speeches"
+msgstr "Charlas"
+
+#: proposal/templates/proposal/blockschedule_list.html:128
+msgid "Special Activities"
+msgstr "Actividades especiales"
+
+#: proposal/templates/proposal/blockschedule_list.html:148
+msgid "New Speech Topic"
+msgstr "Nuevo tema para charlas"
+
+#: proposal/templates/proposal/blockschedule_list.html:169
+msgid "New Speech Type"
+msgstr "Nuevo tipo de charla"
+
+#: proposal/templates/proposal/blockschedule_list.html:189
+msgid "New Special Activity"
+msgstr "Nueva actividad especial"
+
+#: proposal/templates/proposal/blockschedule_list.html:227
 #: proposal/templates/proposal/speech_list.html:9
 msgid "Add"
 msgstr "Agregar"
+
+#: proposal/templates/proposal/blockschedule_list.html:369
+msgid "Create Room"
+msgstr "Crear Sala"
+
+#: proposal/templates/proposal/blockschedule_list.html:378
+msgid "Save Room"
+msgstr "Guardar Sala"
+
+#: proposal/templates/proposal/blockschedule_list.html:379
+msgid "Close"
+msgstr "Cerrar"
 
 #: proposal/templates/proposal/speech_list.html:22
 msgid "Edit"
@@ -970,7 +1019,7 @@ msgstr "Siguiente"
 msgid "Are you sure you want to delete"
 msgstr "Está seguro que desea eliminar"
 
-#: proposal/views.py:34 proposal/views.py:93
+#: proposal/views.py:36 proposal/views.py:179
 msgid ""
 "We are sorry! You have to be registered as a system user to be able to senda "
 "proposal speech"
@@ -978,7 +1027,7 @@ msgstr ""
 "Lo sentimos ! Para poder enviar una propuesta de charla tiene que estar "
 "registrado como usuario en nuestro sistema."
 
-#: proposal/views.py:50 proposal/views.py:109
+#: proposal/views.py:52 proposal/views.py:195
 msgid "We are sorry! The proposal speech period is not active"
 msgstr ""
 "Lo sentimos! No estamos en periodo de envíos de propuestas para charlas"
