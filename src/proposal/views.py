@@ -1,8 +1,8 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from .forms import SpeechForm, TopicForm, TypeForm, SpecialActivityForm
+from .forms import SpeechForm, TopicForm, TypeForm, SpecialActivityForm, RoomsCreateForm
 from django.urls import reverse, reverse_lazy
-from proposal.models import Speech
+from proposal.models import Speech, Room
 from ecsl.models import Payment, Inscription, EventECSL
 import hashlib
 import urllib
@@ -55,27 +55,55 @@ class SpeechListView(generic.ListView):
         return super(SpeechListView, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        return Speech.objects.filter(user=self.request.user)
+        event = EventECSL.objects.filter(current=True).first()
+        if event:
+            return Speech.objects.filter(user=self.request.user, event=event)
 
 
-def get_color_speech(event, request):
-    colors = []
-    result = Speech.objects.filter(event=event, topic=request.POST['topic'],
-                                   speech_type=request.POST['type'])
+def get_color_speech(request, result):
+    colors = None
     if result:
+        colors = []
         for speech in result:
             colors.append(speech.topic.color)
     return colors
 
+def get_times_speech(request, result):
+    times = None
+    if result:
+        times = []
+        for speech in result:
+            times.append(speech.time_given.time)
+    return times
+
 
 def get_all_speeches(request):
     if request.method == 'POST':
-        result = None
+        result = []
+        colors = []
         event = EventECSL.objects.filter(current=True).first()
-        if event:
-            result = serializers.serialize('json', Speech.objects.filter(event=event, topic=request.POST['topic'],
-                                                                         speech_type=request.POST['type']))
-        return JsonResponse(data={'result': result, 'color': get_color_speech(event, request)})
+        if event and 'topic' in request.POST and 'type' in request.POST:
+            if request.POST['topic'] == 'None' and request.POST['type'] == 'None':
+                result_query = Speech.objects.filter(event=event, is_scheduled=False)
+                result = serializers.serialize('json', result_query)
+
+            elif request.POST['topic'] == 'None' and request.POST['type'] != 'None':
+                result_query = Speech.objects.filter(event=event, speech_type=request.POST['type'],
+                                                     is_scheduled=False)
+                result = serializers.serialize('json', result_query)
+
+            elif request.POST['type'] == 'None' and request.POST['topic'] != 'None':
+                result_query = Speech.objects.filter(event=event, topic=request.POST['topic'],
+                                                     is_scheduled=False)
+                result = serializers.serialize('json', result_query)
+            else:
+                result_query = Speech.objects.filter(event=event, speech_type=request.POST['type'],
+                                                     is_scheduled=False, topic=request.POST['topic'])
+                result = serializers.serialize('json', result_query)
+
+            times = get_times_speech(request, result_query)
+            colors = get_color_speech(request, result_query)
+        return JsonResponse(data={'result': result, 'color': colors, 'times': times})
 
 
 def get_participants(request):
@@ -98,6 +126,17 @@ def get_participants(request):
     return JsonResponse(dev, safe=False)
 
 
+class CreateRoom(generic.CreateView):
+    model = Room
+    form_class = RoomsCreateForm
+    success_url = reverse_lazy('list_charlas')
+
+    def form_valid(self, form):
+        form.instance.event = EventECSL.objects.filter(current=True).first()
+        response = super(CreateRoom, self).form_valid(form)
+        return response
+
+
 class CreateTopic(generic.CreateView):
     model = Topic
     form_class = TopicForm
@@ -108,6 +147,7 @@ class CreateType(generic.CreateView):
     model = SpeechType
     form_class = TypeForm
     success_url = reverse_lazy('list_charlas')
+
 
 class CreateSpecialActivity(generic.CreateView):
     model = SpecialActivity
@@ -120,6 +160,7 @@ class CreateSpecialActivity(generic.CreateView):
             form.instance.event = event
             response = super(CreateSpecialActivity, self).form_valid(form)
         return response
+
 
 def deleteView(request, speech_id):
     if request.method == 'POST':

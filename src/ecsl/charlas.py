@@ -17,8 +17,9 @@ from ecsl.models import Payment, EventECSL
 from django.db.models.query_utils import Q
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
+from proposal.models import Room
 from ecsl.forms import scheduleForm
-from proposal.forms import TopicForm, TypeForm, SpecialActivityForm
+from proposal.forms import TopicForm, TypeForm, SpecialActivityForm, RoomsCreateForm
 
 
 def dayAmout(date1, date2):
@@ -60,20 +61,39 @@ class CharlaContext:
             # txt = str(day.day)+" de "+str(day.strftime('%B'))
             # days.append(txt)
             days.append(day)
-        if current_event:
-            speeches = Speech.objects.filter(event=current_event)
-            special = SpecialActivity.objects.filter(event=current_event)
+
+        rooms_list = Room.objects.filter(event=current_event)
+        rooms_names = {}
+        counter = 1
+        for room in rooms_list:
+            rooms_names[str(counter)] = room.name
+            counter += 1
+        try:
+            sala = int(self.request.GET.get('sala', '1'))
+            if sala not in range(1, len(rooms_list) + 1):
+                raise
+        except:
+            sala = 1
+
+        speeches = Speech.objects.filter(event=current_event, is_scheduled=False)
+        special = SpecialActivity.objects.filter(event=current_event, is_scheduled=False)
         context['dayList'] = days
         context['object_list'] = charlasDic["dia%s" % (dia)]
         context['dia'] = dia
         context['topics'] = Topic.objects.all()
         context['types'] = SpeechType.objects.all()
+        context['diaActual']= days[dia-1]
         context['form'] = scheduleForm()
-        context['speeches'] = Speech.objects.all()
+        context['speeches'] = speeches
         context['topicForm'] = TopicForm()
         context['typeForm'] = TypeForm()
         context['specialForm'] = SpecialActivityForm()
         context['specialActivity'] = special
+        context['rooms_list'] = rooms_list
+        context['sala'] = sala
+        context['room_name'] = rooms_names[str(sala)]
+        context['room_id'] = rooms_list[sala-1].id
+        context['room_form'] = RoomsCreateForm()
         return context
 
 
@@ -90,10 +110,12 @@ class Charlas(CharlaContext, ListView):
         return super(Charlas, self).dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-           if request.method=='POST':
+        if request.method == 'POST':
             form = scheduleForm(request.POST)
-            print(form)
             if form.is_valid():
+                print(form.cleaned_data)
+                speech_can_be_saved = False
+                block_can_be_saved = False
                 speechSchedule = SpeechSchedule(start_time=form.cleaned_data['start_time'],
                                                 end_time=form.cleaned_data['end_time'],
                                                 speech=form.cleaned_data['speech'],
@@ -113,6 +135,8 @@ class Charlas(CharlaContext, ListView):
                                                      end_time__gte=blockSchedule.start_time).first()
                 if not block and blockSchedule.start_time <= blockSchedule.end_time:
                     blockSchedule.save()
+
+
             return redirect(reverse('list_charlas'))
 
 

@@ -20,7 +20,7 @@ class Topic(models.Model):
 
 
 class SpeechTime(models.Model):
-    name = models.CharField(max_length=40, verbose_name=_("Nombre"), default=_("Basic speech"))
+    name = models.CharField(max_length=40, verbose_name=_("Name"), default=_("Basic speech"))
     time = models.IntegerField(default=10, verbose_name=_("Time (in minutes)"))
 
     def __str__(self):
@@ -77,6 +77,7 @@ class Speech(models.Model):
     event = models.ForeignKey(EventECSL, default="", on_delete=models.CASCADE, verbose_name=_("Event"))
     time_asked = models.ForeignKey(SpeechTime, null=True, on_delete=models.CASCADE, related_name='time_asked', verbose_name=_("Duration"))
     time_given = models.ForeignKey(SpeechTime, null=True, on_delete=models.CASCADE, related_name='time_given', verbose_name=_("Duration Assigned"))
+    is_scheduled = models.BooleanField(default=False, verbose_name=_('is Scheduled'))
 
     @property
     def speaker_name(self):
@@ -106,8 +107,9 @@ class Speech(models.Model):
 
 class Room(models.Model):
     name = models.CharField(max_length=100, verbose_name=_('Nombre'))
-    spaces = models.SmallIntegerField(default=30)
-    map = models.ImageField(upload_to="mapa", null=True, blank=True)
+    spaces = models.SmallIntegerField(default=30, verbose_name=_('Spaces'))
+    map = models.ImageField(upload_to="mapa", null=True, blank=True, verbose_name=_('Map'))
+    event = models.ForeignKey(EventECSL, on_delete=models.CASCADE, verbose_name=_("Event"), null=True, default=None)
 
     def __str__(self):
         return self.name
@@ -132,24 +134,22 @@ class Register_Speech(models.Model):
 class SpeechSchedule(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
-    speech = models.ForeignKey(Speech, on_delete=models.CASCADE)
-    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    speech = models.ForeignKey(Speech, on_delete=models.CASCADE, null=True, blank=True)
+    special = models.ForeignKey('SpecialActivity', on_delete=models.CASCADE, null=True, blank=True)
+    room = models.ForeignKey('Room', default="", on_delete=models.CASCADE)
 
     def __str__(self):
-        return "(%s %s) %s en %s" % (self.start_time.strftime("%Y-%m-%d %H:%M"),
+        return "(%s %s) %s" % (self.start_time.strftime("%Y-%m-%d %H:%M"),
                                      self.end_time.strftime("%Y-%m-%d %H:%M"),
-                                     self.speech.title, self.room.name)
+                                     self.room.name)
 
     @property
     def title(self):
-        return self.speech
+        return self.room.name + " "+str(self.start_time)+" "+str(self.end_time)
 
     def registros(self):
         regs = Register_Speech.objects.filter(speech=self).count()
         total = self.room.spaces - regs
-
-        if self.speech.pk == 14:
-            return ""
 
         dev = "Lleno"
         if total > 0:
@@ -163,25 +163,15 @@ class SpeechSchedule(models.Model):
 
 
 class SpecialActivity(models.Model):
-    name = models.CharField(max_length=100, verbose_name=_('Nombre'))
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    name = models.CharField(max_length=100, verbose_name=_('Name'))
+    time = models.ForeignKey(SpeechTime, null=True, on_delete=models.CASCADE,verbose_name=_("Duration Assigned"))
     message = models.TextField(null=True, blank=True, verbose_name=_("Message"))
-    room = models.ForeignKey('Room', on_delete=models.CASCADE, verbose_name=_("Room"))
+    room = models.ForeignKey('Room', default="", on_delete=models.CASCADE, verbose_name=_("Room"))
     event = models.ForeignKey(EventECSL, default="", on_delete=models.CASCADE, verbose_name=_("Event"))
+    is_scheduled = models.BooleanField(default=False, verbose_name=_('is Scheduled'))
 
     def __str__(self):
         return self.name
-
-    def get_speech(self, user=None):
-        query = SpeechSchedule.objects.filter(
-            start_time__gte=self.start_time,
-            start_time__lte=self.end_time,
-        )
-        if user:
-            query = query.filter(register_speech__user=user)
-
-        return query.order_by('start_time')
 
     class Meta:
         verbose_name = "Actividad Especial"

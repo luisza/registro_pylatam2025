@@ -6,7 +6,7 @@ Created on 2 jun. 2017
 from django import forms
 from ecsl.models import Inscription, Payment, PaymentOption, EventECSL
 from proposal.models import SpeechSchedule, Topic, Speech, Register_Speech, \
-    BlockSchedule
+    BlockSchedule, Room
 from django.utils.translation import ugettext_lazy as _
 
 class ProfileForm(forms.ModelForm):
@@ -122,7 +122,7 @@ class ContactForm(forms.Form):
     )
 
 class scheduleForm(forms.ModelForm):
-    is_speech = forms.BooleanField()
+    is_speech = forms.BooleanField(required=False)
     text = forms.CharField(max_length=250)
     color = forms.CharField(max_length=10)
     class Meta:

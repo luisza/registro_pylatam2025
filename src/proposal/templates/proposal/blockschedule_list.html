@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load bootstrap %}
 {% load registro_charla %}
 
 {% block content %}
@@ -29,43 +30,81 @@
             color: #fff;
             font-weight: bold;
         }
+
+        .days {
+            padding-left: 10%;
+        }
+
+        .roomContainer {
+            display: inline-block;
+            width: 10%;
+            height: fit-content;
+        }
+
+        .scheduleContainer {
+            float: right;
+            width: 89%;
+            padding: 1%;
+        }
+
+
     </style>
+
+
+    <h2> Temáticas </h2>
+
+    <form id="activityForm" name="activityForm" method="post" hidden>
+        {% csrf_token %}
+        <label>Inicio</label>
+        {{ form.start_time }}
+        <label>Fin</label>
+        {{ form.end_time }}
+        <label>Speech</label>
+        {{ form.speech }}
+        <label>Room</label>
+        {{ form.room }}
+        <label>Is_peech</label>
+        {{ form.is_speech }}
+        <label>Text</label>
+        {{ form.text }}
+        <label>Color</label>
+        {{ form.color }}
+        <input name="form_id" value="activityForm">
+        <input type="submit" name="action" value={% trans 'Submit' %}>
+    </form>
 
     <div class="row">
         <div class="col-sm-4">
-            <h2> Speeches </h2>
+            <h2> {% trans 'Speeches' %} </h2>
             <hr>
-
             <div class="card">
                 <div class="card-body">
                     <div style="display: flex">
                         <div class="input-group">
-                        <span class="input-group-btn">
-                            <a style="height: 40px;" data-toggle="modal"
-                               data-target="#topic-modal" class="btn btn-success"><i
-                                    class="fas fa-plus"></i></a>
-                  
-                        </span>
+                            <span class="input-group-btn">
+                                <a style="height: 40px;" data-toggle="modal"
+                                   data-target="#topic-modal" class="btn btn-success"><i
+                                        class="fas fa-plus"></i></a>
+                            </span>
                             <form id="filter" method="post">
                                 {% csrf_token %}
-
                                 <select class="btn btn-primary" style="width: 80%; text-overflow: ellipsis" name="topic"
                                         id="topic">
+                                    <option selected value="None">Topic</option>
                                     {% for topic in topics %}
                                         <option value={{ topic.id }}>{{ topic }}</option>
                                     {% endfor %}
                                 </select>
                         </div>
-
                         <div class="input-group">
-                        <span class="input-group-btn">
-                            <a data-toggle="modal" data-target="#type-modal"
-                               style="height: 40px;" class="btn btn-success">
-                                <i class="fas fa-plus"></i></a>
-                        </span>
-
+                            <span class="input-group-btn">
+                                <a data-toggle="modal" data-target="#type-modal"
+                                   style="height: 40px;" class="btn btn-success">
+                                    <i class="fas fa-plus"></i></a>
+                            </span>
                             <select style="width: 80%; text-overflow: ellipsis" class="btn btn-primary" name="type"
                                     id="type">
+                                <option selected value="None">Type</option>
                                 {% for type in types %}
                                     <option value={{ type.id }}>{{ type }}</option>
                                 {% endfor %}
@@ -74,47 +113,43 @@
                         <a onclick="send_filter()" id="search" class="btn btn-info" style="height: 40px"><i
                                 class="fas fa-search"></i></a>
                         </form>
+                        </div>
                     </div>
                 </div>
-
-            </div>
-            <div class="jumbotron">
-                <ul id="speeches">
-                    {% for speech in speeches %}
-                        <li class="draggable">{{ speech }}</li>
-                    {% endfor %}
-                </ul>
-
-                <div id="droppable" class="ui-widget-header">
-                    <p>Drop here</p>
+                <div class="jumbotron">
+                    <ul id="speeches">
+                        {% for speech in speeches %}
+                            <li class="draggable" value="{{ speech.pk }}" color="{{ speech.topic.color }}"
+                                time="{{ speech.time_given.time }}" is_speech="1" desc="none">{{ speech}}</li>
+                        {% endfor %}
+                    </ul>
                 </div>
-            </div>
-            <div style="display: flex">
-                <h2> Special Activities</h2>
-                <div style="padding-top: 18px; margin-left: 10px">
-                    <a data-toggle="modal" data-target="#special-modal"
-                       style="height: 40px;" class="btn btn-success"><i class="fas fa-plus"></i></a>
+                <div style="display: flex">
+                    <h2> {% trans 'Special Activities' %}</h2>
+                    <div style="padding-top: 18px; margin-left: 10px">
+                        <a data-toggle="modal" data-target="#special-modal"
+                           style="height: 40px;" class="btn btn-success"><i class="fas fa-plus"></i></a>
+                    </div>
                 </div>
-            </div>
-            <hr>
-            <div class="jumbotron">
-                <ul id="speeches">
-                    {% for special in specialActivity %}
-                        <li class="draggable">{{ special }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
+                <hr>
+                <div class="jumbotron">
+                    <ul id="speeches">
+                        {% for special in specialActivity %}
+                            <li class="draggable" color="#ddd234" time="{{ special.time.time }}" is_speech="0" desc="{{ special.message }}">{{ special }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
 
             <div id="topic-modal" class="modal fade" role="dialog">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">New Speech Topic</h4>
+                            <h4 class="modal-title"> {% trans 'New Speech Topic' %} </h4>
                         </div>
                         <div class="modal-body" style="text-align: center">
                             <form action="proposal/createTopic/" method="post">
-                                 {% csrf_token %}
+                                {% csrf_token %}
                                 <div class="jumbotron" style="display: inline-grid">
                                     {{ topicForm }}
                                     <hr>
@@ -131,7 +166,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">New Speech Type</h4>
+                            <h4 class="modal-title"> {% trans 'New Speech Type' %}</h4>
                         </div>
                         <div class="modal-body" style="text-align: center">
                             <form action="proposal/createType/" method="post">
@@ -151,7 +186,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">New Special Activity</h4>
+                            <h4 class="modal-title">{% trans 'New Special Activity' %}</h4>
                         </div>
                         <div class="modal-body" style="text-align: center">
                             <form action="proposal/createSpecial/" method="post">
@@ -165,35 +200,36 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
-
         </div>
-
-
         <div class="col-sm-8">
 
-            <div class="row">
-                <div class="col-md-1"></div>
-                {% for tipo in tipos %}
-                    <div class="col-md-2" style="color: {{ tipo.color }}"> {{ tipo.name }} </div>
+        </div>
+    </div>
+    </div>
+    <hr>
+    <div class="container">
+        <ul class="days nav nav-tabs">
+            {% for d in dayList %}
+                <li role="presentation" class="{% if dia ==  forloop.counter %} active {% endif %}">
+                    <a href="{% url 'list_charlas' %}?dia={{ forloop.counter }}">{{ d }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+        <div class="roomContainer">
+            <ul class="nav nav-tabs flex-column">
+                {% for room in rooms_list %}
+                    <li role="presentation" class="{% if sala == forloop.counter %} active {% endif %}">
+                        <a href="{% url 'list_charlas' %}?dia={{ dia }}&sala={{ forloop.counter }}">{{ room }}</a>
+                    </li>
                 {% endfor %}
-            </div>
-
-            <hr>
-
-            <ul class="nav nav-tabs">
-                {% for d in dayList %}
-                    <li role="presentation" class="{% if dia ==  forloop.counter %} active {% endif %}">
-                        <a href="{% url 'list_charlas' %}?dia={{ forloop.counter }}">{{ d }}</a></li>
-                {% endfor %}
-
-
+                <li role="presentation" class="">
+                    <a href="#" data-toggle="modal" data-target="#room_modal">{% trans 'Add' %}</a>
+                </li>
             </ul>
-            <br><br>
+        </div>
 
-
+        <div class="scheduleContainer">
             <div class="row theader">
                 <div class="col-md-2">Horario</div>
                 <div class="col-md-5">Título</div>
@@ -202,6 +238,7 @@
                 <div class="col-md-2">Registro</div>
             </div>
 
+
             {% for obj in object_list %}
 
                 <div id="block_{{ obj.pk }}" class="row {% if obj.is_speech %}speech_row{% else %} text_row {% endif %}"
@@ -209,25 +246,27 @@
 
                     {% if obj.is_speech %}
                         {% for speech in obj.get_speech %}
-                            <div class="row">
-                                <div class="col-md-2">{{ speech.start_time | date:"P" }}
-                                    a {{ speech.end_time | date:"P" }}
-                                    <p style="color:{{ speech.speech.topic.color }}">
-                                        {{ speech.speech.speech_type.name }}
-                                    </p>
-                                    {{ speech.registros }}
+                            {% if speech.room.name == room_name %}
+                                <div class="row">
+                                    <div class="col-md-2">{{ speech.start_time | date:"P" }}
+                                        a {{ speech.end_time | date:"P" }}
+                                        <p style="color:{{ speech.speech.topic.color }}">
+                                            {{ speech.speech.speech_type.name }}
+                                        </p>
+                                        {{ speech.registros }}
 
-                                </div>
-                                <div class="col-md-5">
+                                    </div>
+                                    <div class="col-md-5">
 
-                                    <a href="{% url 'detail_charla' speech.speech.pk %}"
-                                       target="_blank"> {{ speech.speech.title }} </a>
+                                        <a href="{% url 'detail_charla' speech.speech.pk %}"
+                                           target="_blank"> {{ speech.speech.title }} </a>
+                                    </div>
+                                    <div class="col-md-2">{{ speech.speech.user.get_full_name }}</div>
+                                    <div class="col-md-1">{{ speech.room.name }}</div>
+                                    <div class="col-md-2">  {% get_registro speech as nreg %} <a
+                                            href="{{ nreg.url }}"> {{ nreg.message }} </a></div>
                                 </div>
-                                <div class="col-md-2">{{ speech.speech.user.get_full_name }}</div>
-                                <div class="col-md-1">{{ speech.room.name }}</div>
-                                <div class="col-md-2">  {% get_registro speech as nreg %} <a
-                                        href="{{ nreg.url }}"> {{ nreg.message }} </a></div>
-                            </div>
+                            {% endif %}
                         {% endfor %}
 
                     {% else %}
@@ -239,10 +278,113 @@
                     {% endif %}
                 </div>
             {% endfor %}
-
-            <br><br>
         </div>
     </div>
+
+
+    <br><br>
+
+
+
+    <table class="table">
+        <thead class="thead">
+        <tr>
+            <th>Horario</th>
+            <th>Actividad</th>
+        </tr>
+        </thead>
+        <tr>
+            <td>7:00</td>
+            <td class="droppable" hora="7:00:00"></td>
+        </tr>
+        <tr>
+            <td>8:00</td>
+            <td class="droppable" hora="8:00:00"></td>
+        </tr>
+        <tr>
+            <td>9:00</td>
+            <td class="droppable" hora="9:00:00"></td>
+        </tr>
+        <tr>
+            <td>10:00</td>
+            <td class="droppable" hora="10:00:00"></td>
+        </tr>
+        <tr>
+            <td>11:00</td>
+            <td class="droppable" hora="11:00:00"></td>
+        </tr>
+        <tr>
+            <td>12:00</td>
+            <td class="droppable" hora="12:00:00"></td>
+        </tr>
+        <tr>
+            <td>13:00</td>
+            <td class="droppable" hora="13:00:00"></td>
+        </tr>
+        <tr>
+            <td>14:00</td>
+            <td class="droppable" hora="14:00:00"></td>
+        </tr>
+        <tr>
+            <td>15:00</td>
+            <td class="droppable" hora="15:00:00"></td>
+        </tr>
+        <tr>
+            <td>16:00</td>
+            <td class="droppable" hora="16:00:00"></td>
+        </tr>
+        <tr>
+            <td>17:00</td>
+            <td class="droppable" hora="17:00:00"></td>
+        </tr>
+        <tr>
+            <td>18:00</td>
+            <td class="droppable" hora="18:00:00"></td>
+        </tr>
+        <tr>
+            <td>19:00</td>
+            <td class="droppable" hora="19:00:00"></td>
+        </tr>
+        <tr>
+            <td>20:00</td>
+            <td class="droppable" hora="20:00:00"></td>
+        </tr>
+        <tr>
+            <td>21:00</td>
+            <td class="droppable" hora="21:00:00"></td>
+    </table>
+
+
+    <p id="actualDay" hidden>{{ diaActual.year }}-{{ diaActual.month }}-{{ diaActual.day }}</p>
+    <p id="actualRoom" hidden>{{ room_id }}</p>
+    <br><br>
+
+<div class="modal fade" role="dialog" id="room_modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                    <h2 class="modal-title text-center">{% trans 'Create Room' %}</h2>
+            </div>
+            <div class="modal-body">
+                <form name="roomForm" action="proposal/createRoom/" method="post">
+                    {% csrf_token %}
+                    {{ room_form|bootstrap }}
+                    <input name="form_id" value="roomForm" hidden>
+                    <br>
+                    <div class="form-group text-center">
+                        <input type="submit" name="action" class="btn btn-primary" value="{% trans 'Save Room' %}">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans 'Close' %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 {% endblock %}
 
 {% block js %}
@@ -251,32 +393,58 @@
     <script>
         $(function () {
             $(".draggable").draggable();
-            $("#droppable").droppable({
+            $(".droppable").droppable({
                 drop: function (event, ui) {
-                    $(this)
-                        .addClass("ui-state-highlight")
-                        .find("p")
-                        .html("Dropped!");
+                    console.log(ui.draggable.attr("time"))
+                    $("#id_speech").val(ui.draggable.val());
+                    $("#id_start_time").val($("#actualDay").text() + " " + $(this).attr("hora"));
+                    $("#id_end_time").val(addhoras($(this).attr("hora"), ui.draggable.attr("time")));
+                    $("#id_color").val((ui.draggable.attr("color")));
+                    if (ui.draggable.attr("is_speech")==1){
+                        $("#id_is_speech").prop("checked", true);
+                    }else{
+                        $("#id_is_speech").prop("checked", false);
+                    }
+                    $("#id_room").val($("#actualRoom").text());
+                    $("#id_text").val(ui.draggable.attr("desc"));
+                    $("form#activityForm").submit();
                 }
             });
         });
-    </script>
 
-    <script>
+        function addhoras(hora, minutos) {
+            console.log(minutos)
+            starttime = new Date($("#actualDay").text() + " " + hora)
+            starttime.setMinutes(starttime.getMinutes() + minutos)
+            endtime = $("#actualDay").text() + " " + starttime.getHours() + ":" + starttime.getMinutes() + ":00"
+            return (endtime)
+        }
 
-        function send_filter() {
+        function send_filter(){
             $('#speeches').empty()
             $.ajax({
                 url: "proposal/filterSpeeches/",
                 type: "post",
                 data: $("#filter").serialize(),
                 success: function (data) {
-                    result = JSON.parse(data.result)
-                    for (var i = 0; i < result.length; i++)
-                        $('#speeches').append('<li class="draggable"' +
-                            'value=' + Object.values(result[i])[1] + ' color=' + data.color[i] + '>' +
-                            Object.values(result[i]['fields'])[2] + '</li>')
-                    $('.draggable').draggable();
+                    if (data.result.length != 0) {
+                        result = JSON.parse(data.result)
+                        if (Object.entries(result).length == 0) {
+                            result = null
+                        }
+                    } else {
+                        result = null
+                    }
+                    if (result != null) {
+                        for (var i = 0; i < result.length; i++)
+                            $('#speeches').append('<li class="draggable"' +
+                                'value=' + Object.values(result[i])[1] + ' color=' + data.color[i] +
+                                  ' is_speech="1"' + 'desc="none"' + 'time=' + data.times[i] + '>' +
+                                Object.values(result[i]['fields'])[2] + '</li>')
+                        $('.draggable').draggable();
+                    } else {
+                        $('#speeches').append('<p>No results matched</p>')
+                    }
                 }
             });
         }
