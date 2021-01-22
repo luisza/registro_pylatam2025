@@ -191,8 +191,7 @@ class BlockSchedule(models.Model):
 
     def get_speech(self, user=None):
         query = SpeechSchedule.objects.filter(
-            start_time__gte=self.start_time,
-            start_time__lte=self.end_time,
+            start_time=self.start_time,
         )
         if user:
             query = query.filter(register_speech__user=user)
