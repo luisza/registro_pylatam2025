@@ -298,7 +298,7 @@
     <br><br>
 
 
-
+    <button id="send_activities" name="send_activities" onclick="send_activities_list()">{% trans 'Submit' %}</button>
     <table class="table">
         <thead class="thead">
         <tr>
@@ -306,6 +306,7 @@
             <th>Actividad</th>
         </tr>
         </thead>
+        <tbody>
         <tr>
             <td>7:00</td>
             <td class="droppable" hora="7:00:00"></td>
@@ -365,6 +366,7 @@
         <tr>
             <td>21:00</td>
             <td class="droppable" hora="21:00:00"></td>
+        </tbody>
     </table>
 
 
@@ -405,29 +407,79 @@
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script>
+        var lista = [];
         $(function () {
             $(".draggable").draggable();
             $(".droppable").droppable({
                 drop: function (event, ui) {
-                    console.log(ui.draggable.attr("time"))
+                    $(this).append(ui.draggable.css({"position": ""}))
+                    ui.draggable.attr('start_time', $("#actualDay").text() + " " + $(this).attr("hora"))
+                    ui.draggable.attr('end_time', addhoras($(this).attr("hora"), ui.draggable.attr("time")))
+                    ui.draggable.attr('room', $("#actualRoom").text())
+
                     $("#id_speech").val(ui.draggable.val());
                     $("#id_start_time").val($("#actualDay").text() + " " + $(this).attr("hora"));
                     $("#id_end_time").val(addhoras($(this).attr("hora"), ui.draggable.attr("time")));
                     $("#id_color").val((ui.draggable.attr("color")));
+                    var is_speech = null
                     if (ui.draggable.attr("is_speech") == 1) {
                         $("#id_is_speech").prop("checked", true);
+                        is_speech = true
                     } else {
                         $("#id_is_speech").prop("checked", false);
+                        is_speech = ""
                     }
                     $("#id_room").val($("#actualRoom").text());
                     $("#id_text").val(ui.draggable.attr("desc"));
-                    $("form#activityForm").submit();
+                    var element = {
+                        'pk_speech': ui.draggable.val(),
+                        'color': ui.draggable.attr("color"),
+                        'start_time': ui.draggable.attr('start_time'),
+                        'end_time': ui.draggable.attr('end_time'),
+                        'is_speech': is_speech,
+                        'room': ui.draggable.attr('room'),
+                        'description': ui.draggable.attr("desc"),
+                    }
+
+
+                    var value = activities_in_list(element)
+                    if (value == false) {
+                        lista.push(element)
+                    }
                 }
-            });
+        });
         });
 
+
+        function activities_in_list(element) {
+            value = false
+            for (var i = 0; i < lista.length; i++) {
+                if (lista[i]['pk_speech'] === element['pk_speech']) {
+                    lista.splice(i, 1)
+                    lista.push(element)
+                    value = true
+                }
+            }
+            return value
+        }
+
+        function send_activities_list() {
+            var token = '{{csrf_token}}';
+            $.ajax({
+                headers: {"X-CSRFToken": token},
+                type: "post",
+                data: {
+                    'agenda': JSON.stringify(lista),
+                },
+                success: function (data) {
+                    console.log(data)
+                    location.reload()
+                }
+            });
+
+        }
+
         function addhoras(hora, minutos) {
-            console.log(minutos)
             starttime = new Date($("#actualDay").text() + " " + hora)
             starttime.setMinutes(starttime.getMinutes() + minutos)
             endtime = $("#actualDay").text() + " " + starttime.getHours() + ":" + starttime.getMinutes() + ":00"
@@ -462,7 +514,5 @@
                 }
             });
         }
-
-
     </script>
 {% endblock %}

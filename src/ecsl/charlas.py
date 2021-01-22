@@ -3,6 +3,8 @@ Created on 5 jun. 2017
 
 @author: luis
 '''
+import json
+from django.utils import timezone
 from django.views.generic.list import ListView
 from proposal.models import SpeechSchedule, Topic, Speech, Register_Speech, \
     BlockSchedule, SpeechType, SpecialActivity
@@ -10,7 +12,6 @@ import datetime
 from django.views.generic.detail import DetailView
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
 from django.urls.base import reverse
 from ecsl.models import Payment, EventECSL
@@ -83,7 +84,7 @@ class CharlaContext:
         context['topics'] = Topic.objects.all()
         context['types'] = SpeechType.objects.all()
         print(charlasDic["dia%s" % (dia)])
-        context['diaActual']= days[dia-1]
+        context['diaActual'] = days[dia - 1]
         context['form'] = scheduleForm()
         context['speeches'] = speeches
         context['topicForm'] = TopicForm()
@@ -93,7 +94,7 @@ class CharlaContext:
         context['rooms_list'] = rooms_list
         context['sala'] = sala
         context['room_name'] = rooms_names[str(sala)]
-        context['room_id'] = rooms_list[sala-1].id
+        context['room_id'] = rooms_list[sala - 1].id
         context['room_form'] = RoomsCreateForm()
         return context
 
@@ -112,53 +113,60 @@ class Charlas(CharlaContext, ListView):
 
     def post(self, request, *args, **kwargs):
         if request.method == 'POST':
-
-            if request.POST['form_id'] == 'delete':
-                block = BlockSchedule.objects.filter(id=request.POST['block']).first()
-                schedule = SpeechSchedule.objects.filter(start_time=block.start_time).first()
-                if block.is_speech:
-                    speech = schedule.speech
-                    speech.is_scheduled= False
-                    speech.save()
-                block.delete()
-                schedule.delete()
+            if request.POST.get('form_id'):
+                if request.POST['form_id'] == 'delete':
+                    block = BlockSchedule.objects.filter(id=request.POST['block']).first()
+                    schedule = SpeechSchedule.objects.filter(start_time=block.start_time).first()
+                    if block.is_speech:
+                        speech = schedule.speech
+                        speech.is_scheduled = False
+                        speech.save()
+                    block.delete()
+                    schedule.delete()
 
             form = scheduleForm(request.POST)
-            if form.is_valid():
-                blockValid=False
-                scheduleValid=False
-                speechSchedule = SpeechSchedule(start_time=form.cleaned_data['start_time'],
-                                                end_time=form.cleaned_data['end_time'],
-                                                speech=form.cleaned_data['speech'],
-                                                room=form.cleaned_data['room'])
-                speech = SpeechSchedule.objects.filter(room=speechSchedule.room,
-                                                       start_time__lt=speechSchedule.end_time,
-                                                       end_time__gt=speechSchedule.start_time).first()
-                sameSpeech= SpeechSchedule.objects.filter(room=speechSchedule.room,
-                                                       start_time=speechSchedule.start_time,
-                                                       end_time=speechSchedule.end_time).first()
-                if not speech and not sameSpeech and speechSchedule.start_time <= speechSchedule.end_time:
-                    speechSchedule.save()
-                    scheduleValid=True
+            if request.POST.get('agenda'):
+                result = json.loads(request.POST['agenda'])
+                for activities in result:
+                    blockValid = False
+                    scheduleValid = False
 
-                blockSchedule = BlockSchedule(start_time=form.cleaned_data['start_time'],
-                                              end_time=form.cleaned_data['end_time'],
-                                              is_speech=form.cleaned_data['is_speech'],
-                                              text=form.cleaned_data['text'],
-                                              color=form.cleaned_data['color'])
-                block = BlockSchedule.objects.filter(start_time__lt=blockSchedule.end_time,
-                                                     end_time__gt=blockSchedule.start_time).first()
-                sameBlock = BlockSchedule.objects.filter(start_time=blockSchedule.start_time,
-                                                     end_time=blockSchedule.end_time).first()
-                if not block and not sameBlock and blockSchedule.start_time <= blockSchedule.end_time:
-                    blockSchedule.save()
-                    blockValid=True
+                    speechSchedule = SpeechSchedule(start_time=timezone.datetime.strptime(activities['start_time'],
+                                                                                          "%Y-%m-%d %H:%M:%S"),
+                                                    end_time=timezone.datetime.strptime(
+                                                        activities['end_time'], "%Y-%m-%d %H:%M:%S"),
+                                                    speech=Speech.objects.filter(
+                                                        id=int(activities['pk_speech'])).first(),
+                                                    room=Room.objects.filter(id=int(activities['room'])).first(), )
+                    speech = SpeechSchedule.objects.filter(room=speechSchedule.room,
+                                                           start_time__lt=speechSchedule.end_time,
+                                                           end_time__gt=speechSchedule.start_time).first()
+                    sameSpeech = SpeechSchedule.objects.filter(room=speechSchedule.room,
+                                                               start_time=speechSchedule.start_time,
+                                                               end_time=speechSchedule.end_time).first()
+                    if not speech and not sameSpeech and speechSchedule.start_time <= speechSchedule.end_time:
+                        speechSchedule.save()
+                        scheduleValid = True
 
-                if form.cleaned_data['is_speech'] and blockValid and scheduleValid:
-                    speech = Speech.objects.filter(id=form.cleaned_data['speech'].id).first()
-                    speech.is_scheduled = True
-                    speech.save()
+                    blockSchedule = BlockSchedule(start_time=timezone.datetime.strptime(
+                        activities['start_time'], "%Y-%m-%d %H:%M:%S"),
+                        end_time=timezone.datetime.strptime(
+                            activities['end_time'], "%Y-%m-%d %H:%M:%S"),
+                        is_speech=bool(activities['is_speech']),
+                        text=activities['description'],
+                        color=activities['color'])
+                    block = BlockSchedule.objects.filter(start_time__lt=blockSchedule.end_time,
+                                                         end_time__gt=blockSchedule.start_time).first()
+                    sameBlock = BlockSchedule.objects.filter(start_time=blockSchedule.start_time,
+                                                             end_time=blockSchedule.end_time).first()
+                    if not block and not sameBlock and blockSchedule.start_time <= blockSchedule.end_time:
+                        blockSchedule.save()
+                        blockValid = True
 
+                    if activities['is_speech'] and blockValid and scheduleValid:
+                        speech = Speech.objects.filter(id=int(activities['pk_speech'])).first()
+                        speech.is_scheduled = True
+                        speech.save()
 
             return redirect(reverse('list_charlas'))
 
@@ -212,7 +220,8 @@ class CharlaDetail(DetailView):
 def register_user_to_speech(request, pk):
     current_event = EventECSL.objects.filter(current=True).first()
     speech = get_object_or_404(Speech, pk=pk)
-    fecha = datetime.datetime(int(request.GET['year']),int(request.GET['month']),int(request.GET['day']),int(request.GET['hour']),int(request.GET['minute']),int(request.GET['second']) )
+    fecha = datetime.datetime(int(request.GET['year']), int(request.GET['month']), int(request.GET['day']),
+                              int(request.GET['hour']), int(request.GET['minute']), int(request.GET['second']))
     schedule = get_object_or_404(SpeechSchedule, speech=speech, start_time=fecha)
     pago = Payment.objects.filter(user=request.user).first()
 
