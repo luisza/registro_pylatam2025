@@ -116,7 +116,7 @@ class Charlas(CharlaContext, ListView):
             if request.POST.get('form_id'):
                 if request.POST['form_id'] == 'delete':
                     block = BlockSchedule.objects.filter(id=request.POST['block']).first()
-                    schedule = SpeechSchedule.objects.filter(start_time=block.start_time).first()
+                    schedule = SpeechSchedule.objects.filter(start_time=block.start_time, room=request.POST['room']).first()
                     if block.is_speech:
                         speech = schedule.speech
                         speech.is_scheduled = False
@@ -154,11 +154,15 @@ class Charlas(CharlaContext, ListView):
                             activities['end_time'], "%Y-%m-%d %H:%M:%S"),
                         is_speech=bool(activities['is_speech']),
                         text=activities['description'],
-                        color=activities['color'])
+                        color=activities['color'],
+                        room=speechSchedule.room)
                     block = BlockSchedule.objects.filter(start_time__lt=blockSchedule.end_time,
-                                                         end_time__gt=blockSchedule.start_time).first()
+                                                         end_time__gt=blockSchedule.start_time,
+                                                         room=speechSchedule.room).first()
                     sameBlock = BlockSchedule.objects.filter(start_time=blockSchedule.start_time,
-                                                             end_time=blockSchedule.end_time).first()
+                                                             end_time=blockSchedule.end_time,
+                                                             room=speechSchedule.room).first()
+
                     if not block and not sameBlock and blockSchedule.start_time <= blockSchedule.end_time:
                         blockSchedule.save()
                         blockValid = True
