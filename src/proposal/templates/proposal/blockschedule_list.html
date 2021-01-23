@@ -2,55 +2,11 @@
 {% load i18n %}
 {% load bootstrap %}
 {% load registro_charla %}
-
+{% load static %}
+{% block css %}
+    <link href="{% static 'css/proposal.css' %}" rel="stylesheet">
+{% endblock %}
 {% block content %}
-    <style>
-        .theader {
-            text-decoration: blond;
-            background-color: #98978b;
-            padding: 10px 2px;
-            text-align: center;
-            color: #fff;
-            margin-bottom: 5px;
-        }
-
-        .speech_row {
-
-            padding: 10px 5px;
-            text-align: left;
-        }
-
-        .speech_row .row {
-            border: solid 1px #fff;
-            padding: 5px 0px;
-        }
-
-        .text_row {
-            padding: 10px 0px;
-            color: #fff;
-            font-weight: bold;
-        }
-
-        .days {
-            padding-left: 10%;
-        }
-
-        .roomContainer {
-            display: inline-block;
-            width: 10%;
-            height: fit-content;
-        }
-
-        .scheduleContainer {
-            float: right;
-            width: 89%;
-            padding: 1%;
-        }
-
-
-    </style>
-
-
     <h2> Temáticas </h2>
 
     <form id="activityForm" name="activityForm" method="post" hidden>
@@ -74,21 +30,21 @@
     </form>
 
     <div class="row">
-        <div class="col-sm-4">
-            <h2> {% trans 'Speeches' %} </h2>
+        <div class="col-sm-3">
+            <h4> {% trans 'Speeches' %} </h4>
             <hr>
             <div class="card">
                 <div class="card-body">
-                    <div style="display: flex">
+                    <div class="inline-flex">
                         <div class="input-group">
                             <span class="input-group-btn">
-                                <a style="height: 40px;" data-toggle="modal"
-                                   data-target="#topic-modal" class="btn btn-success"><i
+                                <a data-toggle="modal"
+                                   data-target="#topic-modal" class="btn btn-success add-button"><i
                                         class="fas fa-plus"></i></a>
                             </span>
                             <form id="filter" method="post">
                                 {% csrf_token %}
-                                <select class="btn btn-primary" style="width: 80%; text-overflow: ellipsis" name="topic"
+                                <select class="btn sidebar-select btn-primary" name="topic"
                                         id="topic">
                                     <option selected value="None">Topic</option>
                                     {% for topic in topics %}
@@ -99,10 +55,10 @@
                         <div class="input-group">
                             <span class="input-group-btn">
                                 <a data-toggle="modal" data-target="#type-modal"
-                                   style="height: 40px;" class="btn btn-success">
+                                   class="btn btn-success add-button">
                                     <i class="fas fa-plus"></i></a>
                             </span>
-                            <select style="width: 80%; text-overflow: ellipsis" class="btn btn-primary" name="type"
+                            <select class="btn sidebar-select btn-primary" name="type"
                                     id="type">
                                 <option selected value="None">Type</option>
                                 {% for type in types %}
@@ -110,7 +66,7 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <a onclick="send_filter()" id="search" class="btn btn-info" style="height: 40px"><i
+                        <a onclick="send_filter()" id="search" class="btn btn-info add-button"><i
                                 class="fas fa-search"></i></a>
                         </form>
                     </div>
@@ -119,24 +75,30 @@
             <div class="jumbotron">
                 <ul id="speeches">
                     {% for speech in speeches %}
-                        <li class="draggable" value="{{ speech.pk }}" color="{{ speech.topic.color }}"
+                        <li class="draggable activity" style="background-color: {{ speech.topic.color }};"
+                            value="{{ speech.pk }}" color="{{ speech.topic.color }}"
                             time="{{ speech.time_given.time }}" is_speech="1" desc="none">{{ speech }}</li>
                     {% endfor %}
                 </ul>
             </div>
-            <div style="display: flex">
+            <br>
+            <div class="inline-flex">
                 <h2> {% trans 'Special Activities' %}</h2>
-                <div style="padding-top: 18px; margin-left: 10px">
+                <div class="add-activity">
                     <a data-toggle="modal" data-target="#special-modal"
-                       style="height: 40px;" class="btn btn-success"><i class="fas fa-plus"></i></a>
+                       class="btn btn-success add-button pl-2"><i class="fas fa-plus"></i></a>
                 </div>
             </div>
             <hr>
             <div class="jumbotron">
                 <ul id="speeches">
                     {% for special in specialActivity %}
-                        <li class="draggable" color="#ddd234" time="{{ special.time.time }}" is_speech="0"
-                            desc="{{ special.message }}">{{ special }}</li>
+                        <li class="draggable activity" style="background-color: #ddd234;" color="#ddd234"
+                            time="{{ special.time.time }}" is_speech="0"
+                            desc="{{ special.message }}"
+                            value="{{ special.pk }}">
+                            {{ special }}
+                        </li>
                     {% endfor %}
                 </ul>
             </div>
@@ -203,33 +165,106 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-8">
-
+        <div class="col-sm-9">
+            <div class="container">
+                <ul class="days nav nav-tabs">
+                    {% for d in dayList %}
+                        <li role="presentation" class="{% if dia ==  forloop.counter %} active {% endif %}">
+                            <a href="{% url 'list_charlas' %}?dia={{ forloop.counter }}">{{ d }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="roomContainer">
+                    <ul class="nav nav-tabs flex-column">
+                        {% for room in rooms_list %}
+                            <li role="presentation" class="{% if sala == forloop.counter %} active {% endif %}">
+                                <a href="{% url 'list_charlas' %}?dia={{ dia }}&sala={{ forloop.counter }}">{{ room }}</a>
+                            </li>
+                        {% endfor %}
+                        <li role="presentation" class="">
+                            <a href="#" data-toggle="modal" data-target="#room_modal">{% trans 'Add' %}</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="scheduleContainer">
+                    <button id="send_activities" name="send_activities"
+                            onclick="send_activities_list()">{% trans 'Submit' %}</button>
+                    <table class="table">
+                        <thead class="thead">
+                            <tr>
+                                <th>Horario</th>
+                                <th>Actividad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>7:00</td>
+                                <td class="droppable" hora="7:00:00"></td>
+                            </tr>
+                            <tr>
+                                <td>8:00</td>
+                                <td class="droppable" hora="8:00:00"></td>
+                            </tr>
+                            <tr>
+                                <td>9:00</td>
+                                <td class="droppable" hora="9:00:00"></td>
+                            </tr>
+                            <tr>
+                                <td>10:00</td>
+                                <td class="droppable" hora="10:00:00"></td>
+                            </tr>
+                            <tr>
+                                <td>11:00</td>
+                                <td class="droppable" hora="11:00:00"></td>
+                            </tr>
+                            <tr>
+                                <td>12:00</td>
+                                <td class="droppable" hora="12:00:00"></td>
+                            </tr>
+                            <tr>
+                                <td>13:00</td>
+                                <td class="droppable" hora="13:00:00"></td>
+                            </tr>
+                            <tr>
+                                <td>14:00</td>
+                                <td class="droppable" hora="14:00:00"></td>
+                            </tr>
+                            <tr>
+                                <td>15:00</td>
+                                <td class="droppable" hora="15:00:00"></td>
+                            </tr>
+                            <tr>
+                                <td>16:00</td>
+                                <td class="droppable" hora="16:00:00"></td>
+                            </tr>
+                            <tr>
+                                <td>17:00</td>
+                                <td class="droppable" hora="17:00:00"></td>
+                            </tr>
+                            <tr>
+                                <td>18:00</td>
+                                <td class="droppable" hora="18:00:00"></td>
+                            </tr>
+                            <tr>
+                                <td>19:00</td>
+                                <td class="droppable" hora="19:00:00"></td>
+                            </tr>
+                            <tr>
+                                <td>20:00</td>
+                                <td class="droppable" hora="20:00:00"></td>
+                            </tr>
+                            <tr>
+                                <td>21:00</td>
+                                <td class="droppable" hora="21:00:00"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-    </div>
     </div>
     <hr>
     <div class="container">
-        <ul class="days nav nav-tabs">
-            {% for d in dayList %}
-                <li role="presentation" class="{% if dia ==  forloop.counter %} active {% endif %}">
-                    <a href="{% url 'list_charlas' %}?dia={{ forloop.counter }}">{{ d }}</a>
-                </li>
-            {% endfor %}
-        </ul>
-        <div class="roomContainer">
-            <ul class="nav nav-tabs flex-column">
-                {% for room in rooms_list %}
-                    <li role="presentation" class="{% if sala == forloop.counter %} active {% endif %}">
-                        <a href="{% url 'list_charlas' %}?dia={{ dia }}&sala={{ forloop.counter }}">{{ room }}</a>
-                    </li>
-                {% endfor %}
-                <li role="presentation" class="">
-                    <a href="#" data-toggle="modal" data-target="#room_modal">{% trans 'Add' %}</a>
-                </li>
-            </ul>
-        </div>
-
         <div class="scheduleContainer">
             <div class="row theader">
                 <div class="col-md-2">Horario</div>
@@ -238,46 +273,48 @@
                 <div class="col-md-1">Salón</div>
                 <div class="col-md-2">Registro</div>
             </div>
+        </div>
 
+        {% for obj in object_list %}
 
-            {% for obj in object_list %}
+            <div id="block_{{ obj.pk }}" class="row {% if obj.is_speech %}speech_row{% else %} text_row {% endif %}"
+                 style="background-color:{{ obj.color }}">
 
-                <div id="block_{{ obj.pk }}" class="row {% if obj.is_speech %}speech_row{% else %} text_row {% endif %}"
-                     style="background-color:{{ obj.color }}">
+                {% if obj.is_speech and obj.room.name == room_name %}
+                    {% for speech in obj.get_speech %}
+                        {% if speech.room.name == room_name %}
+                            <div class="row">
+                                <div class="col-md-2">{{ speech.start_time | date:"P" }}
+                                    a {{ speech.end_time | date:"P" }}
+                                    <p style="color:{{ speech.speech.topic.color }}">
+                                        {{ speech.speech.speech_type.name }}
+                                    </p>
+                                    {{ speech.registros }}
 
-                    {% if obj.is_speech %}
-                        {% for speech in obj.get_speech %}
-                            {% if speech.room.name == room_name %}
-                                <div class="row">
-                                    <div class="col-md-2">{{ speech.start_time | date:"P" }}
-                                        a {{ speech.end_time | date:"P" }}
-                                        <p style="color:{{ speech.speech.topic.color }}">
-                                            {{ speech.speech.speech_type.name }}
-                                        </p>
-                                        {{ speech.registros }}
-
-                                    </div>
-                                    <div class="col-md-5">
-
-                                        <a href="{% url 'detail_charla' speech.speech.pk %}"
-                                           target="_blank"> {{ speech.speech.title }} </a>
-                                    </div>
-                                    <div class="col-md-2">{{ speech.speech.user.get_full_name }}</div>
-                                    <div class="col-md-1">{{ speech.room.name }}</div>
-                                    <div class="col-md-2" style="display: flex">  {% get_registro speech as nreg %} <a
-                                            href="{{ nreg.url }}"> {{ nreg.message }} </a>
-                                        <form method="post" style="margin-left: 10%">
-                                            {% csrf_token %}
-                                            <input name="form_id" value="delete" hidden>
-                                            <input name='block' value="{{ obj.pk }}" hidden>
-                                            <input type="submit" value="x" class="btn btn-danger btn-sm">
-                                        </form>
-                                    </div>
                                 </div>
-                            {% endif %}
-                        {% endfor %}
+                                <div class="col-md-5">
 
-                    {% else %}
+                                    <a href="{% url 'detail_charla' speech.speech.pk %}"
+                                       target="_blank"> {{ speech.speech.title }} </a>
+                                </div>
+                                <div class="col-md-2">{{ speech.speech.user.get_full_name }}</div>
+                                <div class="col-md-1">{{ speech.room.name }}</div>
+                                <div class="col-md-2" style="display: flex">  {% get_registro speech as nreg %} <a
+                                        href="{{ nreg.url }}"> {{ nreg.message }} </a>
+                                    <form method="post" style="margin-left: 10%">
+                                        {% csrf_token %}
+                                        <input name="form_id" value="delete" hidden>
+                                        <input name='block' value="{{ obj.pk }}" hidden>
+                                        <input name='room' value="{{ room_id }}" hidden>
+                                        <input type="submit" value="x" class="btn btn-danger btn-sm">
+                                    </form>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+
+                {% else %}
+                    {% if obj.room.name == room_name %}
                         <div class="col-md-2 text-center"> {{ obj.start_time | date:"P" }}
                             a {{ obj.end_time | date:"P" }} </div>
                         <div class="col-md-10 text-center"> {{ obj.text }}
@@ -285,90 +322,17 @@
                                 {% csrf_token %}
                                 <input name="form_id" value="delete" hidden>
                                 <input name='block' value="{{ obj.pk }}" hidden>
+                                <input name='room' value="{{ room_id }}" hidden>
                                 <input type="submit" value="x" class="btn btn-danger btn-sm">
                             </form>
                         </div>
                     {% endif %}
-                </div>
-            {% endfor %}
-        </div>
+                {% endif %}
+            </div>
+        {% endfor %}
     </div>
 
-
     <br><br>
-
-
-    <button id="send_activities" name="send_activities" onclick="send_activities_list()">{% trans 'Submit' %}</button>
-    <table class="table">
-        <thead class="thead">
-        <tr>
-            <th>Horario</th>
-            <th>Actividad</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>7:00</td>
-            <td class="droppable" hora="7:00:00"></td>
-        </tr>
-        <tr>
-            <td>8:00</td>
-            <td class="droppable" hora="8:00:00"></td>
-        </tr>
-        <tr>
-            <td>9:00</td>
-            <td class="droppable" hora="9:00:00"></td>
-        </tr>
-        <tr>
-            <td>10:00</td>
-            <td class="droppable" hora="10:00:00"></td>
-        </tr>
-        <tr>
-            <td>11:00</td>
-            <td class="droppable" hora="11:00:00"></td>
-        </tr>
-        <tr>
-            <td>12:00</td>
-            <td class="droppable" hora="12:00:00"></td>
-        </tr>
-        <tr>
-            <td>13:00</td>
-            <td class="droppable" hora="13:00:00"></td>
-        </tr>
-        <tr>
-            <td>14:00</td>
-            <td class="droppable" hora="14:00:00"></td>
-        </tr>
-        <tr>
-            <td>15:00</td>
-            <td class="droppable" hora="15:00:00"></td>
-        </tr>
-        <tr>
-            <td>16:00</td>
-            <td class="droppable" hora="16:00:00"></td>
-        </tr>
-        <tr>
-            <td>17:00</td>
-            <td class="droppable" hora="17:00:00"></td>
-        </tr>
-        <tr>
-            <td>18:00</td>
-            <td class="droppable" hora="18:00:00"></td>
-        </tr>
-        <tr>
-            <td>19:00</td>
-            <td class="droppable" hora="19:00:00"></td>
-        </tr>
-        <tr>
-            <td>20:00</td>
-            <td class="droppable" hora="20:00:00"></td>
-        </tr>
-        <tr>
-            <td>21:00</td>
-            <td class="droppable" hora="21:00:00"></td>
-        </tbody>
-    </table>
-
 
     <p id="actualDay" hidden>{{ diaActual.year }}-{{ diaActual.month }}-{{ diaActual.day }}</p>
     <p id="actualRoom" hidden>{{ room_id }}</p>
@@ -447,17 +411,19 @@
                         lista.push(element)
                     }
                 }
-        });
+            });
         });
 
 
         function activities_in_list(element) {
             value = false
             for (var i = 0; i < lista.length; i++) {
-                if (lista[i]['pk_speech'] === element['pk_speech']) {
-                    lista.splice(i, 1)
-                    lista.push(element)
-                    value = true
+                if( lista[i]['is_speech'] === element['is_speech']) {
+                    if (lista[i]['pk_speech'] === element['pk_speech']) {
+                        lista.splice(i, 1)
+                        lista.push(element)
+                        value = true
+                    }
                 }
             }
             return value
@@ -503,7 +469,7 @@
                     }
                     if (result != null) {
                         for (var i = 0; i < result.length; i++)
-                            $('#speeches').append('<li class="draggable"' +
+                            $('#speeches').append('<li class="draggable activity" style="background-color:' + data.color[i] + ';"' +
                                 'value=' + Object.values(result[i])[1] + ' color=' + data.color[i] +
                                 ' is_speech="1"' + 'desc="none"' + 'time=' + data.times[i] + '>' +
                                 Object.values(result[i]['fields'])[2] + '</li>')

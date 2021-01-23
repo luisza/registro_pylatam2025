@@ -184,6 +184,7 @@ class BlockSchedule(models.Model):
     is_speech = models.BooleanField()
     text = models.TextField(null=True, blank=True)
     color = models.CharField(max_length=10)
+    room = models.ForeignKey('Room', default="", on_delete=models.CASCADE, verbose_name=_("Room"))
 
     def __str__(self):
         return "%s %s" % (self.start_time.strftime("%Y-%m-%d %H:%M"),
