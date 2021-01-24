@@ -73,9 +73,9 @@
                 </div>
             </div>
             <div class="jumbotron">
-                <ul id="speeches">
+                <ul id="speeches" class="connectedSortable">
                     {% for speech in speeches %}
-                        <li class="draggable activity" style="background-color: {{ speech.topic.color }};"
+                        <li class="ui-state-default activity" style="background-color: {{ speech.topic.color }};"
                             value="{{ speech.pk }}" color="{{ speech.topic.color }}"
                             time="{{ speech.time_given.time }}" is_speech="1" desc="none">{{ speech }}</li>
                     {% endfor %}
@@ -91,9 +91,9 @@
             </div>
             <hr>
             <div class="jumbotron">
-                <ul id="speeches">
+                <ul id="specials" class="connectedSortable">
                     {% for special in specialActivity %}
-                        <li class="draggable activity" style="background-color: #ddd234;" color="#ddd234"
+                        <li class="ui-state-default activity" style="background-color: #ddd234;" color="#ddd234"
                             time="{{ special.time.time }}" is_speech="0"
                             desc="{{ special.message }}"
                             value="{{ special.pk }}">
@@ -191,72 +191,102 @@
                             onclick="send_activities_list()">{% trans 'Submit' %}</button>
                     <table class="table">
                         <thead class="thead">
-                            <tr>
-                                <th>Horario</th>
-                                <th>Actividad</th>
-                            </tr>
+                        <tr>
+                            <th>Horario</th>
+                            <th>Actividad</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>7:00</td>
-                                <td class="droppable" hora="7:00:00"></td>
-                            </tr>
-                            <tr>
-                                <td>8:00</td>
-                                <td class="droppable" hora="8:00:00"></td>
-                            </tr>
-                            <tr>
-                                <td>9:00</td>
-                                <td class="droppable" hora="9:00:00"></td>
-                            </tr>
-                            <tr>
-                                <td>10:00</td>
-                                <td class="droppable" hora="10:00:00"></td>
-                            </tr>
-                            <tr>
-                                <td>11:00</td>
-                                <td class="droppable" hora="11:00:00"></td>
-                            </tr>
-                            <tr>
-                                <td>12:00</td>
-                                <td class="droppable" hora="12:00:00"></td>
-                            </tr>
-                            <tr>
-                                <td>13:00</td>
-                                <td class="droppable" hora="13:00:00"></td>
-                            </tr>
-                            <tr>
-                                <td>14:00</td>
-                                <td class="droppable" hora="14:00:00"></td>
-                            </tr>
-                            <tr>
-                                <td>15:00</td>
-                                <td class="droppable" hora="15:00:00"></td>
-                            </tr>
-                            <tr>
-                                <td>16:00</td>
-                                <td class="droppable" hora="16:00:00"></td>
-                            </tr>
-                            <tr>
-                                <td>17:00</td>
-                                <td class="droppable" hora="17:00:00"></td>
-                            </tr>
-                            <tr>
-                                <td>18:00</td>
-                                <td class="droppable" hora="18:00:00"></td>
-                            </tr>
-                            <tr>
-                                <td>19:00</td>
-                                <td class="droppable" hora="19:00:00"></td>
-                            </tr>
-                            <tr>
-                                <td>20:00</td>
-                                <td class="droppable" hora="20:00:00"></td>
-                            </tr>
-                            <tr>
-                                <td>21:00</td>
-                                <td class="droppable" hora="21:00:00"></td>
-                            </tr>
+                        <tr>
+                            <td class="horaCalendario">7:00</td>
+                            <td class="" hora="7:00:00">
+                                <ul id="hour-7" hora="7:00:00" class="connectedSortable droppable"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="horaCalendario">8:00</td>
+                            <td class="droppable" hora="8:00:00">
+                                <ul id="hour-8"   hora="8:00:00" class="connectedSortable droppable"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="horaCalendario">9:00</td>
+                            <td class="droppable" hora="9:00:00">
+                                <ul id="hour-9"  hora="9:00:00" class="connectedSortable droppable"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="horaCalendario">10:00</td>
+                            <td class="droppable" hora="10:00:00">
+                                <ul id="hour-10"  hora="10:00:00" class="connectedSortable droppable"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="horaCalendario">11:00</td>
+                            <td class="droppable" hora="11:00:00">
+                                <ul id="hour-11"  hora="11:00:00" class="connectedSortable droppable"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="horaCalendario">12:00</td>
+                            <td class="droppable" hora="12:00:00">
+                                <ul id="hour-12"  hora="12:00:00" class="connectedSortable droppable"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="horaCalendario">13:00</td>
+                            <td class="droppable" hora="13:00:00">
+                                <ul id="hour-13" class="connectedSortable"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="horaCalendario">14:00</td>
+                            <td class="droppable" hora="14:00:00">
+                                <ul id="hour-14" class="connectedSortable"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="horaCalendario">15:00</td>
+                            <td class="droppable" hora="15:00:00">
+                                <ul id="hour-15" class="connectedSortable"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="horaCalendario">16:00</td>
+                            <td class="droppable" hora="16:00:00">
+                                <ul id="hour-16" class="connectedSortable"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="horaCalendario">17:00</td>
+                            <td class="droppable" hora="17:00:00">
+                                <ul id="hour-17" class="connectedSortable"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="horaCalendario">18:00</td>
+                            <td class="droppable" hora="18:00:00">
+                                <ul id="hour-18" class="connectedSortable"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="horaCalendario">19:00</td>
+                            <td class="droppable" hora="19:00:00">
+                                <ul id="hour-19" class="connectedSortable"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="horaCalendario">20:00</td>
+                            <td class="droppable" hora="20:00:00">
+                                <ul id="hour-20" class="connectedSortable"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="horaCalendario">21:00</td>
+                            <td class="droppable" hora="21:00:00">
+                                <ul id="hour-21" class="connectedSortable"></ul>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -372,11 +402,17 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script>
         var lista = [];
+
         $(function () {
-            $(".draggable").draggable();
+            $("#speeches, #specials, #hour-7, #hour-8, #hour-9,#hour-10, #hour-11, #hour-12,#hour-13, #hour-14,#hour-15, #hour-16, #hour-17, #hour-18, #hour-19, #hour-20, #hour-21").sortable({
+                placeholder: "ui-state-highlight",
+                connectWith: ".connectedSortable",
+            }).disableSelection();
+        });
+
+        $(function () {
             $(".droppable").droppable({
                 drop: function (event, ui) {
-                    $(this).append(ui.draggable.css({"position": ""}))
                     ui.draggable.attr('start_time', $("#actualDay").text() + " " + $(this).attr("hora"))
                     ui.draggable.attr('end_time', addhoras($(this).attr("hora"), ui.draggable.attr("time")))
                     ui.draggable.attr('room', $("#actualRoom").text())
@@ -418,7 +454,7 @@
         function activities_in_list(element) {
             value = false
             for (var i = 0; i < lista.length; i++) {
-                if( lista[i]['is_speech'] === element['is_speech']) {
+                if (lista[i]['is_speech'] === element['is_speech']) {
                     if (lista[i]['pk_speech'] === element['pk_speech']) {
                         lista.splice(i, 1)
                         lista.push(element)

@@ -85,8 +85,10 @@ hr {
     border-radius: 1rem;
     padding: 1rem;
     margin-top: 1rem;
-    display: inline-flex;
     width: 90%;
+    cursor: pointer;
+    text-align: center;
+    list-style: none;
 }
 
 .ul, .ol {
@@ -98,4 +100,27 @@ hr {
         padding: 5%;
         margin: 0;
     }
+}
+
+.ui-state-highlight {
+    height: 40px;
+    border: none;
+    border-radius: 1rem;
+    padding: 1rem;
+    margin-top: 1rem;
+    width: 90%;
+    background-color: cornflowerblue;
+    list-style: none;
+}
+
+.horaCalendario{
+    width: 40px;
+}
+
+td{
+    text-align: center;
+}
+
+th{
+    text-align: center;
 }
