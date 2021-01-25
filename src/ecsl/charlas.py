@@ -127,15 +127,37 @@ class Charlas(CharlaContext, ListView):
             form = scheduleForm(request.POST)
             if request.POST.get('agenda'):
                 result = json.loads(request.POST['agenda'])
+                start_date = timezone.datetime.strptime(result[0]['start_time'], "%Y-%m-%d %H:%M:%S")
+                start_date = timezone.datetime(hour=0, minute=0, day=start_date.day, month=start_date.month, year=start_date.year)
+                end_date = timezone.datetime(hour=23, minute=59, day=start_date.day, month=start_date.month, year=start_date.year)
+
+                block = BlockSchedule.objects.filter(start_time__gte=start_date, end_time__lte=end_date, room=result[0]['room'])
+                schedule = SpeechSchedule.objects.filter(start_time__gte=start_date, end_time__lte=end_date, room=result[0]['room'])
+                for speech in schedule:
+                    if speech.speech:
+                        speech.speech.is_scheduled = False
+                        speech.speech.save()
+                block.delete()
+                schedule.delete()
+
                 for activities in result:
                     blockValid = False
                     scheduleValid = False
 
-                    speechSchedule = SpeechSchedule(start_time=timezone.datetime.strptime(activities['start_time'],
+                    if activities['is_speech']:
+                        speechSchedule = SpeechSchedule(start_time=timezone.datetime.strptime(activities['start_time'],
                                                                                           "%Y-%m-%d %H:%M:%S"),
                                                     end_time=timezone.datetime.strptime(
                                                         activities['end_time'], "%Y-%m-%d %H:%M:%S"),
                                                     speech=Speech.objects.filter(
+                                                        id=int(activities['pk_speech'])).first(),
+                                                    room=Room.objects.filter(id=int(activities['room'])).first(), )
+                    else:
+                        speechSchedule = SpeechSchedule(start_time=timezone.datetime.strptime(activities['start_time'],
+                                                                                          "%Y-%m-%d %H:%M:%S"),
+                                                    end_time=timezone.datetime.strptime(
+                                                        activities['end_time'], "%Y-%m-%d %H:%M:%S"),
+                                                    special=SpecialActivity.objects.filter(
                                                         id=int(activities['pk_speech'])).first(),
                                                     room=Room.objects.filter(id=int(activities['room'])).first(), )
                     speech = SpeechSchedule.objects.filter(room=speechSchedule.room,
