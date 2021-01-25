@@ -196,6 +196,10 @@ CELERYBEAT_SCHEDULE = {
         'task': 'ecsl.tasks.checking_proposal_date',
         'schedule': crontab(minute=0, hour=0),
     },
+    'send_becas_open_application_period': {
+        'task': 'ecsl.tasks.checking_becas_date',
+        'schedule': crontab(minute=0, hour=0),
+    },
 }
 
 ASYNC_NOTIFICATION_TEXT_AREA_WIDGET = 'ckeditor.widgets.CKEditorWidget'

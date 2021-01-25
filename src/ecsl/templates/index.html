@@ -39,9 +39,11 @@
                                 <a class="btn btn-warning" href="{% url 'payment' %}">
                                     <i class="fas fa-user-plus"></i> {% trans 'Sign Up' %}
                                 </a>
-                                <a class="btn btn-success" href="{% url 'becas-create' %}">
-                                    <i class="fas fa-money-check-alt"></i> {% trans 'Scholarship' %}
-                                </a>
+                                {% if becas_period %}
+                                    <a class="btn btn-success" href="{% url 'becas-create' %}">
+                                        <i class="fas fa-money-check-alt"></i> {% trans 'Scholarship' %}
+                                    </a>
+                                {% endif %}
                                 {% if period %}
                                     <a class="btn btn-default"
                                        href="{% url 'proposal:speech-list' %}">
