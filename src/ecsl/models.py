@@ -203,8 +203,8 @@ class Becas(models.Model):
 
     )
 
-    user = models.OneToOneField(
-        User, on_delete=models.CASCADE, verbose_name=_('Usuario'))
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, verbose_name=_('User'), null=True)
     razon = models.TextField(
         verbose_name="Dinos porqué deberíamos darte la beca")
     aportes_a_la_comunidad = models.TextField(
@@ -218,7 +218,7 @@ class Becas(models.Model):
 
 
     def __str__(self):
-        return self.user.get_full_name()
+        return self.user.get_full_name() + " | " + str(self.event)
 
     class Meta:
         verbose_name = "Beca"
@@ -243,13 +243,17 @@ class EventECSL(models.Model):
     start_date_proposal = models.DateField(verbose_name=_("Start Date Proposal"), blank=True, null=True)
     end_date_proposal = models.DateField(verbose_name=_("End Date Proposal"), blank=True, null=True)
     email_event = models.CharField(max_length=50, null=True, verbose_name=_('Email Event'))
-    beca_start = models.DateField(verbose_name=_("Scholarship application start period"), null=True)
-    beca_end = models.DateField(verbose_name=_("Scholarship application end period"), null=True)
+    beca_start = models.DateField(verbose_name=_("Scholarship application start period"), null=True, blank=True)
+    beca_end = models.DateField(verbose_name=_("Scholarship application end period"), null=True, blank=True)
     max_inscription = models.IntegerField(default=250, null=True, verbose_name=_("Maximum Inscriptions"))
 
     @property
     def is_beca_active(self):
-        return self.beca_start <= date.today() <= self.beca_end and self.current
+        return (self.beca_start and self.beca_end) and self.beca_start <= date.today() <= self.beca_end and self.current
+
+    @property
+    def check_becas_start_date(self):
+        return self.beca_start and self.beca_start == timezone.localtime().date()
 
     @property
     def checking_period(self):
