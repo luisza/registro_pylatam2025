@@ -30,21 +30,21 @@
     </form>
 
     <div class="row">
-        <div class="col-sm-3">
+        <div class="col-sm-5">
             <h4> {% trans 'Speeches' %} </h4>
             <hr>
             <div class="card">
                 <div class="card-body">
-                    <div class="inline-flex">
+                    <div class="inline-flex" style="width: 100%;">
                         <div class="input-group">
                             <span class="input-group-btn">
-                                <a data-toggle="modal"
+                                <a style="height: 40px;" data-toggle="modal"
                                    data-target="#topic-modal" class="btn btn-success add-button"><i
-                                        class="fas fa-plus"></i></a>
+                                        class="fas fa-plus" style="margin-top: 15px"></i></a>
                             </span>
                             <form id="filter" method="post">
                                 {% csrf_token %}
-                                <select class="btn sidebar-select btn-primary" name="topic"
+                                <select class="btn sidebar-select btn-primary" style="height: 40px" name="topic"
                                         id="topic">
                                     <option selected value="None">Topic</option>
                                     {% for topic in topics %}
@@ -54,11 +54,11 @@
                         </div>
                         <div class="input-group">
                             <span class="input-group-btn">
-                                <a data-toggle="modal" data-target="#type-modal"
+                                <a style="height: 40px" data-toggle="modal" data-target="#type-modal"
                                    class="btn btn-success add-button">
-                                    <i class="fas fa-plus"></i></a>
+                                    <i style="margin-top: 15px" class="fas fa-plus"></i></a>
                             </span>
-                            <select class="btn sidebar-select btn-primary" name="type"
+                            <select class="btn sidebar-select btn-primary" style="height: 40px" name="type"
                                     id="type">
                                 <option selected value="None">Type</option>
                                 {% for type in types %}
@@ -66,18 +66,33 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <a onclick="send_filter()" id="search" class="btn btn-info add-button"><i
-                                class="fas fa-search"></i></a>
+                        <a style="height: 40px" onclick="send_filter()" id="search" class="btn btn-info add-button"><i
+                                style="margin-top: 15px" class="fas fa-search"></i></a>
                         </form>
                     </div>
                 </div>
             </div>
             <div class="jumbotron">
-                <ul id="speeches" class="connectedSortable droppable">
+                <ul id="speeches" class="connectedSortable droppable" hora="7:00:00">
                     {% for speech in speeches %}
+
+
                         <li class="ui-state-default activity" style="background-color: {{ speech.topic.color }};"
                             value="{{ speech.pk }}" color="{{ speech.topic.color }}"
-                            time="{{ speech.time_given.time }}" is_speech="1" desc="none">{{ speech }}</li>
+                            time="{{ speech.time_given.time }}" is_speech="1" desc="none">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    {{ speech }}
+                                </div>
+                                <div class="col-sm-4">
+                                    <select class="">time
+                                        <option selected value="None">Type</option>
+                                        <option selected value="None">Type</option>
+                                        <option selected value="None">Type</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </li>
                     {% endfor %}
                 </ul>
             </div>
@@ -91,7 +106,7 @@
             </div>
             <hr>
             <div class="jumbotron">
-                <ul id="specials" class="connectedSortable droppable">
+                <ul id="specials" class="connectedSortable droppable" hora="7:00:00">
                     {% for special in specialActivity %}
                         <li class="ui-state-default activity" style="background-color: #ddd234;" color="#ddd234"
                             time="{{ special.time.time }}" is_speech="0"
@@ -165,7 +180,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-9">
+        <div class="col-sm-7">
             <div class="container">
                 <ul class="days nav nav-tabs">
                     {% for d in dayList %}
@@ -199,38 +214,38 @@
                         <tbody>
                         <tr>
                             <td class="horaCalendario">7:00</td>
-                            <td class="" hora="7:00:00" id="td-7">
-                                <ul id="hour-7" hora="7:00:00" class="connectedSortable droppable"></ul>
+                            <td class="droppable" hora="7:00:00" id="td-7">
+                                <ul id="hour-7" hora="7:00:00" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
                             <td class="horaCalendario">8:00</td>
                             <td class="droppable" hora="8:00:00" id="td-8">
-                                <ul id="hour-8"   hora="8:00:00" class="connectedSortable droppable"></ul>
+                                <ul id="hour-8" hora="8:00:00" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
                             <td class="horaCalendario">9:00</td>
                             <td class="droppable" hora="9:00:00" id="td-9">
-                                <ul id="hour-9"  hora="9:00:00" class="connectedSortable droppable"></ul>
+                                <ul id="hour-9" hora="9:00:00" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
                             <td class="horaCalendario">10:00</td>
                             <td class="droppable" hora="10:00:00" id="td-10">
-                                <ul id="hour-10"  hora="10:00:00" class="connectedSortable droppable"></ul>
+                                <ul id="hour-10" hora="10:00:00" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
                             <td class="horaCalendario">11:00</td>
                             <td class="droppable" hora="11:00:00" id="td-11">
-                                <ul id="hour-11"  hora="11:00:00" class="connectedSortable droppable"></ul>
+                                <ul id="hour-11" hora="11:00:00" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
                             <td class="horaCalendario">12:00</td>
                             <td class="droppable" hora="12:00:00" id="td-12">
-                                <ul id="hour-12"  hora="12:00:00" class="connectedSortable droppable"></ul>
+                                <ul id="hour-12" hora="12:00:00" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
@@ -301,48 +316,48 @@
                     {% for speech in obj.get_speech %}
                         {% if speech.room.name == room_name %}
                             <div class="speech_actvity"
-                                start_datetime = "{{ speech.start_time | date:"Y-n-j G:i:s"}}"
-                                end_datetime = "{{ speech.end_time | date:"Y-n-j G:i:s"}}"
-                                start_time="{{ speech.start_time | date:"G:i" }}"
-                                start_hour="{{ speech.start_time | date:"G" }}"
-                                end_time = "{{ speech.end_time | date:"G:i" }}"
-                                color = "{{ speech.speech.topic.color }}"
-                                name = "{{ speech.speech.title }}"
-                                activity_pk = "{{ speech.speech.pk }}"
-                                title = "{{ speech.speech.title }}"
-                                room_name = "{{ speech.room.name }}"
-                                room_pk = "{{ speech.room.pk }}"
-                                obj_pk = "{{ obj.pk }}"
-                                speech_pk = "{{ speech.speech.pk }}"
-                                room_id = "{{ room_id }}"
-                                is_speech = "true"
-                                desc = "none"
-                                time = {{ speech.speech.time_given.time }}
-                                >
+                                 start_datetime="{{ speech.start_time | date:"Y-n-j G:i:s" }}"
+                                 end_datetime="{{ speech.end_time | date:"Y-n-j G:i:s" }}"
+                                 start_time="{{ speech.start_time | date:"G:i" }}"
+                                 start_hour="{{ speech.start_time | date:"G" }}"
+                                 end_time="{{ speech.end_time | date:"G:i" }}"
+                                 color="{{ speech.speech.topic.color }}"
+                                 name="{{ speech.speech.title }}"
+                                 activity_pk="{{ speech.speech.pk }}"
+                                 title="{{ speech.speech.title }}"
+                                 room_name="{{ speech.room.name }}"
+                                 room_pk="{{ speech.room.pk }}"
+                                 obj_pk="{{ obj.pk }}"
+                                 speech_pk="{{ speech.speech.pk }}"
+                                 room_id="{{ room_id }}"
+                                 is_speech="true"
+                                 desc="none"
+                                 time={{ speech.speech.time_given.time }}
+                            >
                             </div>
                         {% endif %}
                     {% endfor %}
-                    {% else %}
-                        {% if obj.room.name == room_name %}
-                            {% for speech_schedule in obj.get_speech %}
-                                <div class="special_actvity"
-                                    start_datetime = "{{ obj.start_time | date:"Y-n-j G:i:s" }}"
-                                    end_datetime = "{{ obj.end_time | date:"Y-n-j G:i:s" }}"
-                                    start_time="{{ obj.start_time | date:"G:i" }}"
-                                    start_hour="{{ obj.start_time | date:"G" }}"
-                                    end_time = "{{ obj.end_time | date:"G:i" }}"
-                                    color = "{{ '#858585' }}"
-                                    time = "{{ speech_schedule.special.time.time }}"
-                                    desc = "{{ obj.text }}"
-                                    room_pk = "{{ speech_schedule.room.pk }}"
-                                    obj_pk = "{{ obj.pk }}"
-                                    value = "{{ speech_schedule.special.pk }}"
-                                    room_id = "{{ room_id }}"
-                                    is_speech = ""
-                                    >
-                                </div>
-                            {% endfor %}
-                        {% endif %}
+                {% else %}
+                    {% if obj.room.name == room_name %}
+                        {% for speech_schedule in obj.get_speech %}
+                            <div class="special_actvity"
+                                 start_datetime="{{ obj.start_time | date:"Y-n-j G:i:s" }}"
+                                 end_datetime="{{ obj.end_time | date:"Y-n-j G:i:s" }}"
+                                 start_time="{{ obj.start_time | date:"G:i" }}"
+                                 start_hour="{{ obj.start_time | date:"G" }}"
+                                 end_time="{{ obj.end_time | date:"G:i" }}"
+                                 color="{{ '#858585' }}"
+                                 time="{{ speech_schedule.special.time.time }}"
+                                 desc="{{ obj.text }}"
+                                 room_pk="{{ speech_schedule.room.pk }}"
+                                 obj_pk="{{ obj.pk }}"
+                                 value="{{ speech_schedule.special.pk }}"
+                                 room_id="{{ room_id }}"
+                                 is_speech=""
+                            >
+                            </div>
+                        {% endfor %}
+                    {% endif %}
                 {% endif %}
             {% endfor %}
         </div>
@@ -383,7 +398,7 @@
     <form id="delete_activity" method="post" style="margin-left: 10%">
         {% csrf_token %}
         <input name="form_id" value="delete" hidden>
-        <input name='block' id="obj_pk"  value="{{ obj.pk }}" hidden>
+        <input name='block' id="obj_pk" value="{{ obj.pk }}" hidden>
         <input name='room' id="room_pk" value="{{ room_id }}" hidden>
     </form>
 
@@ -408,7 +423,6 @@
                     ui.draggable.attr('start_time', $("#actualDay").text() + " " + $(this).attr("hora"))
                     ui.draggable.attr('end_time', addhoras($(this).attr("hora"), ui.draggable.attr("time")))
                     ui.draggable.attr('room', $("#actualRoom").text())
-
                     $("#id_speech").val(ui.draggable.val());
                     $("#id_start_time").val($("#actualDay").text() + " " + $(this).attr("hora"));
                     $("#id_end_time").val(addhoras($(this).attr("hora"), ui.draggable.attr("time")));
@@ -433,66 +447,68 @@
                         'description': ui.draggable.attr("desc"),
                     }
 
-                    for(var j=0;j<Math.trunc(ui.draggable.attr('time')/60);++j) {
-                    hour=parseInt(ui.draggable.attr('start_hour'))+j;
-                    $('#hour-'+ hour).css({'background-color':""})
+                    for (var j = 0; j < Math.trunc(ui.draggable.attr('time') / 60); ++j) {
+                        hour = parseInt(ui.draggable.attr('start_hour')) + j;
+                        $('#hour-' + hour).css({'background-color': ""})
                     }
 
-                    ui.draggable.attr('start_hour',$(this).attr("hora").split(':')[0])
+                    ui.draggable.attr('start_hour', $(this).attr("hora").split(':')[0])
 
 
-                    for(var j=0;j<Math.trunc(ui.draggable.attr('time')/60);++j) {
-                    hour=parseInt(ui.draggable.attr('start_hour'))+j;
-                    $('#hour-'+ hour).css({'background-color':ui.draggable.attr('color')})
+                    for (var j = 0; j < Math.trunc(ui.draggable.attr('time') / 60); ++j) {
+                        hour = parseInt(ui.draggable.attr('start_hour')) + j;
+                        $('#hour-' + hour).css({'background-color': ui.draggable.attr('color')})
                     }
 
                     var value = activities_in_list(element)
                     if (value == false) {
                         lista.push(element)
                     }
-                    if ($(this).attr('id') === 'speeches' || $(this).attr('id') === 'specials' ){
+                    if ($(this).attr('id') === 'speeches' || $(this).attr('id') === 'specials') {
                         delete_temp_activity(ui.draggable.attr('value'), ui.draggable.attr('is_speech'))
+                        if (ui.draggable.attr('db')) {
+                            delete_actity(ui.draggable.attr('room'), ui.draggable.attr('db'))
+                        }
                     }
                 }
             });
         });
 
 
-
-        $(function(){
+        $(function () {
             var special = document.getElementsByClassName("special_actvity")
-            for(var i = 0; i< special.length; ++i) {
-                $('#hour-'+ special[i].getAttribute("start_hour")).append(
+            for (var i = 0; i < special.length; ++i) {
+                $('#hour-' + special[i].getAttribute("start_hour")).append(
                     '<li class="ui-state-default activity" style="background-color: ' + special[i].getAttribute("color") + ';"' +
-                        ' value="' + special[i].getAttribute("value") + '" color="' + special[i].getAttribute("color") + '"' +
-                        ' is_speech= "" ' + ' desc="' + special[i].getAttribute("desc") + '"' +
-                        ' time="' + special[i].getAttribute("time") + '"' + ' start_hour= "' + special[i].getAttribute("start_hour") +
-                '" >' +
-                        '<div class="row">' +
-                            '<div class="col-md-2 text-center">' +
-                                special[i].getAttribute("start_time") + ' a ' + special[i].getAttribute("end_time") +
-                            '</div>' +
-                            '<div class="col-md-9 text-center">' +
-                                special[i].getAttribute("desc") +
-                            '</div>' +
-                            '<div class="col-md-1 text-center">' +
-                                '<button onclick="delete_actity(' + special[i].getAttribute("room_pk") + ', ' + special[i].getAttribute("obj_pk") + ')" class="btn btn-danger btn-sm"> X </button>' +
-                            '</div>' +
-                        '</div>' +
+                    ' value="' + special[i].getAttribute("value") + '" color="' + special[i].getAttribute("color") + '"' +
+                    ' is_speech= "" ' + ' desc="' + special[i].getAttribute("desc") + '"' +
+                    ' time="' + special[i].getAttribute("time") + '"' + ' start_hour= "' + special[i].getAttribute("start_hour") + '" ' +
+                    'db="' + special[i].getAttribute("obj_pk") +
+                    '">' +
+                    '<div class="row">' +
+                    '<div class="col-md-2 text-center">' +
+                    special[i].getAttribute("start_time") + ' a ' + special[i].getAttribute("end_time") +
+                    '</div>' +
+                    '<div class="col-md-9 text-center">' +
+                    special[i].getAttribute("desc") +
+                    '</div>' +
+                    '<div class="col-md-1 text-center">' +
+                    '<button onclick="delete_actity(' + special[i].getAttribute("room_pk") + ', ' + special[i].getAttribute("obj_pk") + ')" class="btn btn-danger btn-sm"> X </button>' +
+                    '</div>' +
+                    '</div>' +
                     '</li>'
-
                 );
-                for(var j=0;j<Math.trunc(special[i].getAttribute("time")/60);++j) {
-                    hour=parseInt(special[i].getAttribute("start_hour"))+j;
-                   $('#hour-'+ hour).css({'background-color':special[i].getAttribute("color")})
+                for (var j = 0; j < Math.trunc(special[i].getAttribute("time") / 60); ++j) {
+                    hour = parseInt(special[i].getAttribute("start_hour")) + j;
+                    $('#hour-' + hour).css({'background-color': special[i].getAttribute("color")})
                 }
 
                 var element = {
                     'pk_speech': special[i].getAttribute("value"),
-                    'color': special[i].getAttribute("color") ,
+                    'color': special[i].getAttribute("color"),
                     'start_time': special[i].getAttribute("start_datetime"),
                     'end_time': special[i].getAttribute("end_datetime"),
-                    'is_speech': special[i].getAttribute("is_speech") ,
+                    'is_speech': special[i].getAttribute("is_speech"),
                     'room': special[i].getAttribute("room_pk"),
                     'description': special[i].getAttribute("desc"),
                 }
@@ -501,43 +517,45 @@
             }
         });
 
-        $(function() {
+        $(function () {
             var blocks = document.getElementsByClassName("speech_actvity")
 
             var url_mask = "{% url 'detail_charla' pk=0 %}";
 
-            for(var i = 0; i< blocks.length; ++i){
-                $('#hour-'+ blocks[i].getAttribute("start_hour")).append(
+            for (var i = 0; i < blocks.length; ++i) {
+                $('#hour-' + blocks[i].getAttribute("start_hour")).append(
                     '<li class="ui-state-default activity" style="background-color: ' + blocks[i].getAttribute("color") + ';"' +
-                        ' value="' + blocks[i].getAttribute("activity_pk") + '"' + ' color="' + blocks[i].getAttribute("color") + '"' +
-                        ' is_speech="' + blocks[i].getAttribute("is_speech") + '"' + ' desc="' + blocks[i].getAttribute("desc") + '"'+
-                        ' time="'+ blocks[i].getAttribute("time") + '"' + ' start_hour= "' + blocks[i].getAttribute("start_hour") + '">'+
-                        '<div class="row">' +
-                            '<div class="col-md-2 text-center">' +
-                                blocks[i].getAttribute("start_time") + ' a ' + blocks[i].getAttribute("end_time") +
-                            '</div>' +
-                            '<div class="col-md-9 text-center">' +
-                                '<a style="margin-left: 7%;" href=' + url_mask.replace(/0/, blocks[i].getAttribute("speech_pk"))  + '>' +
-                                    blocks[i].getAttribute("name") +
-                                '</a>' +
-                            '</div>' +
-                            '<div class="col-md-1 text-center">' +
-                                '<button onclick="delete_actity(' + blocks[i].getAttribute("room_pk") + ', ' + blocks[i].getAttribute("obj_pk") + ')" class="btn btn-danger btn-sm"> X </button>' +
-                            '</div>' +
-                        '</div>' +
+                    ' value="' + blocks[i].getAttribute("activity_pk") + '"' + ' color="' + blocks[i].getAttribute("color") + '"' +
+                    ' is_speech="' + blocks[i].getAttribute("is_speech") + '"' + ' desc="' + blocks[i].getAttribute("desc") + '"' +
+                    ' time="' + blocks[i].getAttribute("time") + '"' + ' start_hour= "' + blocks[i].getAttribute("start_hour") + '"' +
+                    'db="' + blocks[i].getAttribute("obj_pk") +
+                    '">' +
+                    '<div class="row">' +
+                    '<div class="col-md-2 text-center">' +
+                    blocks[i].getAttribute("start_time") + ' a ' + blocks[i].getAttribute("end_time") +
+                    '</div>' +
+                    '<div class="col-md-9 text-center">' +
+                    '<a style="margin-left: 7%;" href=' + url_mask.replace(/0/, blocks[i].getAttribute("speech_pk")) + '>' +
+                    blocks[i].getAttribute("name") +
+                    '</a>' +
+                    '</div>' +
+                    '<div class="col-md-1 text-center">' +
+                    '<button onclick="delete_actity(' + blocks[i].getAttribute("room_pk") + ', ' + blocks[i].getAttribute("obj_pk") + ')" class="btn btn-danger btn-sm"> X </button>' +
+                    '</div>' +
+                    '</div>' +
                     '</li>'
                 );
-                for(var j=0;j<Math.trunc(blocks[i].getAttribute("time")/60);++j) {
-                    hour=parseInt(blocks[i].getAttribute("start_hour"))+j;
-                   $('#hour-'+ hour).css({'background-color':blocks[i].getAttribute("color")})
+                for (var j = 0; j < Math.trunc(blocks[i].getAttribute("time") / 60); ++j) {
+                    hour = parseInt(blocks[i].getAttribute("start_hour")) + j;
+                    $('#hour-' + hour).css({'background-color': blocks[i].getAttribute("color")})
                 }
 
                 var element = {
                     'pk_speech': blocks[i].getAttribute("activity_pk"),
-                    'color': blocks[i].getAttribute("color") ,
+                    'color': blocks[i].getAttribute("color"),
                     'start_time': blocks[i].getAttribute("start_datetime"),
                     'end_time': blocks[i].getAttribute("end_datetime"),
-                    'is_speech': blocks[i].getAttribute("is_speech") ,
+                    'is_speech': blocks[i].getAttribute("is_speech"),
                     'room': blocks[i].getAttribute("room_pk"),
                     'description': blocks[i].getAttribute("desc"),
                 }
@@ -545,20 +563,20 @@
             }
         });
 
-        function delete_temp_activity(id, is_speech){
-            if (is_speech == 0){
+        function delete_temp_activity(id, is_speech) {
+            if (is_speech == 0) {
                 is_speech = ""
             }
-             for (var i = 0; i < lista.length; i++) {
-                 if (lista[i]['pk_speech'] == id && lista[i]['is_speech'] == is_speech) {
-                     lista.splice(i, 1)
-                 }
-             }
+            for (var i = 0; i < lista.length; i++) {
+                if (lista[i]['pk_speech'] == id && lista[i]['is_speech'] == is_speech) {
+                    lista.splice(i, 1)
+                }
+            }
         }
 
-        function delete_actity(room_pk, obj_pk){
-            $('#obj_pk').val(obj_pk)
-            $('#room_pk').val(room_pk)
+        function delete_actity(room_pk, obj_pk) {
+            $('#obj_pk').val(parseInt(obj_pk))
+            $('#room_pk').val(parseInt(room_pk))
             $('#delete_activity').submit()
 
         }
@@ -579,19 +597,19 @@
 
         function send_activities_list() {
             var token = '{{csrf_token}}';
-            if(lista.length!=0){
-                            $.ajax({
-                headers: {"X-CSRFToken": token},
-                type: "post",
-                data: {
-                    'agenda': JSON.stringify(lista),
-                },
-                success: function (data) {
-                    console.log(data)
-                    location.reload()
-                }
-            });
-            }else{
+            if (lista.length != 0) {
+                $.ajax({
+                    headers: {"X-CSRFToken": token},
+                    type: "post",
+                    data: {
+                        'agenda': JSON.stringify(lista),
+                    },
+                    success: function (data) {
+                        console.log(data)
+                        location.reload()
+                    }
+                });
+            } else {
                 location.reload()
             }
         }
