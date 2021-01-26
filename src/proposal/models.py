@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+
+from ecsl.managers import CurrentEventManager
 from ecsl.models import EventECSL
 
 
@@ -10,6 +12,8 @@ from ecsl.models import EventECSL
 class Topic(models.Model):
     name = models.CharField(max_length=150, verbose_name=_("Name"))
     color = models.CharField(max_length=10, default="#fff")
+    event = models.ForeignKey(EventECSL, on_delete=models.CASCADE, null=True, blank=False, verbose_name=_("Event"))
+    objects = CurrentEventManager()
 
     def __str__(self):
         return self.name
@@ -74,10 +78,12 @@ class Speech(models.Model):
     presentacion = models.FileField(upload_to='presentaciones/',
                                     verbose_name=_("Presentation"),
                                     null=True, blank=True)
-    event = models.ForeignKey(EventECSL, default="", on_delete=models.CASCADE, verbose_name=_("Event"))
+    event = models.ForeignKey(EventECSL, null=True, blank=False, on_delete=models.CASCADE, verbose_name=_("Event"))
     time_asked = models.ForeignKey(SpeechTime, null=True, on_delete=models.CASCADE, related_name='time_asked', verbose_name=_("Duration"))
     time_given = models.ForeignKey(SpeechTime, null=True, on_delete=models.CASCADE, related_name='time_given', verbose_name=_("Duration Assigned"))
     is_scheduled = models.BooleanField(default=False, verbose_name=_('is Scheduled'))
+
+    objects = CurrentEventManager()
 
     @property
     def speaker_name(self):
