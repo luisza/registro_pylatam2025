@@ -30,7 +30,7 @@
     </form>
 
     <div class="row">
-        <div class="col-sm-3">
+        <div id="filterPanel" class="col-sm-3">
             <h4> {% trans 'Speeches' %} </h4>
             <hr>
             <div class="card">
@@ -182,7 +182,7 @@
                             </li>
                         {% endfor %}
                         <li role="presentation" class="">
-                            <a href="#" data-toggle="modal" data-target="#room_modal">{% trans 'Add' %}</a>
+                            <a id="addroom" href="#" data-toggle="modal" data-target="#room_modal">{% trans 'Add' %}</a>
                         </li>
                     </ul>
                 </div>
@@ -457,8 +457,6 @@
             });
         });
 
-
-
         $(function(){
             var special = document.getElementsByClassName("special_actvity")
             for(var i = 0; i< special.length; ++i) {
@@ -476,7 +474,7 @@
                                 special[i].getAttribute("desc") +
                             '</div>' +
                             '<div class="col-md-1 text-center">' +
-                                '<button onclick="delete_actity(' + special[i].getAttribute("room_pk") + ', ' + special[i].getAttribute("obj_pk") + ')" class="btn btn-danger btn-sm"> X </button>' +
+                                '<button onclick="delete_actity(' + special[i].getAttribute("room_pk") + ', ' + special[i].getAttribute("obj_pk") + ')" class="btn btn-danger btn-sm deleteButton"> X </button>' +
                             '</div>' +
                         '</div>' +
                     '</li>'
@@ -522,7 +520,7 @@
                                 '</a>' +
                             '</div>' +
                             '<div class="col-md-1 text-center">' +
-                                '<button onclick="delete_actity(' + blocks[i].getAttribute("room_pk") + ', ' + blocks[i].getAttribute("obj_pk") + ')" class="btn btn-danger btn-sm"> X </button>' +
+                                '<button onclick="delete_actity(' + blocks[i].getAttribute("room_pk") + ', ' + blocks[i].getAttribute("obj_pk") + ')" class="btn btn-danger btn-sm deleteButton"> X </button>' +
                             '</div>' +
                         '</div>' +
                     '</li>'
@@ -631,5 +629,18 @@
                 }
             });
         }
+
+        $(function displayOrEdit(){
+            var action = '{{ view }}'
+            if(action=='display'){
+                $("#filterPanel").remove();
+                $("#send_activities").remove();
+                $(".deleteButton").remove();
+                $("#addroom").remove();
+                $('.activity').draggable({ disabled: true });
+                $('.connectedSortable').sortable({ disabled: true });
+
+            }
+        });
     </script>
 {% endblock %}
