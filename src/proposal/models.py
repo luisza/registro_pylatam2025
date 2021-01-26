@@ -6,9 +6,6 @@ from ecsl.managers import CurrentEventManager
 from ecsl.models import EventECSL
 
 
-# Create your models here.
-
-
 class Topic(models.Model):
     name = models.CharField(max_length=150, verbose_name=_("Name"))
     color = models.CharField(max_length=10, default="#fff")
@@ -116,6 +113,7 @@ class Room(models.Model):
     spaces = models.SmallIntegerField(default=30, verbose_name=_('Spaces'))
     map = models.ImageField(upload_to="mapa", null=True, blank=True, verbose_name=_('Map'))
     event = models.ForeignKey(EventECSL, on_delete=models.CASCADE, verbose_name=_("Event"), null=True, default=None)
+    objects = CurrentEventManager()
 
     def __str__(self):
         return self.name
@@ -175,6 +173,7 @@ class SpecialActivity(models.Model):
     room = models.ForeignKey('Room', default="", on_delete=models.CASCADE, verbose_name=_("Room"))
     event = models.ForeignKey(EventECSL, default="", on_delete=models.CASCADE, verbose_name=_("Event"))
     is_scheduled = models.BooleanField(default=False, verbose_name=_('is Scheduled'))
+    objects = CurrentEventManager()
 
     def __str__(self):
         return self.name
