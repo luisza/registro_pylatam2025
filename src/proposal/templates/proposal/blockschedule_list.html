@@ -35,146 +35,158 @@
             <hr>
             <div class="card">
                 <div class="card-body">
-                    <div class="inline-flex" style="width: 100%;">
-                        <div class="input-group">
-                            <span class="input-group-btn">
-                                <a style="height: 40px;" data-toggle="modal"
-                                   data-target="#topic-modal" class="btn btn-success add-button"><i
-                                        class="fas fa-plus" style="margin-top: 15px"></i></a>
-                            </span>
-                            <form id="filter" method="post">
-                                {% csrf_token %}
-                                <select class="btn sidebar-select btn-primary" style="height: 40px" name="topic"
-                                        id="topic">
-                                    <option selected value="None">{% trans 'Topic' %}</option>
-                                    {% for topic in topics %}
-                                        <option value={{ topic.id }}>{{ topic }}</option>
+                    <div class="row flex">
+                        <div class="col-md-6 inline-flex">
+                            <div class="col-2">
+                                <span class="input-group-btn">
+                                    <a style="height: 40px;" data-toggle="modal"
+                                       data-target="#topic-modal" class="btn btn-info add-button">
+                                        <i class="fas fa-plus" style="margin-top: 15px"></i>
+                                    </a>
+                                </span>
+                            </div>
+                            <div class="col-10">
+                                <form id="filter" method="post">
+                                    {% csrf_token %}
+                                    <select class="btn sidebar-select btn-primary" style="height: 40px" name="topic"
+                                            id="topic">
+                                        <option selected value="None">{% trans 'Topic' %}</option>
+                                        {% for topic in topics %}
+                                            <option value={{ topic.id }}>{{ topic }}</option>
+                                        {% endfor %}
+                                    </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 inline-flex">
+                            <div class="col-2">
+                                <span class="input-group-btn">
+                                    <a style="height: 40px" data-toggle="modal" data-target="#type-modal"
+                                       class="btn btn-info add-button">
+                                        <i style="margin-top: 15px" class="fas fa-plus"></i></a>
+                                </span>
+                            </div>
+                            <div class="col-9">
+                                <select class="btn sidebar-select btn-primary" style="height: 40px" name="type" id="type">
+                                    <option selected value="None">{% trans 'Type' %}</option>
+                                    {% for type in types %}
+                                        <option value={{ type.id }}>{{ type }}</option>
                                     {% endfor %}
                                 </select>
+                            </div>
+                            <div class="col-1">
+                                <a style="height: 40px" onclick="send_filter()" id="search" class="btn btn-info add-button">
+                                    <i style="margin-top: 15px" class="fas fa-search"></i>
+                                </a>
+                                </form>
+                            </div>
                         </div>
-                        <div class="input-group">
-                            <span class="input-group-btn">
-                                <a style="height: 40px" data-toggle="modal" data-target="#type-modal"
-                                   class="btn btn-success add-button">
-                                    <i style="margin-top: 15px" class="fas fa-plus"></i></a>
-                            </span>
-                            <select class="btn sidebar-select btn-primary" style="height: 40px" name="type"
-                                    id="type">
-                                <option selected value="None">{% trans 'Type' %}</option>
-                                {% for type in types %}
-                                    <option value={{ type.id }}>{{ type }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <a style="height: 40px" onclick="send_filter()" id="search" class="btn btn-info add-button"><i
-                                style="margin-top: 15px" class="fas fa-search"></i></a>
-                        </form>
                     </div>
-                </div>
-            </div>
-            <div class="jumbotron">
-                <ul id="speeches" class="connectedSortable droppable" hora="7:00:00">
-                    {% for speech in speeches %}
+                    <br>
+                    <div class="jumbotron">
+                        <ul id="speeches" class="connectedSortable droppable" hora="7:00:00">
+                            {% for speech in speeches %}
 
 
-                        <li class="ui-state-default activity" style="background-color: {{ speech.topic.color }};"
-                            value="{{ speech.pk }}" color="{{ speech.topic.color }}"
-                            time="{{ speech.speech_type.time }}" is_speech="1" desc="none">
-                            <div class="row">
-                                <div class="col-sm-8">
-                                    {{ speech }}
+                                <li class="ui-state-default activity" style="background-color: {{ speech.topic.color }};"
+                                    value="{{ speech.pk }}" color="{{ speech.topic.color }}"
+                                    time="{{ speech.speech_type.time }}" is_speech="1" desc="none">
+                                    <div class="row">
+                                        <div class="col-sm-8">
+                                            {{ speech }}
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <select class="">time
+                                                <option selected value="None">Type</option>
+                                                <option selected value="None">Type</option>
+                                                <option selected value="None">Type</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <br>
+                    <div class="inline-flex">
+                        <h4> {% trans 'Special Activities' %}</h4>
+                        <div class="add-activity">
+                            <a data-toggle="modal" data-target="#special-modal"
+                               class="btn btn-info add-button pl-2"><i class="fas fa-plus"></i></a>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="jumbotron">
+                        <ul id="specials" class="connectedSortable droppable" hora="7:00:00">
+                            {% for special in specialActivity %}
+                                <li class="ui-state-default activity" style="background-color: #ddd234;" color="#ddd234"
+                                    time="{{ special.type.time }}" is_speech="0"
+                                    desc="{{ special.message }}"
+                                    value="{{ special.pk }}">
+                                    {{ special }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div id="topic-modal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title"> {% trans 'New Speech Topic' %} </h4>
                                 </div>
-                                <div class="col-sm-4">
-                                    <select class="">time
-                                        <option selected value="None">Type</option>
-                                        <option selected value="None">Type</option>
-                                        <option selected value="None">Type</option>
-                                    </select>
+                                <div class="modal-body" style="text-align: center">
+                                    <form action="proposal/createTopic/" method="post">
+                                        {% csrf_token %}
+                                        <div class="jumbotron" style="display: inline-grid">
+                                            {{ topicForm }}
+                                            <hr>
+                                            <input class="btn btn-info" type="submit" value="{% trans 'Save' %}">
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-            <br>
-            <div class="inline-flex">
-                <h4> {% trans 'Special Activities' %}</h4>
-                <div class="add-activity">
-                    <a data-toggle="modal" data-target="#special-modal"
-                       class="btn btn-success add-button pl-2"><i class="fas fa-plus"></i></a>
-                </div>
-            </div>
-            <hr>
-            <div class="jumbotron">
-                <ul id="specials" class="connectedSortable droppable" hora="7:00:00">
-                    {% for special in specialActivity %}
-                        <li class="ui-state-default activity" style="background-color: #ddd234;" color="#ddd234"
-                            time="{{ special.type.time }}" is_speech="0"
-                            desc="{{ special.message }}"
-                            value="{{ special.pk }}">
-                            {{ special }}
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-
-            <div id="topic-modal" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title"> {% trans 'New Speech Topic' %} </h4>
-                        </div>
-                        <div class="modal-body" style="text-align: center">
-                            <form action="proposal/createTopic/" method="post">
-                                {% csrf_token %}
-                                <div class="jumbotron" style="display: inline-grid">
-                                    {{ topicForm }}
-                                    <hr>
-                                    <input class="btn btn-info" type="submit" value="{% trans 'Save' %}">
-                                </div>
-                            </form>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <div id="type-modal" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title"> {% trans 'New Speech Type' %}</h4>
-                        </div>
-                        <div class="modal-body" style="text-align: center">
-                            <form action="proposal/createType/" method="post">
-                                {% csrf_token %}
-                                <div class="jumbotron" style="display: inline-grid">
-                                    {{ typeForm }}
-                                    <hr>
-                                    <input class="btn btn-info" type="submit" value="{% trans 'Save' %}">
+                    <div id="type-modal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title"> {% trans 'New Speech Type' %}</h4>
                                 </div>
-                            </form>
+                                <div class="modal-body" style="text-align: center">
+                                    <form action="proposal/createType/" method="post">
+                                        {% csrf_token %}
+                                        <div class="jumbotron" style="display: inline-grid">
+                                            {{ typeForm }}
+                                            <hr>
+                                            <input class="btn btn-info" type="submit" value="{% trans 'Save' %}">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div id="special-modal" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">{% trans 'New Special Activity' %}</h4>
-                        </div>
-                        <div class="modal-body" style="text-align: center">
-                            <form action="proposal/createSpecial/" method="post">
-                                {% csrf_token %}
-                                <div class="jumbotron" style="display: inline-grid;">
-                                    {{ specialForm }}
-                                    <hr>
-                                    <input class="btn btn-info" type="submit" value="{% trans 'Save' %}">
+                    <div id="special-modal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">{% trans 'New Special Activity' %}</h4>
                                 </div>
-                            </form>
+                                <div class="modal-body" style="text-align: center">
+                                    <form action="proposal/createSpecial/" method="post">
+                                        {% csrf_token %}
+                                        <div class="jumbotron" style="display: inline-grid;">
+                                            {{ specialForm }}
+                                            <hr>
+                                            <input class="btn btn-info" type="submit" value="{% trans 'Save' %}">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -202,7 +214,7 @@
                     </ul>
                 </div>
                 <div class="scheduleContainer">
-                    <button id="send_activities" name="send_activities"
+                    <button class="btn btn-success" id="send_activities" name="send_activities"
                             onclick="send_activities_list()">{% trans 'Submit' %}</button>
                     <table class="table">
                         <thead class="thead">
@@ -214,91 +226,91 @@
                         <tbody>
                         <tr>
                             <td class="horaCalendario">7:00</td>
-                            <td class="droppable" hora="7:00:00" id="td-7">
+                            <td class="droppable" hora="7:00:00" id="td-7" lasthour="7:00:00">
                                 <ul id="hour-7" hora="7:00:00" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
                             <td class="horaCalendario">8:00</td>
-                            <td class="droppable" hora="8:00:00" id="td-8">
+                            <td class="droppable" hora="8:00:00" id="td-8" lasthour="8:00:00">
                                 <ul id="hour-8" hora="8:00:00" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
                             <td class="horaCalendario">9:00</td>
-                            <td class="droppable" hora="9:00:00" id="td-9">
+                            <td class="droppable" hora="9:00:00" id="td-9" lasthour="9:00:00">
                                 <ul id="hour-9" hora="9:00:00" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
                             <td class="horaCalendario">10:00</td>
-                            <td class="droppable" hora="10:00:00" id="td-10">
+                            <td class="droppable" hora="10:00:00" id="td-10" lasthour="10:00:00">
                                 <ul id="hour-10" hora="10:00:00" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
                             <td class="horaCalendario">11:00</td>
-                            <td class="droppable" hora="11:00:00" id="td-11">
+                            <td class="droppable" hora="11:00:00" id="td-11" lasthour="11:00:00">
                                 <ul id="hour-11" hora="11:00:00" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
                             <td class="horaCalendario">12:00</td>
-                            <td class="droppable" hora="12:00:00" id="td-12">
+                            <td class="droppable" hora="12:00:00" id="td-12" lasthour="12:00:00">
                                 <ul id="hour-12" hora="12:00:00" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
                             <td class="horaCalendario">13:00</td>
-                            <td class="droppable" hora="13:00:00" id="td-13">
+                            <td class="droppable" hora="13:00:00" id="td-13" lasthour="13:00:00">
                                 <ul id="hour-13" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
                             <td class="horaCalendario">14:00</td>
-                            <td class="droppable" hora="14:00:00" id="td-14">
+                            <td class="droppable" hora="14:00:00" id="td-14" lasthour="14:00:00">
                                 <ul id="hour-14" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
                             <td class="horaCalendario">15:00</td>
-                            <td class="droppable" hora="15:00:00" id="td-15">
+                            <td class="droppable" hora="15:00:00" id="td-15" lasthour="15:00:00">
                                 <ul id="hour-15" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
                             <td class="horaCalendario">16:00</td>
-                            <td class="droppable" hora="16:00:00" id="td-16">
+                            <td class="droppable" hora="16:00:00" id="td-16" lasthour="16:00:00">
                                 <ul id="hour-16" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
                             <td class="horaCalendario">17:00</td>
-                            <td class="droppable" hora="17:00:00" id="td-17">
+                            <td class="droppable" hora="17:00:00" id="td-17" lasthour="17:00:00">
                                 <ul id="hour-17" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
                             <td class="horaCalendario">18:00</td>
-                            <td class="droppable" hora="18:00:00" id="td-18">
+                            <td class="droppable" hora="18:00:00" id="td-18" lasthour="18:00:00">
                                 <ul id="hour-18" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
                             <td class="horaCalendario">19:00</td>
-                            <td class="droppable" hora="19:00:00" id="td-19">
+                            <td class="droppable" hora="19:00:00" id="td-19" lasthour="19:00:00">
                                 <ul id="hour-19" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
                             <td class="horaCalendario">20:00</td>
-                            <td class="droppable" hora="20:00:00" id="td-20">
+                            <td class="droppable" hora="20:00:00" id="td-20" lasthour="20:00:00">
                                 <ul id="hour-20" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
                             <td class="horaCalendario">21:00</td>
-                            <td class="droppable" hora="21:00:00" id="td-21">
+                            <td class="droppable" hora="21:00:00" id="td-21" lasthour="21:00:00">
                                 <ul id="hour-21" class="connectedSortable"></ul>
                             </td>
                         </tr>
@@ -417,14 +429,53 @@
             }).disableSelection();
         });
 
+
+        function difHours(hour1,hour2){
+            starttime = new Date($("#actualDay").text() + " " + hour1)
+            endime = new Date($("#actualDay").text() + " " + hour2)
+            diff = endime-starttime
+            return millisToMinutesAndSeconds(diff)
+        }
+
+        function millisToMinutesAndSeconds(millis) {
+          var minutes = Math.floor(millis / 60000);
+          var seconds = ((millis % 60000) / 1000).toFixed(0);
+          return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+        }
+
+        function update_last_hours(){
+            for (var i = 7; i <= 20; ++i) {
+                var minutes_left_to_assign = parseInt(difHours($('#td-' + (i+1) ).attr('hora'), $('#td-' + i).attr('lasthour')).split(":")[0])
+                if( minutes_left_to_assign > 0 )
+                {
+                    $('#td-' + i ).attr('lasthour', addLastHour($('#td-' + i ).attr('hora'), 60));
+                    $('#td-' + (i+1) ).attr('lasthour', addLastHour($('#td-' + (i+1)).attr('lasthour'), minutes_left_to_assign));
+                }
+            }
+        }
+
         $(function () {
             $(".droppable").droppable({
                 drop: function (event, ui) {
-                    ui.draggable.attr('start_time', $("#actualDay").text() + " " + $(this).attr("hora"))
-                    ui.draggable.attr('end_time', addhoras($(this).attr("hora"), ui.draggable.attr("time")))
+
+                    ui.draggable.attr('start_time', $("#actualDay").text() + " " + $(this).attr("lasthour"))
+                    ui.draggable.attr('end_time', addhoras($(this).attr("lasthour"), ui.draggable.attr("time")))
+
+                    hour = parseInt(ui.draggable.attr('start_hour'));
+
+                    if($('#td-' + hour).attr('lasthour')){
+                        if($('#td-' + hour).attr('hora') < substractLastHour($('#td-' + hour).attr('lasthour'),ui.draggable.attr("time"))){
+                            $('#td-' + hour).attr('lasthour',substractLastHour($('#td-' + hour).attr('lasthour'),ui.draggable.attr("time")))
+                        }
+                    }
+                    $(this).attr('lasthour',addLastHour($(this).attr('lasthour'), ui.draggable.attr("time")))
+                    update_last_hours();
+
+
+
                     ui.draggable.attr('room', $("#actualRoom").text())
                     $("#id_speech").val(ui.draggable.val());
-                    $("#id_start_time").val($("#actualDay").text() + " " + $(this).attr("hora"));
+                    $("#id_start_time").val($("#actualDay").text() + " " + $(this).attr("lasthour"));
                     $("#id_end_time").val(addhoras($(this).attr("hora"), ui.draggable.attr("time")));
                     $("#id_color").val((ui.draggable.attr("color")));
                     var is_speech = null
@@ -447,17 +498,22 @@
                         'description': ui.draggable.attr("desc"),
                     }
 
-                    for (var j = 0; j < Math.trunc(ui.draggable.attr('time') / 60); ++j) {
-                        hour = parseInt(ui.draggable.attr('start_hour')) + j;
-                        $('#hour-' + hour).css({'background-color': ""})
-                    }
+                    $('.'+ is_speech + ui.draggable.val()+'').remove();
 
                     ui.draggable.attr('start_hour', $(this).attr("hora").split(':')[0])
 
 
-                    for (var j = 0; j < Math.trunc(ui.draggable.attr('time') / 60); ++j) {
+                    var s_time = ui.draggable.attr('start_time').split(" ")[1];
+                    var e_time = ui.draggable.attr('end_time').split(" ")[1];
+                    var times = parseInt(difHours(s_time, e_time).split(":")[0])/60;
+                    var not_oclock = s_time.split(":")[1];
+                    for (var j = 1; j < times; ++j) {
                         hour = parseInt(ui.draggable.attr('start_hour')) + j;
-                        $('#hour-' + hour).css({'background-color': ui.draggable.attr('color')})
+                        $('#hour-' + hour).append('<li class="activity ' + is_speech + ui.draggable.attr("value") + '" style="background-color:' + ui.draggable.attr("color") +'">' + '</li>');
+                     }
+                    if(not_oclock!=0)
+                    {
+                        $('#hour-' + (hour+1)).append('<li class="activity ' + is_speech + ui.draggable.attr("value") + '" style="background-color:' + ui.draggable.attr("color") +'">' + '</li>');
                     }
 
                     var value = activities_in_list(element)
@@ -472,18 +528,20 @@
                     }
                 }
             });
+            update_last_hours();
         });
 
 
         $(function () {
             var special = document.getElementsByClassName("special_actvity")
             for (var i = 0; i < special.length; ++i) {
+                $("#td-"+ special[i].getAttribute("start_hour")).attr('lasthour',addLastHour( $("#td-"+ special[i].getAttribute("start_hour")).attr('lasthour'),special[i].getAttribute("time")))
                 $('#hour-' + special[i].getAttribute("start_hour")).append(
                     '<li class="ui-state-default activity" style="background-color: ' + special[i].getAttribute("color") + ';"' +
                     ' value="' + special[i].getAttribute("value") + '" color="' + special[i].getAttribute("color") + '"' +
                     ' is_speech= "" ' + ' desc="' + special[i].getAttribute("desc") + '"' +
                     ' time="' + special[i].getAttribute("time") + '"' + ' start_hour= "' + special[i].getAttribute("start_hour") + '" ' +
-                    'db="' + special[i].getAttribute("obj_pk") +
+                    'db="' + special[i].getAttribute("obj_pk") + ' "start_time="' + special[i].getAttribute("start_time") +
                     '">' +
                     '<div class="row">' +
                     '<div class="col-md-2 text-center">' +
@@ -498,9 +556,18 @@
                     '</div>' +
                     '</li>'
                 );
-                for (var j = 0; j < Math.trunc(special[i].getAttribute("time") / 60); ++j) {
+                var s_time = special[i].getAttribute('start_datetime').split(" ")[1];
+                var e_time = special[i].getAttribute('end_datetime').split(" ")[1];
+                var times = parseInt(difHours(s_time, e_time).split(":")[0])/60;
+                var not_oclock = s_time.split(":")[1];
+                var hour=0;
+                for (var j = 1; j < times ; ++j) {
                     hour = parseInt(special[i].getAttribute("start_hour")) + j;
-                    $('#hour-' + hour).css({'background-color': special[i].getAttribute("color")})
+                    $('#hour-' + hour).append('<li class="activity ' + special[i].getAttribute("value") + '" style="background-color:' + special[i].getAttribute("color") +'">' + '</li>');
+                }
+                if(not_oclock!=0)
+                {
+                    $('#hour-' + (hour+1)).append('<li class="activity ' + special[i].getAttribute("value") + '" style="background-color:' + special[i].getAttribute("color") +'">' + '</li>');
                 }
 
                 var element = {
@@ -513,8 +580,8 @@
                     'description': special[i].getAttribute("desc"),
                 }
                 lista.push(element)
-
             }
+            update_last_hours();
         });
 
         $(function () {
@@ -523,12 +590,13 @@
             var url_mask = "{% url 'detail_charla' pk=0 %}";
 
             for (var i = 0; i < blocks.length; ++i) {
+                $("#td-"+ blocks[i].getAttribute("start_hour")).attr('lasthour',addLastHour( $("#td-"+ blocks[i].getAttribute("start_hour")).attr('lasthour'),blocks[i].getAttribute("time")))
                 $('#hour-' + blocks[i].getAttribute("start_hour")).append(
                     '<li class="ui-state-default activity" style="background-color: ' + blocks[i].getAttribute("color") + ';"' +
                     ' value="' + blocks[i].getAttribute("activity_pk") + '"' + ' color="' + blocks[i].getAttribute("color") + '"' +
                     ' is_speech="' + blocks[i].getAttribute("is_speech") + '"' + ' desc="' + blocks[i].getAttribute("desc") + '"' +
                     ' time="' + blocks[i].getAttribute("time") + '"' + ' start_hour= "' + blocks[i].getAttribute("start_hour") + '"' +
-                    'db="' + blocks[i].getAttribute("obj_pk") +
+                    'db="' + blocks[i].getAttribute("obj_pk") + ' "start_time="' + blocks[i].getAttribute("start_time") +
                     '">' +
                     '<div class="row">' +
                     '<div class="col-md-2 text-center">' +
@@ -545,9 +613,20 @@
                     '</div>' +
                     '</li>'
                 );
-                for (var j = 0; j < Math.trunc(blocks[i].getAttribute("time") / 60); ++j) {
+
+
+                var s_time = blocks[i].getAttribute('start_datetime').split(" ")[1];
+                var e_time = blocks[i].getAttribute('end_datetime').split(" ")[1];
+                var times = parseInt(difHours(s_time, e_time).split(":")[0])/60;
+                var not_oclock = s_time.split(":")[1];
+                var hour=0;
+                for (var j = 1; j < times ; ++j) {
                     hour = parseInt(blocks[i].getAttribute("start_hour")) + j;
-                    $('#hour-' + hour).css({'background-color': blocks[i].getAttribute("color")})
+                    $('#hour-' + hour).append('<li class="activity ' + blocks[i].getAttribute("is_speech") + blocks[i].getAttribute("activity_pk") + '" style="background-color:' + blocks[i].getAttribute("color") +'">' + '</li>');
+                }
+                if(not_oclock!=0)
+                {
+                    $('#hour-' + (hour+1)).append('<li class="activity ' + blocks[i].getAttribute("is_speech") + blocks[i].getAttribute("activity_pk") + '" style="background-color:' + blocks[i].getAttribute("color") +'">' + '</li>');
                 }
 
                 var element = {
@@ -561,6 +640,7 @@
                 }
                 lista.push(element)
             }
+            update_last_hours();
         });
 
         function delete_temp_activity(id, is_speech) {
@@ -616,9 +696,23 @@
 
         function addhoras(hora, minutos) {
             starttime = new Date($("#actualDay").text() + " " + hora)
-            starttime.setMinutes(starttime.getMinutes() + minutos)
+            starttime.setMinutes(starttime.getMinutes() + parseInt(minutos))
             endtime = $("#actualDay").text() + " " + starttime.getHours() + ":" + starttime.getMinutes() + ":00"
             return (endtime)
+        }
+
+        function addLastHour(hora, minutos) {
+            starttime = new Date($("#actualDay").text() + " " + hora)
+            starttime.setMinutes(starttime.getMinutes() + parseInt(minutos))
+            endtime = ""+ starttime.getHours() + ":" + starttime.getMinutes() + ":00"
+            return (endtime)
+        }
+
+        function substractLastHour(hora, minutos){
+            starttime = new Date($("#actualDay").text() + " " + hora)
+            starttime.setMinutes(starttime.getMinutes() - parseInt(minutos))
+            endtime = ""+ starttime.getHours() + ":" + starttime.getMinutes() + ":00"
+            return(endtime)
         }
 
         function send_filter() {
