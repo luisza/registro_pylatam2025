@@ -103,7 +103,9 @@ def get_all_speeches(request):
 
             times = get_times_speech(request, result_query)
             colors = get_color_speech(request, result_query)
-        return JsonResponse(data={'result': result, 'color': colors, 'times': times})
+            types = SpeechType.objects.filter(is_special=False)
+            types = serializers.serialize('json', types)
+        return JsonResponse(data={'result': result, 'color': colors, 'times': times, 'types': types,})
 
 
 def get_participants(request):
