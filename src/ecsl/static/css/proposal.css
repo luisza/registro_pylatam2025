@@ -47,6 +47,7 @@
 .inline-flex {
     display: inline-flex;
     vertical-align: middle;
+    margin-top: 1%;
 }
 
 hr {
@@ -57,7 +58,7 @@ hr {
     width: 95%;
     text-overflow: ellipsis;
     height: 3rem;
-    padding: 7% 0 7% 15%;
+    padding-right: 15%;
     font-size: 12px;
 }
 
