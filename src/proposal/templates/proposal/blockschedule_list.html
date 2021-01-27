@@ -30,7 +30,7 @@
     </form>
 
     <div class="row">
-        <div class="col-sm-5">
+        <div class="col-sm-5" id="filterPanel">
             <h4> {% trans 'Speeches' %} </h4>
             <hr>
             <div class="card">
@@ -493,7 +493,7 @@
                     special[i].getAttribute("desc") +
                     '</div>' +
                     '<div class="col-md-1 text-center">' +
-                    '<button onclick="delete_actity(' + special[i].getAttribute("room_pk") + ', ' + special[i].getAttribute("obj_pk") + ')" class="btn btn-danger btn-sm"> X </button>' +
+                    '<button onclick="delete_actity(' + special[i].getAttribute("room_pk") + ', ' + special[i].getAttribute("obj_pk") + ')" class="btn btn-danger btn-sm deleteButton"> X </button>' +
                     '</div>' +
                     '</div>' +
                     '</li>'
@@ -540,7 +540,7 @@
                     '</a>' +
                     '</div>' +
                     '<div class="col-md-1 text-center">' +
-                    '<button onclick="delete_actity(' + blocks[i].getAttribute("room_pk") + ', ' + blocks[i].getAttribute("obj_pk") + ')" class="btn btn-danger btn-sm"> X </button>' +
+                    '<button onclick="delete_actity(' + blocks[i].getAttribute("room_pk") + ', ' + blocks[i].getAttribute("obj_pk") + ')" class="btn btn-danger btn-sm deleteButton"> X </button>' +
                     '</div>' +
                     '</div>' +
                     '</li>'
