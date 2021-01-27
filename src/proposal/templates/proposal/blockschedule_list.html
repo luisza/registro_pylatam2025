@@ -46,7 +46,7 @@
                                 {% csrf_token %}
                                 <select class="btn sidebar-select btn-primary" style="height: 40px" name="topic"
                                         id="topic">
-                                    <option selected value="None">Topic</option>
+                                    <option selected value="None">{% trans 'Topic' %}</option>
                                     {% for topic in topics %}
                                         <option value={{ topic.id }}>{{ topic }}</option>
                                     {% endfor %}
@@ -60,7 +60,7 @@
                             </span>
                             <select class="btn sidebar-select btn-primary" style="height: 40px" name="type"
                                     id="type">
-                                <option selected value="None">Type</option>
+                                <option selected value="None">{% trans 'Type' %}</option>
                                 {% for type in types %}
                                     <option value={{ type.id }}>{{ type }}</option>
                                 {% endfor %}
@@ -79,7 +79,7 @@
 
                         <li class="ui-state-default activity" style="background-color: {{ speech.topic.color }};"
                             value="{{ speech.pk }}" color="{{ speech.topic.color }}"
-                            time="{{ speech.time_given.time }}" is_speech="1" desc="none">
+                            time="{{ speech.speech_type.time }}" is_speech="1" desc="none">
                             <div class="row">
                                 <div class="col-sm-8">
                                     {{ speech }}
@@ -109,7 +109,7 @@
                 <ul id="specials" class="connectedSortable droppable" hora="7:00:00">
                     {% for special in specialActivity %}
                         <li class="ui-state-default activity" style="background-color: #ddd234;" color="#ddd234"
-                            time="{{ special.time.time }}" is_speech="0"
+                            time="{{ special.type.time }}" is_speech="0"
                             desc="{{ special.message }}"
                             value="{{ special.pk }}">
                             {{ special }}
@@ -197,7 +197,7 @@
                             </li>
                         {% endfor %}
                         <li role="presentation" class="">
-                            <a href="#" data-toggle="modal" data-target="#room_modal">{% trans 'Add' %}</a>
+                            <a id="addroom" href="#" data-toggle="modal" data-target="#room_modal">{% trans 'Add' %}</a>
                         </li>
                     </ul>
                 </div>
@@ -332,7 +332,7 @@
                                  room_id="{{ room_id }}"
                                  is_speech="true"
                                  desc="none"
-                                 time={{ speech.speech.time_given.time }}
+                                 time={{ speech.speech.speech_type.time }}
                             >
                             </div>
                         {% endif %}
@@ -347,7 +347,7 @@
                                  start_hour="{{ obj.start_time | date:"G" }}"
                                  end_time="{{ obj.end_time | date:"G:i" }}"
                                  color="{{ '#858585' }}"
-                                 time="{{ speech_schedule.special.time.time }}"
+                                 time="{{ speech_schedule.special.type.time }}"
                                  desc="{{ obj.text }}"
                                  room_pk="{{ speech_schedule.room.pk }}"
                                  obj_pk="{{ obj.pk }}"
@@ -644,10 +644,23 @@
                                 Object.values(result[i]['fields'])[2] + '</li>')
                         $('.draggable').draggable();
                     } else {
-                        $('#speeches').append('<p>No results matched</p>')
+                        $('#speeches').append('<p>{% trans 'No results matched' %}</p>')
                     }
                 }
             });
         }
+
+        $(function displayOrEdit(){
+            var action = '{{ view }}'
+            if(action=='display'){
+                $("#filterPanel").remove();
+                $("#send_activities").remove();
+                $(".deleteButton").remove();
+                $("#addroom").remove();
+                $('.activity').draggable({ disabled: true });
+                $('.connectedSortable').sortable({ disabled: true });
+
+            }
+        });
     </script>
 {% endblock %}

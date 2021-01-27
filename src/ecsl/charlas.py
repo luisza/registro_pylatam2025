@@ -4,6 +4,8 @@ Created on 5 jun. 2017
 @author: luis
 '''
 import json
+
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.utils import timezone
 from django.views.generic.list import ListView
 from proposal.models import SpeechSchedule, Topic, Speech, Register_Speech, \
@@ -11,7 +13,7 @@ from proposal.models import SpeechSchedule, Topic, Speech, Register_Speech, \
 import datetime
 from django.views.generic.detail import DetailView
 from django.shortcuts import get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.urls.base import reverse
 from ecsl.models import Payment, EventECSL
@@ -82,8 +84,7 @@ class CharlaContext:
         context['object_list'] = charlasDic["dia%s" % (dia)]
         context['dia'] = dia
         context['topics'] = Topic.objects.all()
-        context['types'] = SpeechType.objects.all()
-        print(charlasDic["dia%s" % (dia)])
+        context['types'] = SpeechType.objects.filter(is_special=False)
         context['diaActual'] = days[dia - 1]
         context['form'] = scheduleForm()
         context['speeches'] = speeches
@@ -98,7 +99,6 @@ class CharlaContext:
         context['room_form'] = RoomsCreateForm()
         return context
 
-
 class Charlas(CharlaContext, ListView):
     model = BlockSchedule
     order_by = "start_time"
@@ -111,12 +111,38 @@ class Charlas(CharlaContext, ListView):
             return redirect('sineventos/')
         return super(Charlas, self).dispatch(request, *args, **kwargs)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['view'] = 'display'
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
+class EditCharlas(PermissionRequiredMixin, CharlaContext, ListView):
+    model = BlockSchedule
+    order_by = "start_time"
+    permission_required = 'proposal.add_blockschedule'
+
+    def dispatch(self, request, *args, **kwargs):
+        current_event = EventECSL.objects.filter(current=True).first()
+        if not current_event:
+            messages.success(
+                self.request, _("Sorry, we need an event to display the schedule"))
+            return redirect('sineventos/')
+        return super(EditCharlas, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['view'] = 'edit'
+        return context
+
     def post(self, request, *args, **kwargs):
         if request.method == 'POST':
             if request.POST.get('form_id'):
                 if request.POST['form_id'] == 'delete':
                     block = BlockSchedule.objects.filter(id=request.POST['block']).first()
-                    schedule = SpeechSchedule.objects.filter(start_time=block.start_time, room=request.POST['room']).first()
+                    schedule = SpeechSchedule.objects.filter(start_time=block.start_time,
+                                                             room=request.POST['room']).first()
                     if block.is_speech:
                         speech = schedule.speech
                         speech.is_scheduled = False
@@ -128,11 +154,15 @@ class Charlas(CharlaContext, ListView):
             if request.POST.get('agenda'):
                 result = json.loads(request.POST['agenda'])
                 start_date = timezone.datetime.strptime(result[0]['start_time'], "%Y-%m-%d %H:%M:%S")
-                start_date = timezone.datetime(hour=0, minute=0, day=start_date.day, month=start_date.month, year=start_date.year)
-                end_date = timezone.datetime(hour=23, minute=59, day=start_date.day, month=start_date.month, year=start_date.year)
+                start_date = timezone.datetime(hour=0, minute=0, day=start_date.day, month=start_date.month,
+                                               year=start_date.year)
+                end_date = timezone.datetime(hour=23, minute=59, day=start_date.day, month=start_date.month,
+                                             year=start_date.year)
 
-                block = BlockSchedule.objects.filter(start_time__gte=start_date, end_time__lte=end_date, room=result[0]['room'])
-                schedule = SpeechSchedule.objects.filter(start_time__gte=start_date, end_time__lte=end_date, room=result[0]['room'])
+                block = BlockSchedule.objects.filter(start_time__gte=start_date, end_time__lte=end_date,
+                                                     room=result[0]['room'])
+                schedule = SpeechSchedule.objects.filter(start_time__gte=start_date, end_time__lte=end_date,
+                                                         room=result[0]['room'])
                 for speech in schedule:
                     if speech.speech:
                         speech.speech.is_scheduled = False
@@ -146,20 +176,20 @@ class Charlas(CharlaContext, ListView):
 
                     if activities['is_speech']:
                         speechSchedule = SpeechSchedule(start_time=timezone.datetime.strptime(activities['start_time'],
-                                                                                          "%Y-%m-%d %H:%M:%S"),
-                                                    end_time=timezone.datetime.strptime(
-                                                        activities['end_time'], "%Y-%m-%d %H:%M:%S"),
-                                                    speech=Speech.objects.filter(
-                                                        id=int(activities['pk_speech'])).first(),
-                                                    room=Room.objects.filter(id=int(activities['room'])).first(), )
+                                                                                              "%Y-%m-%d %H:%M:%S"),
+                                                        end_time=timezone.datetime.strptime(
+                                                            activities['end_time'], "%Y-%m-%d %H:%M:%S"),
+                                                        speech=Speech.objects.filter(
+                                                            id=int(activities['pk_speech'])).first(),
+                                                        room=Room.objects.filter(id=int(activities['room'])).first(), )
                     else:
                         speechSchedule = SpeechSchedule(start_time=timezone.datetime.strptime(activities['start_time'],
-                                                                                          "%Y-%m-%d %H:%M:%S"),
-                                                    end_time=timezone.datetime.strptime(
-                                                        activities['end_time'], "%Y-%m-%d %H:%M:%S"),
-                                                    special=SpecialActivity.objects.filter(
-                                                        id=int(activities['pk_speech'])).first(),
-                                                    room=Room.objects.filter(id=int(activities['room'])).first(), )
+                                                                                              "%Y-%m-%d %H:%M:%S"),
+                                                        end_time=timezone.datetime.strptime(
+                                                            activities['end_time'], "%Y-%m-%d %H:%M:%S"),
+                                                        special=SpecialActivity.objects.filter(
+                                                            id=int(activities['pk_speech'])).first(),
+                                                        room=Room.objects.filter(id=int(activities['room'])).first(), )
                     speech = SpeechSchedule.objects.filter(room=speechSchedule.room,
                                                            start_time__lt=speechSchedule.end_time,
                                                            end_time__gt=speechSchedule.start_time).first()
@@ -194,7 +224,7 @@ class Charlas(CharlaContext, ListView):
                         speech.is_scheduled = True
                         speech.save()
 
-            return redirect(reverse('list_charlas'))
+            return redirect(reverse('edit_charlas'))
 
 
 @method_decorator(login_required, name='dispatch')

@@ -20,23 +20,15 @@ class Topic(models.Model):
         verbose_name_plural = "Temáticas"
 
 
-class SpeechTime(models.Model):
-    name = models.CharField(max_length=40, verbose_name=_("Name"), default=_("Basic speech"))
-    time = models.IntegerField(default=10, verbose_name=_("Time (in minutes)"))
-
-    def __str__(self):
-        return f"%s (%d minutes)" % (self.name, self.time)
-
-    class Meta:
-        verbose_name = _("Activity Duration")
-        verbose_name_plural = _("Activity Duration")
-
-
 class SpeechType(models.Model):
     name = models.CharField(max_length=150, verbose_name=_("Name"))
+    time = models.IntegerField(default=10, verbose_name=_("Duration (in minutes)"))
+    event = models.ForeignKey(EventECSL, null=True, default=None, on_delete=models.CASCADE, verbose_name=_("Event"))
+    is_special = models.BooleanField(default=False, verbose_name=_('Is Special Activity'))
+    objects = CurrentEventManager()
 
     def __str__(self):
-        return self.name
+        return _("%s (%d minutes)") % (self.name, self.time)
 
     class Meta:
         verbose_name = "Tipo de actividad"
@@ -76,8 +68,6 @@ class Speech(models.Model):
                                     verbose_name=_("Presentation"),
                                     null=True, blank=True)
     event = models.ForeignKey(EventECSL, null=True, blank=False, on_delete=models.CASCADE, verbose_name=_("Event"))
-    time_asked = models.ForeignKey(SpeechTime, null=True, on_delete=models.CASCADE, related_name='time_asked', verbose_name=_("Duration"))
-    time_given = models.ForeignKey(SpeechTime, null=True, on_delete=models.CASCADE, related_name='time_given', verbose_name=_("Duration Assigned"))
     is_scheduled = models.BooleanField(default=False, verbose_name=_('is Scheduled'))
 
     objects = CurrentEventManager()
@@ -140,7 +130,7 @@ class SpeechSchedule(models.Model):
     end_time = models.DateTimeField()
     speech = models.ForeignKey(Speech, on_delete=models.CASCADE, null=True, blank=True)
     special = models.ForeignKey('SpecialActivity', on_delete=models.CASCADE, null=True, blank=True)
-    room = models.ForeignKey('Room', default="", on_delete=models.CASCADE)
+    room = models.ForeignKey('Room', on_delete=models.CASCADE, null=True, default=None)
 
     def __str__(self):
         return "(%s %s) %s" % (self.start_time.strftime("%Y-%m-%d %H:%M"),
@@ -168,9 +158,9 @@ class SpeechSchedule(models.Model):
 
 class SpecialActivity(models.Model):
     name = models.CharField(max_length=100, verbose_name=_('Name'))
-    time = models.ForeignKey(SpeechTime, null=True, on_delete=models.CASCADE,verbose_name=_("Duration Assigned"))
+    type = models.ForeignKey(SpeechType, null=True, on_delete=models.CASCADE, verbose_name=_("Type"))
     message = models.TextField(null=True, blank=True, verbose_name=_("Message"))
-    room = models.ForeignKey('Room', default="", on_delete=models.CASCADE, verbose_name=_("Room"))
+    room = models.ForeignKey('Room', null=True, default=None, blank=True, on_delete=models.CASCADE, verbose_name=_("Room"))
     event = models.ForeignKey(EventECSL, default="", on_delete=models.CASCADE, verbose_name=_("Event"))
     is_scheduled = models.BooleanField(default=False, verbose_name=_('is Scheduled'))
     objects = CurrentEventManager()
@@ -189,7 +179,7 @@ class BlockSchedule(models.Model):
     is_speech = models.BooleanField()
     text = models.TextField(null=True, blank=True)
     color = models.CharField(max_length=10)
-    room = models.ForeignKey('Room', default="", on_delete=models.CASCADE, verbose_name=_("Room"))
+    room = models.ForeignKey('Room', null=True, default=None, on_delete=models.CASCADE, verbose_name=_("Room"))
 
     def __str__(self):
         return "%s %s" % (self.start_time.strftime("%Y-%m-%d %H:%M"),
