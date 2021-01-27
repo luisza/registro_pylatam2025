@@ -185,7 +185,7 @@
                 <ul class="days nav nav-tabs">
                     {% for d in dayList %}
                         <li role="presentation" class="{% if dia ==  forloop.counter %} active {% endif %}">
-                            <a href="{% url 'list_charlas' %}?dia={{ forloop.counter }}">{{ d }}</a>
+                            <a href="{% url 'edit_charlas' %}?dia={{ forloop.counter }}">{{ d }}</a>
                         </li>
                     {% endfor %}
                 </ul>
@@ -193,7 +193,7 @@
                     <ul class="nav nav-tabs flex-column">
                         {% for room in rooms_list %}
                             <li role="presentation" class="{% if sala == forloop.counter %} active {% endif %}">
-                                <a href="{% url 'list_charlas' %}?dia={{ dia }}&sala={{ forloop.counter }}">{{ room }}</a>
+                                <a href="{% url 'edit_charlas' %}?dia={{ dia }}&sala={{ forloop.counter }}">{{ room }}</a>
                             </li>
                         {% endfor %}
                         <li role="presentation" class="">
