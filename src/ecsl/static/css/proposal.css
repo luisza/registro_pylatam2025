@@ -92,11 +92,8 @@ hr {
 }
 td ul {
     margin: 0;
-    padding: 1rem;
 }
-.ul, .ol {
-    padding: 0;
-}
+
 
 .delete_btn {
     margin-left: 2%;
