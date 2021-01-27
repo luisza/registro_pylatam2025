@@ -84,8 +84,7 @@ class CharlaContext:
         context['object_list'] = charlasDic["dia%s" % (dia)]
         context['dia'] = dia
         context['topics'] = Topic.objects.all()
-        context['types'] = SpeechType.objects.all()
-        print(charlasDic["dia%s" % (dia)])
+        context['types'] = SpeechType.objects.filter(is_special=False)
         context['diaActual'] = days[dia - 1]
         context['form'] = scheduleForm()
         context['speeches'] = speeches

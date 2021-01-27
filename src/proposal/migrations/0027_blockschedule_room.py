@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='blockschedule',
             name='room',
-            field=models.ForeignKey(default='', on_delete=django.db.models.deletion.CASCADE, to='proposal.room', verbose_name='Room'),
+            field=models.ForeignKey(default=None, null=True, on_delete=django.db.models.deletion.CASCADE, to='proposal.room', verbose_name='Room'),
         ),
     ]
