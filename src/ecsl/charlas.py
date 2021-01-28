@@ -6,6 +6,7 @@ Created on 5 jun. 2017
 import json
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.core import serializers
 from django.utils import timezone
 from django.views.generic.list import ListView
 from proposal.models import SpeechSchedule, Topic, Speech, Register_Speech, \
@@ -85,6 +86,7 @@ class CharlaContext:
         context['dia'] = dia
         context['topics'] = Topic.objects.all()
         context['types'] = SpeechType.objects.filter(is_special=False)
+        context['types_serializer'] = serializers.serialize('json', SpeechType.objects.filter(is_special=False))
         context['diaActual'] = days[dia - 1]
         context['form'] = scheduleForm()
         context['speeches'] = speeches
