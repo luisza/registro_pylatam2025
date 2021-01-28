@@ -163,10 +163,16 @@ class EditCharlas(PermissionRequiredMixin, CharlaContext, ListView):
                                                      room=result[0]['room'])
                 schedule = SpeechSchedule.objects.filter(start_time__gte=start_date, end_time__lte=end_date,
                                                          room=result[0]['room'])
+
                 for speech in schedule:
                     if speech.speech:
                         speech.speech.is_scheduled = False
                         speech.speech.save()
+                        if result[0].get('type'):
+                            speech_type = SpeechType.objects.filter(id=int(result[0]['type'])).first()
+                            speech.speech.speech_type = speech_type
+                            speech.speech.save()
+
                 block.delete()
                 schedule.delete()
 
@@ -220,6 +226,10 @@ class EditCharlas(PermissionRequiredMixin, CharlaContext, ListView):
                         blockValid = True
 
                     if activities['is_speech'] and blockValid and scheduleValid:
+                        if activities.get('type'):
+                            speech = Speech.objects.filter(id=int(activities['pk_speech'])).first()
+                            speech.speech_type = SpeechType.objects.filter(id=int(activities['type'])).first()
+                            speech.save()
                         speech = Speech.objects.filter(id=int(activities['pk_speech'])).first()
                         speech.is_scheduled = True
                         speech.save()
