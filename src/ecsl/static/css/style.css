@@ -64,6 +64,10 @@ ul {
 
 #type_time{
     padding: 0;
+    width: 100%;
 }
 
+select{
+    text-overflow: ellipsis;
+}
 
