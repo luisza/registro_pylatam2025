@@ -87,7 +87,7 @@
                             {% for speech in speeches %}
 
 
-                                <li class="ui-state-default activity" style="background-color: {{ speech.topic.color }};"
+                                <li id="li_{{ speech.pk }}" class="ui-state-default activity" style="background-color: {{ speech.topic.color }};"
                                     value="{{ speech.pk }}" color="{{ speech.topic.color }}"
                                     time="{{ speech.speech_type.time }}" is_speech="1" desc="none">
                                     <div class="row">
@@ -430,6 +430,31 @@
                 connectWith: ".connectedSortable",
             }).disableSelection();
         });
+
+         function difHours(hour1,hour2){
+            starttime = new Date($("#actualDay").text() + " " + hour1)
+            endime = new Date($("#actualDay").text() + " " + hour2)
+            diff = endime-starttime
+            return millisToMinutesAndSeconds(diff)
+        }
+
+        function millisToMinutesAndSeconds(millis) {
+          var minutes = Math.floor(millis / 60000);
+          var seconds = ((millis % 60000) / 1000).toFixed(0);
+          return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+        }
+
+        function update_last_hours(){
+            for (var i = 7; i <= 20; ++i) {
+                var minutes_left_to_assign = parseInt(difHours($('#td-' + (i+1) ).attr('hora'), $('#td-' + i).attr('lasthour')).split(":")[0])
+                if( minutes_left_to_assign > 0 )
+                {
+                    $('#td-' + i ).attr('lasthour', addLastHour($('#td-' + i ).attr('hora'), 60));
+                    $('#td-' + (i+1) ).attr('lasthour', addLastHour($('#td-' + (i+1)).attr('lasthour'), minutes_left_to_assign));
+                }
+            }
+        }
+
 
         $(function () {
             $(".droppable").droppable({
