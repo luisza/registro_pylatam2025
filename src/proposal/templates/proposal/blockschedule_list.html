@@ -294,7 +294,7 @@
                         <tr>
                             <td class="horaCalendario">16:00</td>
                             <td class="droppable" hora="16:00:00" id="td-16" lasthour="16:00:00">
-                                <ul id="hour-16" hora="16:00:00" class="connectedSortable"></ul>
+                                <ul id="hour-16" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
@@ -436,6 +436,7 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script>
         activities_dicHTML = '{{ activities_dic|safe }}';
+        stored_activities_dicHTML = '{{ stored_activities_dic|safe }}';
 
         var types = {{ types_serializer|safe }};
         var transNoResult= '{% trans 'No results matched' %}';

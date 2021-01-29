@@ -25,7 +25,7 @@ from proposal.models import Room
 from ecsl.forms import scheduleForm
 from proposal.forms import TopicForm, TypeForm, SpecialActivityForm, RoomsCreateForm
 from json import dumps
-
+from django.forms.models import model_to_dict
 
 def dayAmout(date1, date2):
     difference = date1 - date2
@@ -100,11 +100,36 @@ class CharlaContext:
         context['room_name'] = rooms_names[str(sala)]
         context['room_id'] = rooms_list[sala - 1].id
         context['room_form'] = RoomsCreateForm()
-        context['activities_dic'] = json.dumps(build_activities_dic(charlasDic["dia%s" % (dia)], rooms_names[str(sala)]))
+        context['activities_dic'] = json.dumps(build_activities_dic(speeches, special))
+        context['stored_activities_dic'] = json.dumps(build_stored_activities_dic(charlasDic["dia%s" % (dia)], rooms_names[str(sala)]))
         return context
 
 
-def build_activities_dic(object_list, room):
+def build_activities_dic(speeches, special_activities):
+    activities_dic = {}
+    for special_activity in special_activities:
+        temp_dic = {}
+        temp_key = "0-" + str(special_activity.id)
+        activities_dic[temp_key] = model_to_dict(special_activity)
+
+    for speech in speeches:
+        temp_dic = {}
+        temp_key = "1-" + str(speech.id)
+        temp_dic["title"] = speech.title
+        temp_dic["color"] = speech.topic.color
+        temp_dic["time"] = speech.speech_type.time
+        temp_dic["is_speech"] = "true"
+        temp_dic["activity_pk"] = speech.pk
+        temp_dic["speech_pk"] = speech.pk
+        temp_dic["speech_type"] = speech.speech_type.pk
+        temp_dic["desc"] = "none"
+        temp_dic["is_scheduled"] = speech.is_scheduled
+        activities_dic[temp_key] = temp_dic
+
+    return activities_dic
+
+
+def build_stored_activities_dic(object_list, room):
     activities_dic = {}
     for obj in object_list:
         if obj.room.name == room:
@@ -129,6 +154,7 @@ def build_activities_dic(object_list, room):
                     temp_dic["speech_pk"] = speech.speech.pk
                     temp_dic["speech_type"] = speech.speech.speech_type.pk
                     temp_dic["desc"] = "none"
+                    temp_dic["is_scheduled"] = speech.speech.is_scheduled
                     activities_dic["1-" + str(speech.speech.pk)] = temp_dic
                 else:
                     temp_dic["start_datetime"] = timezone.localtime(obj.start_time).strftime("%Y-%m-%d %H:%M:%S")
@@ -141,6 +167,7 @@ def build_activities_dic(object_list, room):
                     temp_dic["value"] = speech.special.pk
                     temp_dic["desc"] = obj.text
                     temp_dic["is_speech"] = ""
+                    temp_dic["is_scheduled"] = speech.special.is_scheduled
                     activities_dic["0-" + str(speech.special.pk)] = temp_dic
     return activities_dic
 
