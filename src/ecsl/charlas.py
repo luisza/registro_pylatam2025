@@ -24,6 +24,7 @@ from django.utils.translation import ugettext_lazy as _
 from proposal.models import Room
 from ecsl.forms import scheduleForm
 from proposal.forms import TopicForm, TypeForm, SpecialActivityForm, RoomsCreateForm
+from json import dumps
 
 
 def dayAmout(date1, date2):
@@ -99,7 +100,50 @@ class CharlaContext:
         context['room_name'] = rooms_names[str(sala)]
         context['room_id'] = rooms_list[sala - 1].id
         context['room_form'] = RoomsCreateForm()
+        context['activities_dic'] = json.dumps(build_activities_dic(charlasDic["dia%s" % (dia)], rooms_names[str(sala)]))
         return context
+
+
+def build_activities_dic(object_list, room):
+    activities_dic = {}
+    for obj in object_list:
+        if obj.room.name == room:
+            for speech in obj.get_speech():
+                temp_dic = {}
+                temp_dic["room_pk"] = speech.room.pk
+                temp_dic["obj_pk"] = obj.pk
+
+                if obj.is_speech:
+                    temp_dic["start_datetime"] = timezone.localtime(speech.start_time).strftime("%Y-%m-%d %H:%M:%S")
+                    temp_dic["end_datetime"] = timezone.localtime(speech.end_time).strftime("%Y-%m-%d %H:%M:%S")
+                    temp_dic["start_time"] = timezone.localtime(speech.start_time).strftime("%H:%M")
+                    temp_dic["start_hour"] = timezone.localtime(speech.start_time).strftime("%H")
+                    temp_dic["end_time"] = timezone.localtime(speech.end_time).strftime("%H:%M")
+                    temp_dic["color"] = speech.speech.topic.color
+                    temp_dic["name"] = speech.speech.title
+                    temp_dic["time"] = speech.speech.speech_type.time
+                    temp_dic["is_speech"] = "true"
+                    temp_dic["activity_pk"] = speech.speech.pk
+                    temp_dic["title"] = speech.speech.title
+                    temp_dic["room_name"] = speech.room.name
+                    temp_dic["speech_pk"] = speech.speech.pk
+                    temp_dic["speech_type"] = speech.speech.speech_type.pk
+                    temp_dic["desc"] = "none"
+                    activities_dic["1-" + str(speech.speech.pk)] = temp_dic
+                else:
+                    temp_dic["start_datetime"] = timezone.localtime(obj.start_time).strftime("%Y-%m-%d %H:%M:%S")
+                    temp_dic["end_datetime"] = timezone.localtime(obj.end_time).strftime("%Y-%m-%d %H:%M:%S")
+                    temp_dic["start_time"] = timezone.localtime(obj.start_time).strftime("%H:%M")
+                    temp_dic["start_hour"] = timezone.localtime(obj.start_time).strftime("%H")
+                    temp_dic["end_time"] = timezone.localtime(obj.end_time).strftime("%H:%M")
+                    temp_dic["color"] = "#b7ff00"
+                    temp_dic["time"] = speech.special.type.time
+                    temp_dic["value"] = speech.special.pk
+                    temp_dic["desc"] = obj.text
+                    temp_dic["is_speech"] = ""
+                    activities_dic["0-" + str(speech.special.pk)] = temp_dic
+    return activities_dic
+
 
 class Charlas(CharlaContext, ListView):
     model = BlockSchedule
