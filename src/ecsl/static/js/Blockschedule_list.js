@@ -1,27 +1,27 @@
         var lista = [];
         var time_array = [];
         var activities_dic = JSON.parse(activities_dicHTML);
+        var stored_activities_dic = JSON.parse(stored_activities_dicHTML);
 
-
-        $(function (){
+        $(function () {
             fill_time_array();
-            fill_time_array_activities();
+            fill_time_array_stored_activities();
         });
 
-        function fill_time_array(){
-            for(var i = 0; i < 84; i++){
+        function fill_time_array() {
+            for(var i = 0; i < 84; i++) {
                 time_array.push(null);
             }
         }
 
-        function fill_time_array_activities(){
-            const keys = Object.keys(activities_dic);
+        function fill_time_array_stored_activities() {
+            const keys = Object.keys(stored_activities_dic);
             for(var i = 0; i < keys.length; i++){
-                const start_hour = (parseInt(activities_dic[keys[i]].start_time.split(":")[0]) - 7 ) * 6;
-                const start_minute = parseInt(activities_dic[keys[i]].start_time.split(":")[1]) / 10;
+                const start_hour = (parseInt(stored_activities_dic[keys[i]].start_time.split(":")[0]) - 7 ) * 6;
+                const start_minute = parseInt(stored_activities_dic[keys[i]].start_time.split(":")[1]) / 10;
 
-                const end_hour = (parseInt(activities_dic[keys[i]].end_time.split(":")[0]) - 7 ) * 6;
-                const end_minute = parseInt(activities_dic[keys[i]].end_time.split(":")[1])/10;
+                const end_hour = (parseInt(stored_activities_dic[keys[i]].end_time.split(":")[0]) - 7 ) * 6;
+                const end_minute = parseInt(stored_activities_dic[keys[i]].end_time.split(":")[1])/10;
 
                 var start_time = start_hour+start_minute;
                 const end_time = end_hour+end_minute;
@@ -30,6 +30,45 @@
                     time_array[start_time] = String(keys[i]);
                     start_time++;
                 }
+            }
+        }
+
+        function validate_activity_scheduling(activity_pk, hour) {
+            var can_be_stored = false;
+            hour = (hour - 7) * 6;
+            var valid_start_position = -1;
+            for(var i = hour; !can_be_stored && i < hour + 6; i++) {
+                var occupied = false;
+
+                for(var j = i; !occupied && j < parseInt(activities_dic[activity_pk].time)/10 + i; j++) {
+                    if(time_array[j]) {
+                        occupied = true;
+                    }
+                }
+                if(!occupied){
+                    can_be_stored = true;
+                    valid_start_position = i;
+                }
+            }
+            if(can_be_stored){
+                var keys = Object.keys(stored_activities_dic);
+                if(activity_pk in keys) {
+                    for(var i = 0; i < time_array.length; i++){
+                        if(time_array[i] == activity_pk) {
+                            for (var j = i; j < parseInt(stored_activities_dic[activity_pk].time) / 10; j++)
+                            {
+                                time_array[j] = null;
+                            }
+                        }
+                    }
+                }
+                for(var i = valid_start_position; i < parseInt(activities_dic[activity_pk].time)/10 + valid_start_position; i++) {
+                    time_array[i] = activity_pk;
+                }
+                return true;
+            }
+            else{
+                return false;
             }
         }
 
@@ -161,7 +200,7 @@
                         if(initprint.split(':')[1]=='0'){
                             initprint= initprint.split(':')[0]+':00'
                         }
-                        if(activities_dic[time_array[i]]["time"]>=60){
+                        if(stored_activities_dic[time_array[i]]["time"]>=60){
                             if(pkend.split(':')[1] == '00'){
                                 limit=limit-1;
                             }
@@ -169,33 +208,33 @@
 
 
                         for(starthour;starthour<=limit;starthour++){
-                            if(activities_dic[time_array[i]].is_speech == ""){
-                                text = activities_dic[time_array[i]]['desc']
+                            if(stored_activities_dic[time_array[i]].is_speech == ""){
+                                text = stored_activities_dic[time_array[i]]['desc']
                                 select ='<div class="col-sm-4"></div>'
 
-                                li= '<li class="ui-state-default activity painted" style="background-color: ' + activities_dic[time_array[i]]["color"] + ';"' +
-                                    ' value="' + activities_dic[time_array[i]]["value"] + '" color="' + activities_dic[time_array[i]]["color"] + '"' +
-                                    ' is_speech= "" ' + ' desc="' + activities_dic[time_array[i]]["desc"] + '"' +
-                                    ' time="' + activities_dic[time_array[i]]["time"] + '"' + ' start_hour= "' + activities_dic[time_array[i]]["start_hour"] + '" ' +
-                                    'db="' + activities_dic[time_array[i]]["obj_pk"] + ' "start_time="' + activities_dic[time_array[i]]["start_time"] +
+                                li= '<li class="ui-state-default activity painted" style="background-color: ' + stored_activities_dic[time_array[i]]["color"] + ';"' +
+                                    ' value="' + stored_activities_dic[time_array[i]]["value"] + '" color="' + stored_activities_dic[time_array[i]]["color"] + '"' +
+                                    ' is_speech= "" ' + ' desc="' + stored_activities_dic[time_array[i]]["desc"] + '"' +
+                                    ' time="' + stored_activities_dic[time_array[i]]["time"] + '"' + ' start_hour= "' + stored_activities_dic[time_array[i]]["start_hour"] + '" ' +
+                                    'db="' + stored_activities_dic[time_array[i]]["obj_pk"] + ' "start_time="' + stored_activities_dic[time_array[i]]["start_time"] +
                                     '">'
 
                             }else{
-                                text = '<a style="margin-left: 7%;" href=' + url_mask.replace(/0/, activities_dic[time_array[i]]['speech_pk']) + '>' +
-                                    activities_dic[time_array[i]]['title'] +
+                                text = '<a style="margin-left: 7%;" href=' + url_mask.replace(/0/, stored_activities_dic[time_array[i]]['speech_pk']) + '>' +
+                                    stored_activities_dic[time_array[i]]['title'] +
                                     '</a>'
-                                select= '<div class="col-sm-4 container_type_time_'+ activities_dic[time_array[i]]["activity_pk"] + '">' +
+                                select= '<div class="col-sm-4 container_type_time_'+ stored_activities_dic[time_array[i]]["activity_pk"] + '">' +
                                         '<select class="btn btn-primary" id="type_time"' + '>' +
                                         '</select>' +
                                         '</div>'
 
-                                li=  '<li class="ui-state-default activity painted" style="background-color: ' + activities_dic[time_array[i]]["color"] + ';"' +
-                                    ' value="' + activities_dic[time_array[i]]["activity_pk"] + '"' + ' color="' + activities_dic[time_array[i]]["color"] + '"' +
-                                    ' is_speech="' + activities_dic[time_array[i]]["is_speech"] + '"' + ' desc="' + activities_dic[time_array[i]]["desc"] + '"' +
-                                    ' time="' + activities_dic[time_array[i]]["time"] + '"' + ' start_hour= "' + activities_dic[time_array[i]]["start_hour"] + '"' +
-                                    'db="' + activities_dic[time_array[i]]["obj_pk"] + ' "start_time="' + activities_dic[time_array[i]]["start_time"] + '"' +
-                                    'end_time="' + addhoras(activities_dic[time_array[i]]["start_time"], activities_dic[time_array[i]]["time"]) + '"' +
-                                    'id="li_' + activities_dic[time_array[i]]["activity_pk"] + '"' +
+                                li=  '<li class="ui-state-default activity painted" style="background-color: ' + stored_activities_dic[time_array[i]]["color"] + ';"' +
+                                    ' value="' + stored_activities_dic[time_array[i]]["activity_pk"] + '"' + ' color="' + stored_activities_dic[time_array[i]]["color"] + '"' +
+                                    ' is_speech="' + stored_activities_dic[time_array[i]]["is_speech"] + '"' + ' desc="' + stored_activities_dic[time_array[i]]["desc"] + '"' +
+                                    ' time="' + stored_activities_dic[time_array[i]]["time"] + '"' + ' start_hour= "' + stored_activities_dic[time_array[i]]["start_hour"] + '"' +
+                                    'db="' + stored_activities_dic[time_array[i]]["obj_pk"] + ' "start_time="' + stored_activities_dic[time_array[i]]["start_time"] + '"' +
+                                    'end_time="' + addhoras(stored_activities_dic[time_array[i]]["start_time"], stored_activities_dic[time_array[i]]["time"]) + '"' +
+                                    'id="li_' + stored_activities_dic[time_array[i]]["activity_pk"] + '"' +
                                     '">'
 
                             }
@@ -212,11 +251,11 @@
                                     '</div>' +
                                     select +
                                     '<div class="col-md-1 text-center">' +
-                                    '<button onclick="delete_actity(' + activities_dic[time_array[i]]["room_pk"] + ', ' + activities_dic[time_array[i]]["obj_pk"] + ')" class="btn btn-danger btn-sm deleteButton"> X </button>' +
+                                    '<button onclick="delete_actity(' + stored_activities_dic[time_array[i]]["room_pk"] + ', ' + stored_activities_dic[time_array[i]]["obj_pk"] + ')" class="btn btn-danger btn-sm deleteButton"> X </button>' +
                                     '</div>' +
                                     '</div>' +'</li>');
                             }else{
-                                $('#hour-' + starthour).append('<li class="activity painted" style="background-color:' + activities_dic[time_array[i]].color + '">' + initprint + " a "+ pkend +" "+  '</li>');
+                                $('#hour-' + starthour).append('<li class="activity painted" style="background-color:' + stored_activities_dic[time_array[i]].color + '">' + initprint + " a "+ pkend +" "+  '</li>');
                             }
                         }
                     }
