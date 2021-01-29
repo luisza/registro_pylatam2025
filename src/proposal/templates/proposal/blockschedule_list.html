@@ -534,8 +534,12 @@
                             initprint= initprint.split(':')[0]+':00'
                         }
                         if(activities_dic[time_array[i]]["time"]>=60){
-                            limit=limit-1;
+                            if(pkend.split(':')[1] == '00'){
+                                limit=limit-1;
+                            }
                         }
+
+
                         for(starthour;starthour<=limit;starthour++){
                             if(activities_dic[time_array[i]].is_speech == ""){
                                 text = activities_dic[time_array[i]]['desc']
