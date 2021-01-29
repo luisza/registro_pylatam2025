@@ -1,3 +1,4 @@
+        var lista = [];
         var time_array = [];
         var activities_dic = JSON.parse(activities_dicHTML);
 
@@ -32,8 +33,71 @@
             }
         }
 
-        var lista = [];
-        //var types = null;
+         function control_validate_update(start_position, o_time, n_time) {
+            var posiciones = []
+            posiciones = add_new_positions(start_position, o_time)
+            old_local = posiciones.length
+            posiciones = add_new_positions(start_position, n_time)
+            if(posiciones != false) {
+                new_local = posiciones.length
+                return validator(old_local, new_local, posiciones)
+            }else{
+                return false
+            }
+        }
+
+        function add_new_positions(start_position, new_time) {
+            var positions = []
+            new_time = new_time / 10
+
+            for (var i = 0; i < new_time; i++) {
+                if (i == 0) {
+                    positions.push(start_position)
+                } else {
+                    start_position = start_position + 1
+                    positions.push(start_position)
+                }
+            }
+            if(positions[positions.length-1] > 89){
+                positions = false
+            }
+            return positions
+        }
+
+        function validator(old_local, new_local, positions) {
+            cont = 1;
+            checked_values = []
+            result = true
+
+            if (new_local > old_local) {
+                position = new_local - old_local
+            } else {
+                position = old_local - new_local
+            }
+            if (position > positions.length) {
+                checked_values.push(true)
+            } else {
+                for (var i = position; i <= positions.length; i++) {
+                    if (cont <= position) {
+                        if (time_array[positions[i]] == null || old_local > new_local) {
+                            checked_values.push(true)
+                        } else {
+                            checked_values.push(false)
+                        }
+                        cont = cont + 1
+                    } else {
+                        break
+                    }
+                }
+            }
+            for (var i = 0; i < checked_values.length; i++) {
+                if (checked_values[i] == false) {
+                    result = false
+                    break
+                }
+            }
+            return result
+        }
 
         $(function () {
             $("#speeches, #specials, #hour-7, #hour-8, #hour-9,#hour-10, #hour-11, #hour-12,#hour-13, #hour-14,#hour-15, #hour-16, #hour-17, #hour-18, #hour-19, #hour-20, #hour-21").sortable({
@@ -165,7 +229,6 @@
             }
             var blocks = document.getElementsByClassName("speech_actvity")
             var option = null
-            //var types = {{ types_serializer|safe }};
             for (var i = 0; i < blocks.length; i++) {
                 for (var j = 0; j < types.length; j++) {
                     if (Object.values(types[j])[1] == blocks[i].getAttribute('speech_type')) {
@@ -179,7 +242,7 @@
                     }
                     $(".container_type_time_" + blocks[i].getAttribute("activity_pk")).children().append(option)
                 }
-                $(".container_type_time_" + blocks[i].getAttribute("activity_pk")).children().attr('onchange', 'update_times(' + blocks[i].getAttribute("activity_pk") + ', this)')
+                $(".container_type_time_" + blocks[i].getAttribute("activity_pk")).children().attr('onchange', 'update_times(' + blocks[i].getAttribute("activity_pk") + ', this,'+ blocks[i].getAttribute('time')+ ','+ 1 +')')
             }
             update_last_hours();
 
@@ -330,7 +393,6 @@
                         'agenda': JSON.stringify(lista),
                     },
                     success: function (data) {
-                        console.log(data)
                         location.reload()
                     }
                 });
@@ -407,7 +469,7 @@
                                 }
                                 $(".container_type_time_" + Object.values(result[i])[1]).children().append(option)
                             }
-                            $(".container_type_time_" + Object.values(result[i])[1]).children().attr('onchange', 'update_times(' + Object.values(result[i])[1] + ', this)')
+                             $(".container_type_time_" + Object.values(result[i])[1]).children().attr('onchange', 'update_times(' + Object.values(result[i])[1] + ', this ,' + data.times[i] +',' + 0 + ')')
 
                         }
                         $('.draggable').draggable();
@@ -418,21 +480,47 @@
             });
         }
 
-        function update_times(speech_pk, speech_time) {
-
+         function update_times(speech_pk, speech_time, old_time, in_schedule) {
+            if($("#li_" + speech_pk).parent().attr('id') != 'speeches'){
+                in_schedule = true
+            }
             var type_values = speech_time.value.split('-')
-            $("#li_" + speech_pk).attr('time', type_values[0])
-            $("#li_" + speech_pk).attr('type', type_values[1])
-            $("#li_" + speech_pk).attr('start_time', $("#actualDay").text() + " " + $("#li_" + speech_pk).parent().attr('hora'))
-            $("#li_" + speech_pk).attr('end_time', addhoras($("#li_" + speech_pk).parent().attr('hora'), type_values[0]))
-            for (var i = 0; i < lista.length; i++) {
-                if (lista[i]['pk_speech'] == speech_pk) {
-                    lista[i]['type'] = type_values[1]
-                    lista[i]['start_time'] = $("#actualDay").text() + " " + $("#li_" + speech_pk).parent().attr('hora')
-                    lista[i]['end_time'] = addhoras($("#li_" + speech_pk).parent().attr('hora'), type_values[0])
+            var start_hour = (parseInt($("#li_" + speech_pk).parent().attr('hora').split(":")[0]) - 7) * 6;
+            var start_minute = parseInt($("#li_" + speech_pk).parent().attr('hora').split(":")[1]) / 10
+            var start_position = start_hour + start_minute
+            if (in_schedule == true) {
+                if (control_validate_update(start_position, old_time, type_values[0]) == true) {
+                    alert('si hay tiempo par actualizar')
+                    $("#li_" + speech_pk).attr('time', type_values[0])
+                    $("#li_" + speech_pk).attr('type', type_values[1])
+                    $("#li_" + speech_pk).attr('start_tfime', $("#actualDay").text() + " " + $("#li_" + speech_pk).parent().attr('hora'))
+                    $("#li_" + speech_pk).attr('end_time', addhoras($("#li_" + speech_pk).parent().attr('hora'), type_values[0]))
+                    for (var i = 0; i < lista.length; i++) {
+                        if (lista[i]['pk_speech'] == speech_pk) {
+                            lista[i]['type'] = type_values[1]
+                            lista[i]['start_time'] = $("#actualDay").text() + " " + $("#li_" + speech_pk).parent().attr('hora')
+                            lista[i]['end_time'] = addhoras($("#li_" + speech_pk).parent().attr('hora'), type_values[0])
+                        }
+                    }
+
+                }else {
+                    alert('Lo sentimos, no hay tiempo disponible para asignar')
+                }
+            } else {
+                $("#li_" + speech_pk).attr('time', type_values[0])
+                $("#li_" + speech_pk).attr('type', type_values[1])
+                $("#li_" + speech_pk).attr('start_tfime', $("#actualDay").text() + " " + $("#li_" + speech_pk).parent().attr('hora'))
+                $("#li_" + speech_pk).attr('end_time', addhoras($("#li_" + speech_pk).parent().attr('hora'), type_values[0]))
+                for (var i = 0; i < lista.length; i++) {
+                    if (lista[i]['pk_speech'] == speech_pk) {
+                        lista[i]['type'] = type_values[1]
+                        lista[i]['start_time'] = $("#actualDay").text() + " " + $("#li_" + speech_pk).parent().attr('hora')
+                        lista[i]['end_time'] = addhoras($("#li_" + speech_pk).parent().attr('hora'), type_values[0])
+                    }
                 }
             }
         }
+
 
         $(function displayOrEdit() {
             var action = '{{ view }}'
