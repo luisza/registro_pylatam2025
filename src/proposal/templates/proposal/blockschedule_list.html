@@ -595,6 +595,26 @@
                     hour+=1
                 }
             }
+            var blocks = document.getElementsByClassName("speech_actvity")
+            var option = null
+            var types = {{ types_serializer|safe }};
+            for (var i = 0; i < blocks.length; i++) {
+                for (var j = 0; j < types.length; j++) {
+                    if (Object.values(types[j])[1] == blocks[i].getAttribute('speech_type')) {
+                        option = '<option selected value="' + Object.values(types[j]['fields'])[1] +
+                            "-" + Object.values(types[j])[1] + '">' + Object.values(types[j]['fields'])[0] + " (" + Object.values(types[j]['fields'])[1] + " minutos)"
+                        '</option>'
+                    } else {
+                        option = '<option value="' + Object.values(types[j]['fields'])[1] +
+                            "-" + Object.values(types[j])[1] + '">' + Object.values(types[j]['fields'])[0] + " (" + Object.values(types[j]['fields'])[1] + " minutos)"
+                        '</option>'
+                    }
+                    $(".container_type_time_" + blocks[i].getAttribute("activity_pk")).children().append(option)
+                }
+                $(".container_type_time_" + blocks[i].getAttribute("activity_pk")).children().attr('onchange', 'update_times(' + blocks[i].getAttribute("activity_pk") + ', this)')
+            }
+            update_last_hours();
+
         }
 
 
@@ -698,24 +718,6 @@
                 lista.push(element)
             }
             PaintActivities()
-            var option = null
-            var types = {{ types_serializer|safe }};
-            for (var i = 0; i < blocks.length; i++) {
-                for (var j = 0; j < types.length; j++) {
-                    if (Object.values(types[j])[1] == blocks[i].getAttribute('speech_type')) {
-                        option = '<option selected value="' + Object.values(types[j]['fields'])[1] +
-                            "-" + Object.values(types[j])[1] + '">' + Object.values(types[j]['fields'])[0] + " (" + Object.values(types[j]['fields'])[1] + " minutos)"
-                        '</option>'
-                    } else {
-                        option = '<option value="' + Object.values(types[j]['fields'])[1] +
-                            "-" + Object.values(types[j])[1] + '">' + Object.values(types[j]['fields'])[0] + " (" + Object.values(types[j]['fields'])[1] + " minutos)"
-                        '</option>'
-                    }
-                    $(".container_type_time_" + blocks[i].getAttribute("activity_pk")).children().append(option)
-                }
-                $(".container_type_time_" + blocks[i].getAttribute("activity_pk")).children().attr('onchange', 'update_times(' + blocks[i].getAttribute("activity_pk") + ', this)')
-            }
-            update_last_hours();
         });
 
         function delete_temp_activity(id, is_speech) {
