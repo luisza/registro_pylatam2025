@@ -501,6 +501,126 @@
             }
         }
 
+        function PaintActivities(){
+            $(".painted").remove()
+            var hour=7
+            var min=0
+            var pk;
+            var pkinit;
+            var pkend;
+            var text=""
+            var select=""
+            var li=""
+            var url_mask = "{% url 'detail_charla' pk=0 %}";
+            for(var i=0;i<time_array.length;++i){
+                if(time_array[i]!=null){
+                    pk=time_array[i]
+                    if(pk!=time_array[i-1]){
+                        pkinit=hour+":"+min
+                    }
+                    if(pk!=time_array[i+1]){
+                        if(min+10==60){
+                            pkend=(hour+1)+":00"
+                        }else{
+                            pkend=hour+":"+(min+10)
+                        }
+                        var hours = parseInt((pkend.split(':')[0])-parseInt(pkinit.split(":")[0]))
+                        var starthour=parseInt((pkinit.split(':')[0]))
+                        var first= starthour
+                        var limit=starthour+hours
+                        initprint = String(pkinit)
+
+                        if(initprint.split(':')[1]=='0'){
+                            initprint= initprint.split(':')[0]+':00'
+                        }
+                        if(activities_dic[time_array[i]]["time"]>=60){
+                            if(pkend.split(':')[1] == '00'){
+                                limit=limit-1;
+                            }
+                        }
+
+
+                        for(starthour;starthour<=limit;starthour++){
+                            if(activities_dic[time_array[i]].is_speech == ""){
+                                text = activities_dic[time_array[i]]['desc']
+                                select ='<div class="col-sm-4"></div>'
+
+                                li= '<li class="ui-state-default activity painted" style="background-color: ' + activities_dic[time_array[i]]["color"] + ';"' +
+                                    ' value="' + activities_dic[time_array[i]]["value"] + '" color="' + activities_dic[time_array[i]]["color"] + '"' +
+                                    ' is_speech= "" ' + ' desc="' + activities_dic[time_array[i]]["desc"] + '"' +
+                                    ' time="' + activities_dic[time_array[i]]["time"] + '"' + ' start_hour= "' + activities_dic[time_array[i]]["start_hour"] + '" ' +
+                                    'db="' + activities_dic[time_array[i]]["obj_pk"] + ' "start_time="' + activities_dic[time_array[i]]["start_time"] +
+                                    '">'
+
+                            }else{
+                                text = '<a style="margin-left: 7%;" href=' + url_mask.replace(/0/, activities_dic[time_array[i]]['speech_pk']) + '>' +
+                                    activities_dic[time_array[i]]['title'] +
+                                    '</a>'
+                                select= '<div class="col-sm-4 container_type_time_'+ activities_dic[time_array[i]]["activity_pk"] + '">' +
+                                        '<select class="btn btn-primary" id="type_time"' + '>' +
+                                        '</select>' +
+                                        '</div>'
+
+                                li=  '<li class="ui-state-default activity painted" style="background-color: ' + activities_dic[time_array[i]]["color"] + ';"' +
+                                    ' value="' + activities_dic[time_array[i]]["activity_pk"] + '"' + ' color="' + activities_dic[time_array[i]]["color"] + '"' +
+                                    ' is_speech="' + activities_dic[time_array[i]]["is_speech"] + '"' + ' desc="' + activities_dic[time_array[i]]["desc"] + '"' +
+                                    ' time="' + activities_dic[time_array[i]]["time"] + '"' + ' start_hour= "' + activities_dic[time_array[i]]["start_hour"] + '"' +
+                                    'db="' + activities_dic[time_array[i]]["obj_pk"] + ' "start_time="' + activities_dic[time_array[i]]["start_time"] + '"' +
+                                    'end_time="' + addhoras(activities_dic[time_array[i]]["start_time"], activities_dic[time_array[i]]["time"]) + '"' +
+                                    'id="li_' + activities_dic[time_array[i]]["activity_pk"] + '"' +
+                                    '">'
+
+                            }
+                            if(starthour==first){
+                                $('#hour-' + starthour).append(
+                                    li+
+                                    '<div class="row">' +
+                                    '<div class="col-md-2 text-center">' +
+                                    initprint + ' a ' + pkend +
+                                    '</div>' +
+                                    '<div class="col-md-5 text-center">' +
+                                    text
+                                    +
+                                    '</div>' +
+                                    select +
+                                    '<div class="col-md-1 text-center">' +
+                                    '<button onclick="delete_actity(' + activities_dic[time_array[i]]["room_pk"] + ', ' + activities_dic[time_array[i]]["obj_pk"] + ')" class="btn btn-danger btn-sm deleteButton"> X </button>' +
+                                    '</div>' +
+                                    '</div>' +'</li>');
+                            }else{
+                                $('#hour-' + starthour).append('<li class="activity painted" style="background-color:' + activities_dic[time_array[i]].color + '">' + initprint + " a "+ pkend +" "+  '</li>');
+                            }
+                        }
+                    }
+                }
+                min = min +10
+                if(min==60){
+                    min=0
+                    hour+=1
+                }
+            }
+            var blocks = document.getElementsByClassName("speech_actvity")
+            var option = null
+            var types = {{ types_serializer|safe }};
+            for (var i = 0; i < blocks.length; i++) {
+                for (var j = 0; j < types.length; j++) {
+                    if (Object.values(types[j])[1] == blocks[i].getAttribute('speech_type')) {
+                        option = '<option selected value="' + Object.values(types[j]['fields'])[1] +
+                            "-" + Object.values(types[j])[1] + '">' + Object.values(types[j]['fields'])[0] + " (" + Object.values(types[j]['fields'])[1] + " minutos)"
+                        '</option>'
+                    } else {
+                        option = '<option value="' + Object.values(types[j]['fields'])[1] +
+                            "-" + Object.values(types[j])[1] + '">' + Object.values(types[j]['fields'])[0] + " (" + Object.values(types[j]['fields'])[1] + " minutos)"
+                        '</option>'
+                    }
+                    $(".container_type_time_" + blocks[i].getAttribute("activity_pk")).children().append(option)
+                }
+                $(".container_type_time_" + blocks[i].getAttribute("activity_pk")).children().attr('onchange', 'update_times(' + blocks[i].getAttribute("activity_pk") + ', this)')
+            }
+            update_last_hours();
+
+        }
+
 
         $(function () {
             $(".droppable").droppable({
@@ -549,26 +669,7 @@
                         element['type'] = ui.draggable.attr('type')
                     }
 
-                    for (var j = 0; j < Math.trunc(ui.draggable.attr('time') / 60); ++j) {
-                        hour = parseInt(ui.draggable.attr('start_hour')) + j;
-                        $('#hour-' + hour).css({'background-color': ""})
-                    }
-
-                    ui.draggable.attr('start_hour', $(this).attr("hora").split(':')[0])
-
-
-                    var s_time = ui.draggable.attr('start_time').split(" ")[1];
-                    var e_time = ui.draggable.attr('end_time').split(" ")[1];
-                    var times = parseInt(difHours(s_time, e_time).split(":")[0]) / 60;
-                    var not_oclock = s_time.split(":")[1];
-                    for (var j = 1; j < times; ++j) {
-                        hour = parseInt(ui.draggable.attr('start_hour')) + j;
-                        $('#hour-' + hour).append('<li class="activity ' + is_speech + ui.draggable.attr("value") + '" style="background-color:' + ui.draggable.attr("color") + '">' + '</li>');
-                    }
-                    if (not_oclock != 0) {
-                        $('#hour-' + (hour + 1)).append('<li class="activity ' + is_speech + ui.draggable.attr("value") + '" style="background-color:' + ui.draggable.attr("color") + '">' + '</li>');
-                    }
-
+                    PaintActivities()
                     var value = activities_in_list(element)
                     if (value == false) {
                         lista.push(element)
@@ -588,40 +689,6 @@
         $(function () {
             var special = document.getElementsByClassName("special_actvity")
             for (var i = 0; i < special.length; ++i) {
-                $("#td-" + special[i].getAttribute("start_hour")).attr('lasthour', addLastHour($("#td-" + special[i].getAttribute("start_hour")).attr('lasthour'), special[i].getAttribute("time")))
-                $('#hour-' + special[i].getAttribute("start_hour")).append(
-                    '<li class="ui-state-default activity" style="background-color: ' + special[i].getAttribute("color") + ';"' +
-                    ' value="' + special[i].getAttribute("value") + '" color="' + special[i].getAttribute("color") + '"' +
-                    ' is_speech= "" ' + ' desc="' + special[i].getAttribute("desc") + '"' +
-                    ' time="' + special[i].getAttribute("time") + '"' + ' start_hour= "' + special[i].getAttribute("start_hour") + '" ' +
-                    'db="' + special[i].getAttribute("obj_pk") + ' "start_time="' + special[i].getAttribute("start_time") +
-                    '">' +
-                    '<div class="row">' +
-                    '<div class="col-md-2 text-center">' +
-                    special[i].getAttribute("start_time") + ' a ' + special[i].getAttribute("end_time") +
-                    '</div>' +
-                    '<div class="col-md-9 text-center">' +
-                    special[i].getAttribute("desc") +
-                    '</div>' +
-                    '<div class="col-md-1 text-center">' +
-                    '<button onclick="delete_actity(' + special[i].getAttribute("room_pk") + ', ' + special[i].getAttribute("obj_pk") + ')" class="btn btn-danger btn-sm deleteButton"> X </button>' +
-                    '</div>' +
-                    '</div>' +
-                    '</li>'
-                );
-                var s_time = special[i].getAttribute('start_datetime').split(" ")[1];
-                var e_time = special[i].getAttribute('end_datetime').split(" ")[1];
-                var times = parseInt(difHours(s_time, e_time).split(":")[0]) / 60;
-                var not_oclock = s_time.split(":")[1];
-                var hour = 0;
-                for (var j = 1; j < times; ++j) {
-                    hour = parseInt(special[i].getAttribute("start_hour")) + j;
-                    $('#hour-' + hour).append('<li class="activity ' + special[i].getAttribute("value") + '" style="background-color:' + special[i].getAttribute("color") + '">' + '</li>');
-                }
-                if (not_oclock != 0) {
-                    $('#hour-' + (hour + 1)).append('<li class="activity ' + special[i].getAttribute("value") + '" style="background-color:' + special[i].getAttribute("color") + '">' + '</li>');
-                }
-
                 var element = {
                     'pk_speech': special[i].getAttribute("value"),
                     'color': special[i].getAttribute("color"),
@@ -633,6 +700,7 @@
                 }
                 lista.push(element)
             }
+            PaintActivities()
             update_last_hours();
         });
 
@@ -642,50 +710,6 @@
             var url_mask = "{% url 'detail_charla' pk=0 %}";
 
             for (var i = 0; i < blocks.length; ++i) {
-                $("#td-" + blocks[i].getAttribute("start_hour")).attr('lasthour', addLastHour($("#td-" + blocks[i].getAttribute("start_hour")).attr('lasthour'), blocks[i].getAttribute("time")))
-                $('#hour-' + blocks[i].getAttribute("start_hour")).append(
-                    '<li class="ui-state-default activity" style="background-color: ' + blocks[i].getAttribute("color") + ';"' +
-                    ' value="' + blocks[i].getAttribute("activity_pk") + '"' + ' color="' + blocks[i].getAttribute("color") + '"' +
-                    ' is_speech="' + blocks[i].getAttribute("is_speech") + '"' + ' desc="' + blocks[i].getAttribute("desc") + '"' +
-                    ' time="' + blocks[i].getAttribute("time") + '"' + ' start_hour= "' + blocks[i].getAttribute("start_hour") + '"' +
-                    'db="' + blocks[i].getAttribute("obj_pk") + ' "start_time="' + blocks[i].getAttribute("start_time") + '"' +
-                    'end_time="' + addhoras(blocks[i].getAttribute("start_time"), blocks[i].getAttribute("time")) + '"' +
-                    'id="li_' + blocks[i].getAttribute("activity_pk") + '"' +
-                    '">' +
-                    '<div class="row">' +
-                    '<div class="col-md-2 text-center">' +
-                    blocks[i].getAttribute("start_time") + ' a ' + blocks[i].getAttribute("end_time") +
-                    '</div>' +
-                    '<div class="col-md-5 text-center">' +
-                    '<a style="margin-left: 7%;" href=' + url_mask.replace(/0/, blocks[i].getAttribute("speech_pk")) + '>' +
-                    blocks[i].getAttribute("name") +
-                    '</a>' +
-                    '</div>' +
-                    '<div class="col-sm-4 container_type_time_' + blocks[i].getAttribute("activity_pk") + '">' +
-                    '<select class="btn btn-primary" id="type_time"' + '>' +
-                    '</select>' +
-                    '</div>' +
-                    '<div class="col-md-1 text-center">' +
-                    '<button onclick="delete_actity(' + blocks[i].getAttribute("room_pk") + ', ' + blocks[i].getAttribute("obj_pk") + ')" class="btn btn-danger btn-sm deleteButton"> X </button>' +
-                    '</div>' +
-                    '</div>' +
-                    '</li>'
-                );
-
-
-                var s_time = blocks[i].getAttribute('start_datetime').split(" ")[1];
-                var e_time = blocks[i].getAttribute('end_datetime').split(" ")[1];
-                var times = parseInt(difHours(s_time, e_time).split(":")[0]) / 60;
-                var not_oclock = s_time.split(":")[1];
-                var hour = 0;
-                for (var j = 1; j < times; ++j) {
-                    hour = parseInt(blocks[i].getAttribute("start_hour")) + j;
-                    $('#hour-' + hour).append('<li class="activity ' + blocks[i].getAttribute("is_speech") + blocks[i].getAttribute("activity_pk") + '" style="background-color:' + blocks[i].getAttribute("color") + '">' + '</li>');
-                }
-                if (not_oclock != 0) {
-                    $('#hour-' + (hour + 1)).append('<li class="activity ' + blocks[i].getAttribute("is_speech") + blocks[i].getAttribute("activity_pk") + '" style="background-color:' + blocks[i].getAttribute("color") + '">' + '</li>');
-                }
-
                 var element = {
                     'pk_speech': blocks[i].getAttribute("activity_pk"),
                     'color': blocks[i].getAttribute("color"),
@@ -697,24 +721,7 @@
                 }
                 lista.push(element)
             }
-            var option = null
-            var types = {{ types_serializer|safe }};
-            for (var i = 0; i < blocks.length; i++) {
-                for (var j = 0; j < types.length; j++) {
-                    if (Object.values(types[j])[1] == blocks[i].getAttribute('speech_type')) {
-                        option = '<option selected value="' + Object.values(types[j]['fields'])[1] +
-                            "-" + Object.values(types[j])[1] + '">' + Object.values(types[j]['fields'])[0] + " (" + Object.values(types[j]['fields'])[1] + " minutos)"
-                        '</option>'
-                    } else {
-                        option = '<option value="' + Object.values(types[j]['fields'])[1] +
-                            "-" + Object.values(types[j])[1] + '">' + Object.values(types[j]['fields'])[0] + " (" + Object.values(types[j]['fields'])[1] + " minutos)"
-                        '</option>'
-                    }
-                    $(".container_type_time_" + blocks[i].getAttribute("activity_pk")).children().append(option)
-                }
-                $(".container_type_time_" + blocks[i].getAttribute("activity_pk")).children().attr('onchange', 'update_times(' + blocks[i].getAttribute("activity_pk") + ', this)')
-            }
-            update_last_hours();
+            PaintActivities()
         });
 
         function delete_temp_activity(id, is_speech) {
@@ -769,12 +776,9 @@
         }
 
         function addhoras(hora, minutos) {
-            console.log(hora)
-            console.log(minutos)
             starttime = new Date($("#actualDay").text() + " " + hora)
             starttime.setMinutes(starttime.getMinutes() + parseInt(minutos))
             endtime = $("#actualDay").text() + " " + starttime.getHours() + ":" + starttime.getMinutes() + ":00"
-            console.log(endtime)
             return (endtime)
         }
 
@@ -851,8 +855,7 @@
         }
 
         function update_times(speech_pk, speech_time) {
-            console.log(speech_pk)
-            console.log(speech_time)
+
             var type_values = speech_time.value.split('-')
             $("#li_" + speech_pk).attr('time', type_values[0])
             $("#li_" + speech_pk).attr('type', type_values[1])
@@ -865,7 +868,6 @@
                     lista[i]['end_time'] = addhoras($("#li_" + speech_pk).parent().attr('hora'), type_values[0])
                 }
             }
-            console.log(lista)
         }
 
         $(function displayOrEdit() {
