@@ -100,7 +100,7 @@
                                         <div class="col-sm-4 container_type_time_{{ speech.pk }}">
                                             <select selected="{{ speech.speech_type.id }}" style="width: 100%"
                                                     class="btn btn-primary" id="type_time"
-                                                    onchange="update_times({{ speech.pk }},this)">
+                                                    onchange="update_times({{ speech.pk }},this, {{ speech.speech_type.time }}, 0)">
 
 
                                                 {% for type in types %}
@@ -276,55 +276,55 @@
                         <tr>
                             <td class="horaCalendario">13:00</td>
                             <td class="droppable" hora="13:00:00" id="td-13" lasthour="13:00:00">
-                                <ul id="hour-13" class="connectedSortable"></ul>
+                                <ul id="hour-13" hora="13:00:00" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
                             <td class="horaCalendario">14:00</td>
                             <td class="droppable" hora="14:00:00" id="td-14" lasthour="14:00:00">
-                                <ul id="hour-14" class="connectedSortable"></ul>
+                                <ul id="hour-14" hora="14:00:00" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
                             <td class="horaCalendario">15:00</td>
                             <td class="droppable" hora="15:00:00" id="td-15" lasthour="15:00:00">
-                                <ul id="hour-15" class="connectedSortable"></ul>
+                                <ul id="hour-15" hora="15:00:00" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
                             <td class="horaCalendario">16:00</td>
                             <td class="droppable" hora="16:00:00" id="td-16" lasthour="16:00:00">
-                                <ul id="hour-16" class="connectedSortable"></ul>
+                                <ul id="hour-16" hora="16:00:00" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
                             <td class="horaCalendario">17:00</td>
                             <td class="droppable" hora="17:00:00" id="td-17" lasthour="17:00:00">
-                                <ul id="hour-17" class="connectedSortable"></ul>
+                                <ul id="hour-17" hora="17:00:00" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
                             <td class="horaCalendario">18:00</td>
                             <td class="droppable" hora="18:00:00" id="td-18" lasthour="18:00:00">
-                                <ul id="hour-18" class="connectedSortable"></ul>
+                                <ul id="hour-18" hora="18:00:00" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
                             <td class="horaCalendario">19:00</td>
                             <td class="droppable" hora="19:00:00" id="td-19" lasthour="19:00:00">
-                                <ul id="hour-19" class="connectedSortable"></ul>
+                                <ul id="hour-19" hora="19:00:00" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
                             <td class="horaCalendario">20:00</td>
                             <td class="droppable" hora="20:00:00" id="td-20" lasthour="20:00:00">
-                                <ul id="hour-20" class="connectedSortable"></ul>
+                                <ul id="hour-20" hora="20:00:00" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         <tr>
                             <td class="horaCalendario">21:00</td>
                             <td class="droppable" hora="21:00:00" id="td-21" lasthour="21:00:00">
-                                <ul id="hour-21" class="connectedSortable"></ul>
+                                <ul id="hour-21" hora="21:00:00" class="connectedSortable"></ul>
                             </td>
                         </tr>
                         </tbody>
