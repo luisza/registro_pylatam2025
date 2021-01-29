@@ -435,6 +435,39 @@
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script>
+        time_array = [];
+        activities_dic = JSON.parse('{{ activities_dic|escapejs }}');
+
+        $(function (){
+            fill_time_array();
+            fill_time_array_activities();
+        });
+
+        function fill_time_array(){
+            for(var i = 0; i < 84; i++){
+                time_array.push(null);
+            }
+        }
+
+        function fill_time_array_activities(){
+            const keys = Object.keys(activities_dic);
+            for(var i = 0; i < keys.length; i++){
+                const start_hour = (parseInt(activities_dic[keys[i]].start_time.split(":")[0]) - 7 ) * 6;
+                const start_minute = parseInt(activities_dic[keys[i]].start_time.split(":")[1]) / 10;
+
+                const end_hour = (parseInt(activities_dic[keys[i]].end_time.split(":")[0]) - 7 ) * 6;
+                const end_minute = parseInt(activities_dic[keys[i]].end_time.split(":")[1])/10;
+
+                var start_time = start_hour+start_minute;
+                const end_time = end_hour+end_minute;
+
+                while(start_time < end_time){
+                    time_array[start_time] = String(keys[i]);
+                    start_time++;
+                }
+            }
+        }
+
         var lista = [];
         var types = null;
 
