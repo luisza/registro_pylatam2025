@@ -27,6 +27,7 @@ from proposal.forms import TopicForm, TypeForm, SpecialActivityForm, RoomsCreate
 from json import dumps
 from django.forms.models import model_to_dict
 
+
 def dayAmout(date1, date2):
     difference = date1 - date2
     return int(difference.days) + 1
@@ -100,8 +101,11 @@ class CharlaContext:
         context['room_name'] = rooms_names[str(sala)]
         context['room_id'] = rooms_list[sala - 1].id
         context['room_form'] = RoomsCreateForm()
+        speeches = Speech.objects.filter(event=current_event)
+        special = SpecialActivity.objects.filter(event=current_event)
         context['activities_dic'] = json.dumps(build_activities_dic(speeches, special))
-        context['stored_activities_dic'] = json.dumps(build_stored_activities_dic(charlasDic["dia%s" % (dia)], rooms_names[str(sala)]))
+        context['stored_activities_dic'] = json.dumps(
+            build_stored_activities_dic(charlasDic["dia%s" % (dia)], rooms_names[str(sala)]))
         return context
 
 
@@ -110,7 +114,15 @@ def build_activities_dic(speeches, special_activities):
     for special_activity in special_activities:
         temp_dic = {}
         temp_key = "0-" + str(special_activity.id)
-        activities_dic[temp_key] = model_to_dict(special_activity)
+        temp_dic['name'] = special_activity.name
+        temp_dic['desc'] = special_activity.message
+        temp_dic['color'] = '#858585'
+        temp_dic["is_speech"] = ""
+        temp_dic["time"] = special_activity.type.time
+        temp_dic["type"] = special_activity.type.pk
+        temp_dic["activity_pk"] = special_activity.id
+        temp_dic["is_scheduled"] = special_activity.is_scheduled
+        activities_dic[temp_key] = temp_dic
 
     for speech in speeches:
         temp_dic = {}
@@ -145,7 +157,6 @@ def build_stored_activities_dic(object_list, room):
                     temp_dic["start_hour"] = timezone.localtime(speech.start_time).strftime("%H")
                     temp_dic["end_time"] = timezone.localtime(speech.end_time).strftime("%H:%M")
                     temp_dic["color"] = speech.speech.topic.color
-                    temp_dic["name"] = speech.speech.title
                     temp_dic["time"] = speech.speech.speech_type.time
                     temp_dic["is_speech"] = "true"
                     temp_dic["activity_pk"] = speech.speech.pk
@@ -164,7 +175,7 @@ def build_stored_activities_dic(object_list, room):
                     temp_dic["end_time"] = timezone.localtime(obj.end_time).strftime("%H:%M")
                     temp_dic["color"] = "#b7ff00"
                     temp_dic["time"] = speech.special.type.time
-                    temp_dic["value"] = speech.special.pk
+                    temp_dic["activity_pk"] = speech.special.pk
                     temp_dic["desc"] = obj.text
                     temp_dic["is_speech"] = ""
                     temp_dic["is_scheduled"] = speech.special.is_scheduled
@@ -259,7 +270,7 @@ class EditCharlas(PermissionRequiredMixin, CharlaContext, ListView):
                                                         end_time=timezone.datetime.strptime(
                                                             activities['end_time'], "%Y-%m-%d %H:%M:%S"),
                                                         speech=Speech.objects.filter(
-                                                            id=int(activities['pk_speech'])).first(),
+                                                            id=int(activities['activity_pk'])).first(),
                                                         room=Room.objects.filter(id=int(activities['room'])).first(), )
                     else:
                         speechSchedule = SpeechSchedule(start_time=timezone.datetime.strptime(activities['start_time'],
@@ -267,7 +278,7 @@ class EditCharlas(PermissionRequiredMixin, CharlaContext, ListView):
                                                         end_time=timezone.datetime.strptime(
                                                             activities['end_time'], "%Y-%m-%d %H:%M:%S"),
                                                         special=SpecialActivity.objects.filter(
-                                                            id=int(activities['pk_speech'])).first(),
+                                                        id=int(activities['activity_pk'])).first(),
                                                         room=Room.objects.filter(id=int(activities['room'])).first(), )
                     speech = SpeechSchedule.objects.filter(room=speechSchedule.room,
                                                            start_time__lt=speechSchedule.end_time,
@@ -300,10 +311,10 @@ class EditCharlas(PermissionRequiredMixin, CharlaContext, ListView):
 
                     if activities['is_speech'] and blockValid and scheduleValid:
                         if activities.get('type'):
-                            speech = Speech.objects.filter(id=int(activities['pk_speech'])).first()
+                            speech = Speech.objects.filter(id=int(activities['activity_pk'])).first()
                             speech.speech_type = SpeechType.objects.filter(id=int(activities['type'])).first()
                             speech.save()
-                        speech = Speech.objects.filter(id=int(activities['pk_speech'])).first()
+                        speech = Speech.objects.filter(id=int(activities['activity_pk'])).first()
                         speech.is_scheduled = True
                         speech.save()
 

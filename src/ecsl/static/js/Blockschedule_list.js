@@ -39,7 +39,6 @@
             var valid_start_position = -1;
             for(var i = hour; !can_be_stored && i < hour + 6; i++) {
                 var occupied = false;
-
                 for(var j = i; !occupied && j < parseInt(activities_dic[activity_pk].time)/10 + i; j++) {
                     if(time_array[j]) {
                         occupied = true;
@@ -52,10 +51,10 @@
             }
             if(can_be_stored){
                 var keys = Object.keys(stored_activities_dic);
-                if(activity_pk in keys) {
+                if(keys.includes(activity_pk)) {
                     for(var i = 0; i < time_array.length; i++){
                         if(time_array[i] == activity_pk) {
-                            for (var j = i; j < parseInt(stored_activities_dic[activity_pk].time) / 10; j++)
+                            for (var j = i; j < (parseInt(stored_activities_dic[activity_pk].time) / 10)+i; j++)
                             {
                                 time_array[j] = null;
                             }
@@ -64,12 +63,51 @@
                 }
                 for(var i = valid_start_position; i < parseInt(activities_dic[activity_pk].time)/10 + valid_start_position; i++) {
                     time_array[i] = activity_pk;
+
                 }
-                return true;
+                return valid_start_position;
             }
             else{
-                return false;
+                return -1;
             }
+        }
+
+        function ArrayIndexToHour(index){
+            base= 7
+            hour= Math.trunc(parseInt(index)/6)
+            min = (parseInt(index)%6)*10
+            if(min==0){
+                min="00"
+            }
+            time= ""+(hour+base)+":"+min
+            return time
+        }
+
+        function update_stored_dic(start_Position,activity_pk){
+              var element={}
+                    element["start_datetime"] = $("#actualDay").text() + " " +ArrayIndexToHour(start_Position)+":00"
+                    element["end_datetime"] = $("#actualDay").text() + " " +ArrayIndexToHour(start_Position + (parseInt(activities_dic[activity_pk].time)/10))+":00"
+                    element["start_time"] = ArrayIndexToHour(start_Position)
+                    element["start_hour"] = ArrayIndexToHour(start_Position).split(':')[0]
+                    element["end_time"] = ArrayIndexToHour(start_Position + (parseInt(activities_dic[activity_pk].time)/10))
+                    element["time"] = activities_dic[activity_pk].time
+                    element["is_scheduled"] = activities_dic[activity_pk].is_scheduled
+                    element["activity_pk"] = parseInt(activity_pk.split('-')[1])
+                    element["desc"] = activities_dic[activity_pk].desc
+
+            if(parseInt(activity_pk.split('-')[0])){
+                    element["color"] = activities_dic[activity_pk].color
+                    element["is_speech"] = "true"
+                    element["title"] = activities_dic[activity_pk].title
+                    element["room_name"] = room_name
+                    element["speech_pk"] = parseInt(activity_pk.split('-')[1])
+                    element["speech_type"] = activities_dic[activity_pk].speech_type
+            }else{
+                    element["color"] = "#b7ff00"
+                    element["is_speech"] = ""
+
+            }
+            stored_activities_dic[activity_pk] = element;
         }
 
          function control_validate_update(start_position, o_time, n_time) {
@@ -145,28 +183,6 @@
             }).disableSelection();
         });
 
-        function difHours(hour1, hour2) {
-            starttime = new Date($("#actualDay").text() + " " + hour1)
-            endime = new Date($("#actualDay").text() + " " + hour2)
-            diff = endime - starttime
-            return millisToMinutesAndSeconds(diff)
-        }
-
-        function millisToMinutesAndSeconds(millis) {
-            var minutes = Math.floor(millis / 60000);
-            var seconds = ((millis % 60000) / 1000).toFixed(0);
-            return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
-        }
-
-        function update_last_hours() {
-            for (var i = 7; i <= 20; ++i) {
-                var minutes_left_to_assign = parseInt(difHours($('#td-' + (i + 1)).attr('hora'), $('#td-' + i).attr('lasthour')).split(":")[0])
-                if (minutes_left_to_assign > 0) {
-                    $('#td-' + i).attr('lasthour', addLastHour($('#td-' + i).attr('hora'), 60));
-                    $('#td-' + (i + 1)).attr('lasthour', addLastHour($('#td-' + (i + 1)).attr('lasthour'), minutes_left_to_assign));
-                }
-            }
-        }
 
         function PaintActivities(){
             $(".painted").remove()
@@ -178,7 +194,7 @@
             var text=""
             var select=""
             var li=""
-            var url_mask = "{% url 'detail_charla' pk=0 %}";
+            var url_mask = url_maskHTML;
             for(var i=0;i<time_array.length;++i){
                 if(time_array[i]!=null){
                     pk=time_array[i]
@@ -213,32 +229,32 @@
                                 select ='<div class="col-sm-4"></div>'
 
                                 li= '<li class="ui-state-default activity painted" style="background-color: ' + stored_activities_dic[time_array[i]]["color"] + ';"' +
-                                    ' value="' + stored_activities_dic[time_array[i]]["value"] + '" color="' + stored_activities_dic[time_array[i]]["color"] + '"' +
+                                    ' activity_pk="' + stored_activities_dic[time_array[i]]["activity_pk"] + '" color="' + stored_activities_dic[time_array[i]]["color"] + '"' +
                                     ' is_speech= "" ' + ' desc="' + stored_activities_dic[time_array[i]]["desc"] + '"' +
                                     ' time="' + stored_activities_dic[time_array[i]]["time"] + '"' + ' start_hour= "' + stored_activities_dic[time_array[i]]["start_hour"] + '" ' +
                                     'db="' + stored_activities_dic[time_array[i]]["obj_pk"] + ' "start_time="' + stored_activities_dic[time_array[i]]["start_time"] +
                                     '">'
 
                             }else{
-                                text = '<a style="margin-left: 7%;" href=' + url_mask.replace(/0/, stored_activities_dic[time_array[i]]['speech_pk']) + '>' +
+                                text = '<a style="margin-left: 7%;" href="' + url_mask.replace(/0/, parseInt(stored_activities_dic[time_array[i]]['activity_pk'])) + '">' +
                                     stored_activities_dic[time_array[i]]['title'] +
                                     '</a>'
                                 select= '<div class="col-sm-4 container_type_time_'+ stored_activities_dic[time_array[i]]["activity_pk"] + '">' +
-                                        '<select class="btn btn-primary" id="type_time"' + '>' +
+                                        '<select class="btn btn-primary selectType" id="type_time"' + '>' +
                                         '</select>' +
                                         '</div>'
 
                                 li=  '<li class="ui-state-default activity painted" style="background-color: ' + stored_activities_dic[time_array[i]]["color"] + ';"' +
-                                    ' value="' + stored_activities_dic[time_array[i]]["activity_pk"] + '"' + ' color="' + stored_activities_dic[time_array[i]]["color"] + '"' +
+                                    ' activity_pk="' + stored_activities_dic[time_array[i]]["activity_pk"] + '"' + ' color="' + stored_activities_dic[time_array[i]]["color"] + '"' +
                                     ' is_speech="' + stored_activities_dic[time_array[i]]["is_speech"] + '"' + ' desc="' + stored_activities_dic[time_array[i]]["desc"] + '"' +
                                     ' time="' + stored_activities_dic[time_array[i]]["time"] + '"' + ' start_hour= "' + stored_activities_dic[time_array[i]]["start_hour"] + '"' +
                                     'db="' + stored_activities_dic[time_array[i]]["obj_pk"] + ' "start_time="' + stored_activities_dic[time_array[i]]["start_time"] + '"' +
-                                    'end_time="' + addhoras(stored_activities_dic[time_array[i]]["start_time"], stored_activities_dic[time_array[i]]["time"]) + '"' +
+                                    'end_time="' + stored_activities_dic[time_array[i]]["end_time"] + '"' +
                                     'id="li_' + stored_activities_dic[time_array[i]]["activity_pk"] + '"' +
                                     '">'
 
                             }
-                            if(starthour==first){
+                            if(starthour==first && stored_activities_dic[time_array[i]]["is_scheduled"]){
                                 $('#hour-' + starthour).append(
                                     li+
                                     '<div class="row">' +
@@ -283,80 +299,59 @@
                 }
                 $(".container_type_time_" + blocks[i].getAttribute("activity_pk")).children().attr('onchange', 'update_times(' + blocks[i].getAttribute("activity_pk") + ', this,'+ blocks[i].getAttribute('time')+ ','+ 1 +')')
             }
-            update_last_hours();
-
         }
 
 
         $(function () {
             $(".droppable").droppable({
                 drop: function (event, ui) {
-
-                    ui.draggable.attr('start_time', $("#actualDay").text() + " " + $(this).attr("lasthour"))
-                    ui.draggable.attr('end_time', addhoras($(this).attr("lasthour"), ui.draggable.attr("time")))
-
-                    hour = parseInt(ui.draggable.attr('start_hour'));
-
-                    if ($('#td-' + hour).attr('lasthour')) {
-                        if ($('#td-' + hour).attr('hora') < substractLastHour($('#td-' + hour).attr('lasthour'), ui.draggable.attr("time"))) {
-                            $('#td-' + hour).attr('lasthour', substractLastHour($('#td-' + hour).attr('lasthour'), ui.draggable.attr("time")))
-                        }
-                    }
-                    $(this).attr('lasthour', addLastHour($(this).attr('lasthour'), ui.draggable.attr("time")))
-                    update_last_hours();
-
-
-                    ui.draggable.attr('room', $("#actualRoom").text())
-                    $("#id_speech").val(ui.draggable.val());
-                    $("#id_start_time").val($("#actualDay").text() + " " + $(this).attr("lasthour"));
-                    $("#id_end_time").val(addhoras($(this).attr("hora"), ui.draggable.attr("time")));
-                    $("#id_color").val((ui.draggable.attr("color")));
-                    var is_speech = null
-                    if (ui.draggable.attr("is_speech") == 1 || ui.draggable.attr("is_speech") == 'true') {
-                        $("#id_is_speech").prop("checked", true);
-                        is_speech = 'true'
+                    if (ui.draggable.attr('is_speech') == 'true') {
+                        activity_pk = "1-" + ui.draggable.attr('activity_pk');
                     } else {
-                        $("#id_is_speech").prop("checked", false);
-                        is_speech = ""
+                        activity_pk = "0-" + ui.draggable.attr('activity_pk');
                     }
-                    $("#id_room").val($("#actualRoom").text());
-                    $("#id_text").val(ui.draggable.attr("desc"));
-                    var element = {
-                        'pk_speech': ui.draggable.val(),
-                        'color': ui.draggable.attr("color"),
-                        'start_time': ui.draggable.attr('start_time'),
-                        'end_time': ui.draggable.attr('end_time'),
-                        'is_speech': is_speech,
-                        'room': ui.draggable.attr('room'),
-                        'description': ui.draggable.attr("desc"),
-                    }
-                    $('.' + is_speech + ui.draggable.val() + '').remove();
-                    if (ui.draggable.attr('type')) {
-                        element['type'] = ui.draggable.attr('type')
-                    }
+                    time = event.target.getAttribute("hora").split(":")[0];
+                    var startPosition= validate_activity_scheduling(activity_pk, parseInt(time));
+                    if (startPosition>=0) {
+                        update_stored_dic(startPosition, activity_pk)
+                        var element = {
+                            'activity_pk': stored_activities_dic[activity_pk]['activity_pk'],
+                            'color': stored_activities_dic[activity_pk]['color'],
+                            'start_time': stored_activities_dic[activity_pk]['start_datetime'],
+                            'end_time': stored_activities_dic[activity_pk]['end_datetime'],
+                            'is_speech': stored_activities_dic[activity_pk]['is_speech'],
+                            'room': room_id,
+                            'description': stored_activities_dic[activity_pk]['desc'],
+                        }
 
-                    PaintActivities()
-                    var value = activities_in_list(element)
-                    if (value == false) {
-                        lista.push(element)
-                    }
-                    if ($(this).attr('id') === 'speeches' || $(this).attr('id') === 'specials') {
-                        delete_temp_activity(ui.draggable.attr('value'), ui.draggable.attr('is_speech'))
-                        if (ui.draggable.attr('db')) {
-                            delete_actity(ui.draggable.attr('room'), ui.draggable.attr('db'))
+                        if (ui.draggable.attr('type')) {
+                            element['type'] = ui.draggable.attr('type');
+                        }
+
+                        PaintActivities();
+                        var value = activities_in_list(element)
+                        if (value == false) {
+                            lista.push(element);
                         }
                     }
+                    else {
+                    }
+                                        console.log('id:',$(this).attr('id'))
+                    if ($(this).attr('id') === 'speeches' || $(this).attr('id') === 'specials') {
+                            delete_temp_activity(ui.draggable.attr('activity_pk'), ui.draggable.attr('is_speech'));
+                            if (ui.draggable.attr('db')) {
+                                delete_actity(room_id, ui.draggable.attr('db'));
+                            }
+                        }
                 }
             });
-            update_last_hours();
         });
-
 
         $(function () {
             var special = document.getElementsByClassName("special_actvity")
             for (var i = 0; i < special.length; ++i) {
                 var element = {
-                    'pk_speech': special[i].getAttribute("value"),
+                    'activity_pk': special[i].getAttribute("activity_pk"),
                     'color': special[i].getAttribute("color"),
                     'start_time': special[i].getAttribute("start_datetime"),
                     'end_time': special[i].getAttribute("end_datetime"),
@@ -367,17 +362,13 @@
                 lista.push(element)
             }
             PaintActivities()
-            update_last_hours();
         });
 
         $(function () {
             var blocks = document.getElementsByClassName("speech_actvity")
-
-            var url_mask = "{% url 'detail_charla' pk=0 %}";
-
             for (var i = 0; i < blocks.length; ++i) {
                 var element = {
-                    'pk_speech': blocks[i].getAttribute("activity_pk"),
+                    'activity_pk': blocks[i].getAttribute("activity_pk"),
                     'color': blocks[i].getAttribute("color"),
                     'start_time': blocks[i].getAttribute("start_datetime"),
                     'end_time': blocks[i].getAttribute("end_datetime"),
@@ -391,11 +382,11 @@
         });
 
         function delete_temp_activity(id, is_speech) {
-            if (is_speech == 0) {
+            if (is_speech == "") {
                 is_speech = ""
             }
             for (var i = 0; i < lista.length; i++) {
-                if (lista[i]['pk_speech'] == id && lista[i]['is_speech'] == is_speech) {
+                if (lista[i]['activity_pk'] == id && lista[i]['is_speech'] == is_speech) {
                     lista.splice(i, 1)
                 }
             }
@@ -412,7 +403,7 @@
             value = false
             for (var i = 0; i < lista.length; i++) {
                 if (lista[i]['is_speech'] === element['is_speech']) {
-                    if (lista[i]['pk_speech'] == element['pk_speech']) {
+                    if (lista[i]['activity_pk'] == element['activity_pk']) {
                         lista.splice(i, 1)
                         lista.push(element)
                         value = true
@@ -447,20 +438,6 @@
             return (endtime)
         }
 
-        function addLastHour(hora, minutos) {
-            starttime = new Date($("#actualDay").text() + " " + hora)
-            starttime.setMinutes(starttime.getMinutes() + parseInt(minutos))
-            endtime = "" + starttime.getHours() + ":" + starttime.getMinutes() + ":00"
-            return (endtime)
-        }
-
-        function substractLastHour(hora, minutos) {
-            starttime = new Date($("#actualDay").text() + " " + hora)
-            starttime.setMinutes(starttime.getMinutes() - parseInt(minutos))
-            endtime = "" + starttime.getHours() + ":" + starttime.getMinutes() + ":00"
-            return (endtime)
-        }
-
         function send_filter() {
             var option = null
             $('#speeches').empty()
@@ -480,9 +457,9 @@
                     if (result != null) {
                         for (var i = 0; i < result.length; i++)
                             $('#speeches').append('<li class="ui-state-default activity" style="background-color:' + data.color[i] + ';"' +
-                                'value="' + Object.values(result[i])[1] + '" color="' + data.color[i] + '"' +
+                                'activity_pk="' + Object.values(result[i])[1] + '" color="' + data.color[i] + '"' +
                                 'id="li_' + Object.values(result[i])[1] +
-                                '" is_speech="1"' + 'desc="none"' + 'time="' + data.times[i] + '">' +
+                                '" is_speech="true"' + 'desc="none"' + 'time="' + data.times[i] + '">' +
                                 '<div class="row">' +
                                 '<div class="col-sm-8">' +
                                 Object.values(result[i]['fields'])[2] +
@@ -535,7 +512,7 @@
                     $("#li_" + speech_pk).attr('start_tfime', $("#actualDay").text() + " " + $("#li_" + speech_pk).parent().attr('hora'))
                     $("#li_" + speech_pk).attr('end_time', addhoras($("#li_" + speech_pk).parent().attr('hora'), type_values[0]))
                     for (var i = 0; i < lista.length; i++) {
-                        if (lista[i]['pk_speech'] == speech_pk) {
+                        if (lista[i]['activity_pk'] == speech_pk) {
                             lista[i]['type'] = type_values[1]
                             lista[i]['start_time'] = $("#actualDay").text() + " " + $("#li_" + speech_pk).parent().attr('hora')
                             lista[i]['end_time'] = addhoras($("#li_" + speech_pk).parent().attr('hora'), type_values[0])
@@ -551,7 +528,7 @@
                 $("#li_" + speech_pk).attr('start_tfime', $("#actualDay").text() + " " + $("#li_" + speech_pk).parent().attr('hora'))
                 $("#li_" + speech_pk).attr('end_time', addhoras($("#li_" + speech_pk).parent().attr('hora'), type_values[0]))
                 for (var i = 0; i < lista.length; i++) {
-                    if (lista[i]['pk_speech'] == speech_pk) {
+                    if (lista[i]['activity_pk'] == speech_pk) {
                         lista[i]['type'] = type_values[1]
                         lista[i]['start_time'] = $("#actualDay").text() + " " + $("#li_" + speech_pk).parent().attr('hora')
                         lista[i]['end_time'] = addhoras($("#li_" + speech_pk).parent().attr('hora'), type_values[0])
@@ -562,7 +539,7 @@
 
 
         $(function displayOrEdit() {
-            var action = '{{ view }}'
+            var action = editOrDisplay
             if (action == 'display') {
                 $("#filterPanel").remove();
                 $("#send_activities").remove();
@@ -570,5 +547,6 @@
                 $("#addroom").remove();
                 $('.activity').draggable({disabled: true});
                 $('.connectedSortable').sortable({disabled: true});
+                $('.selectType').remove();
             }
         });

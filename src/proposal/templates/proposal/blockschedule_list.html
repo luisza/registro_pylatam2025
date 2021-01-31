@@ -91,15 +91,15 @@
 
                                 <li id="li_{{ speech.pk }}" class="ui-state-default activity"
                                     style="background-color: {{ speech.topic.color }};"
-                                    value="{{ speech.pk }}" color="{{ speech.topic.color }}"
-                                    time="{{ speech.speech_type.time }}" is_speech="1" desc="none">
+                                    activity_pk="{{ speech.pk }}" color="{{ speech.topic.color }}"
+                                    time="{{ speech.speech_type.time }}" is_speech="true" desc="none">
                                     <div class="row">
                                         <div class="col-sm-8">
                                             {{ speech }}
                                         </div>
                                         <div class="col-sm-4 container_type_time_{{ speech.pk }}">
                                             <select selected="{{ speech.speech_type.id }}" style="width: 100%"
-                                                    class="btn btn-primary" id="type_time"
+                                                    class="btn btn-primary selectType" id="type_time"
                                                     onchange="update_times({{ speech.pk }},this, {{ speech.speech_type.time }}, 0)">
 
 
@@ -132,9 +132,9 @@
                         <ul id="specials" class="connectedSortable droppable" hora="7:00:00">
                             {% for special in specialActivity %}
                                 <li class="ui-state-default activity" style="background-color: #ddd234;" color="#ddd234"
-                                    time="{{ special.type.time }}" is_speech="0"
+                                    time="{{ special.type.time }}" is_speech=""
                                     desc="{{ special.message }}"
-                                    value="{{ special.pk }}">
+                                    activity_pk="{{ special.pk }}">
                                     {{ special }}
                                 </li>
                             {% endfor %}
@@ -210,7 +210,7 @@
                 <ul class="days nav nav-tabs">
                     {% for d in dayList %}
                         <li role="presentation" class="{% if dia ==  forloop.counter %} active {% endif %}">
-                            <a href="{% url 'edit_charlas' %}?dia={{ forloop.counter }}">{{ d }}</a>
+                            <a class="linkDay" href="{% url 'edit_charlas' %}?dia={{ forloop.counter }}">{{ d }}</a>
                         </li>
                     {% endfor %}
                 </ul>
@@ -218,7 +218,7 @@
                     <ul class="nav nav-tabs flex-column">
                         {% for room in rooms_list %}
                             <li role="presentation" class="{% if sala == forloop.counter %} active {% endif %}">
-                                <a href="{% url 'edit_charlas' %}?dia={{ dia }}&sala={{ forloop.counter }}">{{ room }}</a>
+                                <a class="linkRoom"href="{% url 'edit_charlas' %}?dia={{ dia }}&sala={{ forloop.counter }}">{{ room }}</a>
                             </li>
                         {% endfor %}
                         <li role="presentation" class="">
@@ -378,7 +378,7 @@
                                  desc="{{ obj.text }}"
                                  room_pk="{{ speech_schedule.room.pk }}"
                                  obj_pk="{{ obj.pk }}"
-                                 value="{{ speech_schedule.special.pk }}"
+                                 activity_pk="{{ speech_schedule.special.pk }}"
                                  room_id="{{ room_id }}"
                                  is_speech=""
                             >
@@ -428,7 +428,7 @@
         <input name='block' id="obj_pk" value="{{ obj.pk }}" hidden>
         <input name='room' id="room_pk" value="{{ room_id }}" hidden>
     </form>
-
+'{{ view }}'
 {% endblock %}
 
 {% block js %}
@@ -440,7 +440,11 @@
 
         var types = {{ types_serializer|safe }};
         var transNoResult= '{% trans 'No results matched' %}';
-        var tokenHTML = '{{csrf_token}}'
+        var tokenHTML = '{{csrf_token}}';
+        var room_name = '{{ room_name }}';
+        var room_id = '{{ room_id }}';
+        var url_maskHTML = '{% url 'detail_charla' pk=0 %}';
+        var editOrDisplay = '{{ view }}'
     </script>
     <script src="{% static 'js/Blockschedule_list.js' %}"></script>
 {% endblock %}
