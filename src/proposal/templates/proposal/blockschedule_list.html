@@ -210,7 +210,12 @@
                 <ul class="days nav nav-tabs">
                     {% for d in dayList %}
                         <li role="presentation" class="{% if dia ==  forloop.counter %} active {% endif %}">
+                        {% if view == 'edit' %}
                             <a class="linkDay" href="{% url 'edit_charlas' %}?dia={{ forloop.counter }}">{{ d }}</a>
+                        {% else %}
+                            <a class="linkDay" href="{% url 'list_charlas' %}?dia={{ forloop.counter }}">{{ d }}</a>
+                        {% endif %}
+
                         </li>
                     {% endfor %}
                 </ul>
@@ -218,7 +223,11 @@
                     <ul class="nav nav-tabs flex-column">
                         {% for room in rooms_list %}
                             <li role="presentation" class="{% if sala == forloop.counter %} active {% endif %}">
+                            {% if view == 'edit' %}
                                 <a class="linkRoom"href="{% url 'edit_charlas' %}?dia={{ dia }}&sala={{ forloop.counter }}">{{ room }}</a>
+                            {% else %}
+                                <a class="linkRoom"href="{% url 'list_charlas' %}?dia={{ dia }}&sala={{ forloop.counter }}">{{ room }}</a>
+                            {% endif %}
                             </li>
                         {% endfor %}
                         <li role="presentation" class="">
@@ -444,7 +453,7 @@
         var room_name = '{{ room_name }}';
         var room_id = '{{ room_id }}';
         var url_maskHTML = '{% url 'detail_charla' pk=0 %}';
-        var editOrDisplay = '{{ view }}'
+        var editOrDisplay = '{{ view }}';
     </script>
     <script src="{% static 'js/Blockschedule_list.js' %}"></script>
 {% endblock %}
