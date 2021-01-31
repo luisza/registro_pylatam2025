@@ -136,6 +136,7 @@ def build_activities_dic(speeches, special_activities):
         temp_dic["activity_pk"] = speech.pk
         temp_dic["speech_pk"] = speech.pk
         temp_dic["speech_type"] = speech.speech_type.pk
+        temp_dic['speech_topic'] = speech.topic.pk
         temp_dic["desc"] = "none"
         temp_dic["is_scheduled"] = speech.is_scheduled
         activities_dic[temp_key] = temp_dic
@@ -166,6 +167,7 @@ def build_stored_activities_dic(object_list, room):
                     temp_dic["room_name"] = speech.room.name
                     temp_dic["speech_pk"] = speech.speech.pk
                     temp_dic["speech_type"] = speech.speech.speech_type.pk
+                    temp_dic['speech_topic'] = speech.speech.topic.pk
                     temp_dic["desc"] = "none"
                     temp_dic["is_scheduled"] = speech.speech.is_scheduled
                     activities_dic["1-" + str(speech.speech.pk)] = temp_dic

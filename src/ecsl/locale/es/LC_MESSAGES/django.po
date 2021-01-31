@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ECSL V1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-26 17:50-0600\n"
+"POT-Creation-Date: 2021-01-31 12:34-0600\n"
 "PO-Revision-Date: 2017-06-04 17:12-0600\n"
 "Last-Translator: Luis Zárate <luis.zarate@solvosoft.com>\n"
 "Language-Team: ES <ES@li.org>\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.6.10\n"
 
-#: ecsl/charlas.py:110 ecsl/charlas.py:130 ecsl/charlas.py:240
+#: ecsl/charlas.py:196 ecsl/charlas.py:216 ecsl/charlas.py:336
 msgid "Sorry, we need an event to display the schedule"
 msgstr "Lo sentimos, pero necesitamos eventos para desplegar la agenda."
 
-#: ecsl/charlas.py:258 ecsl/charlas.py:306
+#: ecsl/charlas.py:354 ecsl/charlas.py:402
 msgid "The payment is still pending to be confirmed"
 msgstr "El pago aún esta pendiente de confirmar."
 
@@ -320,8 +320,8 @@ msgstr "Contáctenos"
 #: ecsl/templates/django_registration/resend_activation_form.html:10
 #: ecsl/templates/ecsl/becas_form.html:17
 #: ecsl/templates/registration/login.html:19
-#: proposal/templates/proposal/blockschedule_list.html:29
-#: proposal/templates/proposal/blockschedule_list.html:191
+#: proposal/templates/proposal/blockschedule_list.html:31
+#: proposal/templates/proposal/blockschedule_list.html:242
 msgid "Submit"
 msgstr "Enviar"
 
@@ -753,9 +753,9 @@ msgid "My profile"
 msgstr "Mi perfil"
 
 #: ecsl/templates/ecsl/inscription_form.html:19
-#: proposal/templates/proposal/blockschedule_list.html:119
-#: proposal/templates/proposal/blockschedule_list.html:140
-#: proposal/templates/proposal/blockschedule_list.html:160
+#: proposal/templates/proposal/blockschedule_list.html:159
+#: proposal/templates/proposal/blockschedule_list.html:180
+#: proposal/templates/proposal/blockschedule_list.html:200
 #: proposal/templates/proposal/speech_form.html:11
 msgid "Save"
 msgstr "Guardar"
@@ -909,7 +909,7 @@ msgid ""
 msgstr "Lo lamentamos, pero la solicitud de beca que está buscando no existe"
 
 #: proposal/forms.py:6 proposal/forms.py:24 proposal/models.py:161
-#: proposal/templates/proposal/blockschedule_list.html:63
+#: proposal/templates/proposal/blockschedule_list.html:73
 msgid "Type"
 msgstr "Tipo"
 
@@ -950,7 +950,7 @@ msgstr "Información del charlista"
 msgid "Speech Title"
 msgstr "Titulo de la charla"
 
-#: proposal/models.py:58 proposal/templates/proposal/blockschedule_list.html:49
+#: proposal/models.py:58 proposal/templates/proposal/blockschedule_list.html:55
 msgid "Topic"
 msgstr "Tema"
 
@@ -990,46 +990,50 @@ msgstr "Mapa"
 msgid "Room"
 msgstr "Sala"
 
-#: proposal/templates/proposal/blockschedule_list.html:34
+#: proposal/templates/proposal/blockschedule_list.html:36
 msgid "Speeches"
 msgstr "Charlas"
 
-#: proposal/templates/proposal/blockschedule_list.html:86
+#: proposal/templates/proposal/blockschedule_list.html:126
 msgid "Special Activities"
 msgstr "Actividades especiales"
 
-#: proposal/templates/proposal/blockschedule_list.html:111
+#: proposal/templates/proposal/blockschedule_list.html:151
 msgid "New Speech Topic"
 msgstr "Nuevo tema para charlas"
 
-#: proposal/templates/proposal/blockschedule_list.html:132
+#: proposal/templates/proposal/blockschedule_list.html:172
 msgid "New Speech Type"
 msgstr "Nuevo tipo de charla"
 
-#: proposal/templates/proposal/blockschedule_list.html:152
+#: proposal/templates/proposal/blockschedule_list.html:192
 msgid "New Special Activity"
 msgstr "Nueva actividad especial"
 
-#: proposal/templates/proposal/blockschedule_list.html:185
+#: proposal/templates/proposal/blockschedule_list.html:236
 #: proposal/templates/proposal/speech_list.html:9
 msgid "Add"
 msgstr "Agregar"
 
-#: proposal/templates/proposal/blockschedule_list.html:364
+#: proposal/templates/proposal/blockschedule_list.html:417
 msgid "Create Room"
 msgstr "Crear Sala"
 
-#: proposal/templates/proposal/blockschedule_list.html:373
+#: proposal/templates/proposal/blockschedule_list.html:426
 msgid "Save Room"
 msgstr "Guardar Sala"
 
-#: proposal/templates/proposal/blockschedule_list.html:375
+#: proposal/templates/proposal/blockschedule_list.html:428
 msgid "Close"
 msgstr "Cerrar"
 
-#: proposal/templates/proposal/blockschedule_list.html:627
+#: proposal/templates/proposal/blockschedule_list.html:453
 msgid "No results matched"
 msgstr "No hay coincidencias"
+
+#: proposal/templates/proposal/blockschedule_list.html:454
+msgid "No time available in the requested position"
+msgstr "No hay tiempo disponible en la posición solicitada"
 
 #: proposal/templates/proposal/speech_list.html:22
 msgid "Edit"
@@ -1055,7 +1059,7 @@ msgstr "Siguiente"
 msgid "Are you sure you want to delete"
 msgstr "Está seguro que desea eliminar"
 
-#: proposal/views.py:36 proposal/views.py:179
+#: proposal/views.py:36 proposal/views.py:181
 msgid ""
 "We are sorry! You have to be registered as a system user to be able to senda "
 "proposal speech"
@@ -1063,7 +1067,7 @@ msgstr ""
 "Lo sentimos ! Para poder enviar una propuesta de charla tiene que estar "
 "registrado como usuario en nuestro sistema."
 
-#: proposal/views.py:52 proposal/views.py:195
+#: proposal/views.py:52 proposal/views.py:197
 msgid "We are sorry! The proposal speech period is not active"
 msgstr ""
 "Lo sentimos! No estamos en periodo de envíos de propuestas para charlas"

@@ -7,7 +7,9 @@
     <link href="{% static 'css/proposal.css' %}" rel="stylesheet">
 {% endblock %}
 {% block content %}
+    <div id="info-page">
     <h2> Temáticas </h2>
+    </div>
 
     <form id="activityForm" name="activityForm" method="post" hidden>
         {% csrf_token %}
@@ -75,7 +77,7 @@
                                 </select>
                             </div>
                             <div class="col-1">
-                                <a style="height: 40px" onclick="send_filter()" id="search"
+                                <a style="height: 40px" onclick="send_filter(0,0)" id="search"
                                    class="btn btn-info add-button">
                                     <i style="margin-top: 15px" class="fas fa-search"></i>
                                 </a>
@@ -449,6 +451,7 @@
 
         var types = {{ types_serializer|safe }};
         var transNoResult= '{% trans 'No results matched' %}';
+        var transNoTime= '{% trans 'No time available in the requested position' %}';
         var tokenHTML = '{{csrf_token}}';
         var room_name = '{{ room_name }}';
         var room_id = '{{ room_id }}';
