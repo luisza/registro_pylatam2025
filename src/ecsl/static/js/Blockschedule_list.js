@@ -40,7 +40,7 @@
             for(var i = hour; !can_be_stored && i < hour + 6; i++) {
                 var occupied = false;
                 for(var j = i; !occupied && j < parseInt(activities_dic[activity_pk].time)/10 + i; j++) {
-                    if(time_array[j]) {
+                    if(time_array[j] && time_array[j]!=activity_pk) {
                         occupied = true;
                     }
                 }
@@ -94,16 +94,15 @@
                     element["is_scheduled"] = activities_dic[activity_pk].is_scheduled
                     element["activity_pk"] = parseInt(activity_pk.split('-')[1])
                     element["desc"] = activities_dic[activity_pk].desc
+                    element["color"] = activities_dic[activity_pk].color
 
             if(parseInt(activity_pk.split('-')[0])){
-                    element["color"] = activities_dic[activity_pk].color
                     element["is_speech"] = "true"
                     element["title"] = activities_dic[activity_pk].title
                     element["room_name"] = room_name
                     element["speech_pk"] = parseInt(activity_pk.split('-')[1])
                     element["speech_type"] = activities_dic[activity_pk].speech_type
             }else{
-                    element["color"] = "#b7ff00"
                     element["is_speech"] = ""
 
             }
@@ -273,7 +272,10 @@
                                     '</div>' +
                                     '</div>' +'</li>');
                             }else{
-                                $('#hour-' + starthour).append('<div class="activity painted contained" style="background-color:' + stored_activities_dic[time_array[i]].color + '">' + initprint + " a "+ pkend +" "+  '</div>');
+                                if( starthour!=first )
+                                {
+                                    $('#hour-' + starthour).append('<div class="activity painted contained" style="background-color:' + stored_activities_dic[time_array[i]].color + '">' + initprint + " a "+ pkend +" "+  '</div>');
+                                }
                             }
                         }
                     }
@@ -310,44 +312,45 @@
         $(function () {
             $(".droppable").droppable({
                 drop: function (event, ui) {
-                    if (ui.draggable.attr('is_speech') == 'true') {
-                        activity_pk = "1-" + ui.draggable.attr('activity_pk');
-                    } else {
-                        activity_pk = "0-" + ui.draggable.attr('activity_pk');
-                    }
-                    time = event.target.getAttribute("hora").split(":")[0];
-                    var startPosition= validate_activity_scheduling(activity_pk, parseInt(time));
-                    if (startPosition>=0) {
-                        update_stored_dic(startPosition, activity_pk)
-                        var element = {
-                            'activity_pk': stored_activities_dic[activity_pk]['activity_pk'],
-                            'color': stored_activities_dic[activity_pk]['color'],
-                            'start_time': stored_activities_dic[activity_pk]['start_datetime'],
-                            'end_time': stored_activities_dic[activity_pk]['end_datetime'],
-                            'is_speech': stored_activities_dic[activity_pk]['is_speech'],
-                            'room': room_id,
-                            'description': stored_activities_dic[activity_pk]['desc'],
-                        }
-
-                        if (ui.draggable.attr('type')) {
-                            element['type'] = ui.draggable.attr('type');
-                        }
-
-                        PaintActivities();
-                        var value = activities_in_list(element)
-                        if (value == false) {
-                            lista.push(element);
+                    if ($(this).attr('id') === 'speeches' || $(this).attr('id') === 'specials') {
+                        delete_temp_activity(ui.draggable.attr('activity_pk'), ui.draggable.attr('is_speech'));
+                        if (ui.draggable.attr('db')) {
+                            delete_actity(room_id, ui.draggable.attr('db'));
                         }
                     }
                     else {
-                    }
-                                        console.log('id:',$(this).attr('id'))
-                    if ($(this).attr('id') === 'speeches' || $(this).attr('id') === 'specials') {
-                            delete_temp_activity(ui.draggable.attr('activity_pk'), ui.draggable.attr('is_speech'));
-                            if (ui.draggable.attr('db')) {
-                                delete_actity(room_id, ui.draggable.attr('db'));
+                        if (ui.draggable.attr('is_speech') == 'true') {
+                            activity_pk = "1-" + ui.draggable.attr('activity_pk');
+                        } else {
+                            activity_pk = "0-" + ui.draggable.attr('activity_pk');
+                        }
+                        time = event.target.getAttribute("hora").split(":")[0];
+                        var startPosition= validate_activity_scheduling(activity_pk, parseInt(time));
+                        if (startPosition>=0) {
+                            update_stored_dic(startPosition, activity_pk)
+                            var element = {
+                                'activity_pk': stored_activities_dic[activity_pk]['activity_pk'],
+                                'color': stored_activities_dic[activity_pk]['color'],
+                                'start_time': stored_activities_dic[activity_pk]['start_datetime'],
+                                'end_time': stored_activities_dic[activity_pk]['end_datetime'],
+                                'is_speech': stored_activities_dic[activity_pk]['is_speech'],
+                                'room': room_id,
+                                'description': stored_activities_dic[activity_pk]['desc'],
+                            }
+
+                            if (ui.draggable.attr('type')) {
+                                element['type'] = ui.draggable.attr('type');
+                            }
+
+                            PaintActivities();
+                            var value = activities_in_list(element)
+                            if (value == false) {
+                                lista.push(element);
                             }
                         }
+                        else {
+                        }
+                    }
                 }
             });
         });

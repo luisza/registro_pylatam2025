@@ -27,6 +27,8 @@ from proposal.forms import TopicForm, TypeForm, SpecialActivityForm, RoomsCreate
 from json import dumps
 from django.forms.models import model_to_dict
 
+SPECIAL_ACTIVITY_COLOR = "#cccccc"
+
 
 def dayAmout(date1, date2):
     difference = date1 - date2
@@ -116,7 +118,7 @@ def build_activities_dic(speeches, special_activities):
         temp_key = "0-" + str(special_activity.id)
         temp_dic['name'] = special_activity.name
         temp_dic['desc'] = special_activity.message
-        temp_dic['color'] = '#858585'
+        temp_dic['color'] = SPECIAL_ACTIVITY_COLOR
         temp_dic["is_speech"] = ""
         temp_dic["time"] = special_activity.type.time
         temp_dic["type"] = special_activity.type.pk
@@ -173,7 +175,7 @@ def build_stored_activities_dic(object_list, room):
                     temp_dic["start_time"] = timezone.localtime(obj.start_time).strftime("%H:%M")
                     temp_dic["start_hour"] = timezone.localtime(obj.start_time).strftime("%H")
                     temp_dic["end_time"] = timezone.localtime(obj.end_time).strftime("%H:%M")
-                    temp_dic["color"] = "#b7ff00"
+                    temp_dic["color"] = SPECIAL_ACTIVITY_COLOR
                     temp_dic["time"] = speech.special.type.time
                     temp_dic["activity_pk"] = speech.special.pk
                     temp_dic["desc"] = obj.text
@@ -231,6 +233,11 @@ class EditCharlas(PermissionRequiredMixin, CharlaContext, ListView):
                         speech = schedule.speech
                         speech.is_scheduled = False
                         speech.save()
+                    else:
+                        special = schedule.special
+                        special.is_scheduled = False
+                        special.save()
+
                     block.delete()
                     schedule.delete()
 
@@ -317,6 +324,11 @@ class EditCharlas(PermissionRequiredMixin, CharlaContext, ListView):
                         speech = Speech.objects.filter(id=int(activities['activity_pk'])).first()
                         speech.is_scheduled = True
                         speech.save()
+
+                    if not activities['is_speech'] and blockValid and scheduleValid:
+                        special = SpecialActivity.objects.filter(id=int(activities['activity_pk'])).first()
+                        special.is_scheduled = True
+                        special.save()
 
             return redirect(reverse('edit_charlas'))
 
