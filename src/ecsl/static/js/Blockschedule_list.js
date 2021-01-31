@@ -112,9 +112,14 @@
 
          function control_validate_update(start_position, o_time, n_time) {
             var posiciones = []
-            posiciones = add_new_positions(start_position, o_time)
-            old_local = posiciones.length
+            var old_posiciones = []
+
+            old_posiciones = add_new_positions(start_position, o_time)
+            old_local = old_posiciones.length
             posiciones = add_new_positions(start_position, n_time)
+            if (posiciones.length == 1){
+                return true
+            }
             if(posiciones != false) {
                 new_local = posiciones.length
                 return validator(old_local, new_local, posiciones)
@@ -142,29 +147,25 @@
         }
 
         function validator(old_local, new_local, positions) {
-            cont = 1;
+            cont = 0;
             checked_values = []
             result = true
-
             if (new_local > old_local) {
                 position = new_local - old_local
-            } else {
+            }
+            else{
                 position = old_local - new_local
             }
-            if (position > positions.length) {
+            if(position > positions.length) {
                 checked_values.push(true)
             } else {
-                for (var i = position; i <= positions.length; i++) {
-                    if (cont <= position) {
+                for (var i = old_local; i <= positions.length; i++) {
                         if (time_array[positions[i]] == null || old_local > new_local) {
                             checked_values.push(true)
                         } else {
                             checked_values.push(false)
                         }
                         cont = cont + 1
-                    } else {
-                        break
-                    }
                 }
             }
             for (var i = 0; i < checked_values.length; i++) {
@@ -180,6 +181,7 @@
             $("#speeches, #specials, #hour-7, #hour-8, #hour-9,#hour-10, #hour-11, #hour-12,#hour-13, #hour-14,#hour-15, #hour-16, #hour-17, #hour-18, #hour-19, #hour-20, #hour-21").sortable({
                 placeholder: "ui-state-highlight",
                 connectWith: ".connectedSortable",
+                items: '> li'
             }).disableSelection();
         });
 
@@ -271,7 +273,7 @@
                                     '</div>' +
                                     '</div>' +'</li>');
                             }else{
-                                $('#hour-' + starthour).append('<li class="activity painted" style="background-color:' + stored_activities_dic[time_array[i]].color + '">' + initprint + " a "+ pkend +" "+  '</li>');
+                                $('#hour-' + starthour).append('<div class="activity painted contained" style="background-color:' + stored_activities_dic[time_array[i]].color + '">' + initprint + " a "+ pkend +" "+  '</div>');
                             }
                         }
                     }
@@ -282,6 +284,9 @@
                     hour+=1
                 }
             }
+            $( ".contained" ).draggable({ containment: "parent" });
+            $( ".contained" ).draggable({ axis: "y" });
+
             var blocks = document.getElementsByClassName("speech_actvity")
             var option = null
             for (var i = 0; i < blocks.length; i++) {
@@ -509,7 +514,7 @@
                     alert('si hay tiempo par actualizar')
                     $("#li_" + speech_pk).attr('time', type_values[0])
                     $("#li_" + speech_pk).attr('type', type_values[1])
-                    $("#li_" + speech_pk).attr('start_tfime', $("#actualDay").text() + " " + $("#li_" + speech_pk).parent().attr('hora'))
+                    $("#li_" + speech_pk).attr('start_time', $("#actualDay").text() + " " + $("#li_" + speech_pk).parent().attr('hora'))
                     $("#li_" + speech_pk).attr('end_time', addhoras($("#li_" + speech_pk).parent().attr('hora'), type_values[0]))
                     for (var i = 0; i < lista.length; i++) {
                         if (lista[i]['activity_pk'] == speech_pk) {
@@ -519,13 +524,15 @@
                         }
                     }
 
-                }else {
+                }else if(control_validate_update(start_position, old_time, type_values[0]) == false){
                     alert('Lo sentimos, no hay tiempo disponible para asignar')
                 }
             } else {
+                $(".container_type_time_"+speech_pk)[0].firstElementChild.setAttribute('onchange',
+                    'update_times('+speech_pk+','+'this,'+type_values[0]+','+0+')')
                 $("#li_" + speech_pk).attr('time', type_values[0])
                 $("#li_" + speech_pk).attr('type', type_values[1])
-                $("#li_" + speech_pk).attr('start_tfime', $("#actualDay").text() + " " + $("#li_" + speech_pk).parent().attr('hora'))
+                $("#li_" + speech_pk).attr('start_time', $("#actualDay").text() + " " + $("#li_" + speech_pk).parent().attr('hora'))
                 $("#li_" + speech_pk).attr('end_time', addhoras($("#li_" + speech_pk).parent().attr('hora'), type_values[0]))
                 for (var i = 0; i < lista.length; i++) {
                     if (lista[i]['activity_pk'] == speech_pk) {
