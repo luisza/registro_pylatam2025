@@ -1,97 +1,462 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load bootstrap %}
 {% load registro_charla %}
-
+{% load static %}
+{% block css %}
+    <link href="{% static 'css/proposal.css' %}" rel="stylesheet">
+{% endblock %}
 {% block content %}
-<style>
-.theader{
-	text-decoration: blond;
-	background-color: #98978b;
-	padding: 10px 2px;
-	text-align: center;
-	color: #fff;
-	margin-bottom: 5px;
-}
+    <div id="info-page">
+    <h2> Temáticas </h2>
+    </div>
 
-.speech_row {
-	
-	padding: 10px 5px;
-	text-align: left;
-}
-.speech_row .row{
-	border: solid 1px #fff;
-	padding: 5px 0px;
-}
+    <form id="activityForm" name="activityForm" method="post" hidden>
+        {% csrf_token %}
+        <label>Inicio</label>
+        {{ form.start_time }}
+        <label>Fin</label>
+        {{ form.end_time }}
+        <label>Speech</label>
+        {{ form.speech }}
+        <label>Room</label>
+        {{ form.room }}
+        <label>Is_peech</label>
+        {{ form.is_speech }}
+        <label>Text</label>
+        {{ form.text }}
+        <label>Color</label>
+        {{ form.color }}
+        <input name="form_id" value="activityForm">
+        <input type="submit" name="action" value={% trans 'Submit' %}>
+    </form>
 
-.text_row  {
-	padding: 10px 0px;
-	color: #fff;
-	font-weight: bold;
-}
-</style>
+    <div class="row">
+        <div class="col-sm-5" id="filterPanel">
+            <h4> {% trans 'Speeches' %} </h4>
+            <hr>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row flex">
+                        <div class="col-md-6 inline-flex">
+                            <div class="col-2">
+                                <span class="input-group-btn">
+                                    <a style="height: 40px;" data-toggle="modal"
+                                       data-target="#topic-modal" class="btn btn-info add-button">
+                                        <i class="fas fa-plus" style="margin-top: 15px"></i>
+                                    </a>
+                                </span>
+                            </div>
+                            <div class="col-10">
+                                <form id="filter" method="post">
+                                    {% csrf_token %}
+                                    <select class="btn sidebar-select btn-primary" style="height: 40px" name="topic"
+                                            id="topic">
+                                        <option selected value="None">{% trans 'Topic' %}</option>
+                                        {% for topic in topics %}
+                                            <option value={{ topic.id }}>{{ topic }}</option>
+                                        {% endfor %}
+                                    </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 inline-flex">
+                            <div class="col-2">
+                                <span class="input-group-btn">
+                                    <a style="height: 40px" data-toggle="modal" data-target="#type-modal"
+                                       class="btn btn-info add-button">
+                                        <i style="margin-top: 15px" class="fas fa-plus"></i></a>
+                                </span>
+                            </div>
+                            <div class="col-9">
+                                <select class="btn sidebar-select btn-primary" style="height: 40px" name="type"
+                                        id="type">
+                                    <option selected value="None">{% trans 'Type' %}</option>
+                                    {% for type in types %}
+                                        <option time={{ type.time }} value={{ type.id }}>{{ type }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-1">
+                                <a style="height: 40px" onclick="send_filter(0,0)" id="search"
+                                   class="btn btn-info add-button">
+                                    <i style="margin-top: 15px" class="fas fa-search"></i>
+                                </a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="jumbotron">
+                        <ul id="speeches" class="connectedSortable droppable" hora="7:00:00">
+                            {% for speech in speeches %}
 
-<h2> Temáticas </h2>
 
-<div class="row">
- <div class="col-md-1"></div>
-{% for tipo in tipos %}
- <div class="col-md-2" style="color: {{tipo.color}}"> {{tipo.name }} </div>
-{% endfor %}
-</div>
-
-<hr>
-
-<ul class="nav nav-tabs">
-    {% for d in dayList %}
-        <li role="presentation" class="{% if dia ==  forloop.counter  %} active {% endif %}">
-        <a href="{% url 'list_charlas' %}?dia={{ forloop.counter }}">{{ d }}</a></li>
-    {% endfor %}
+                                <li id="li_{{ speech.pk }}" class="ui-state-default activity"
+                                    style="background-color: {{ speech.topic.color }};"
+                                    activity_pk="{{ speech.pk }}" color="{{ speech.topic.color }}"
+                                    time="{{ speech.speech_type.time }}" is_speech="true" desc="none">
+                                    <div class="row">
+                                        <div class="col-sm-8">
+                                            {{ speech }}
+                                        </div>
+                                        <div class="col-sm-4 container_type_time_{{ speech.pk }}">
+                                            <select selected="{{ speech.speech_type.id }}" style="width: 100%"
+                                                    class="btn btn-primary selectType" id="type_time"
+                                                    onchange="update_times({{ speech.pk }},this, {{ speech.speech_type.time }}, 0)">
 
 
-</ul>
-<br ><br>
+                                                {% for type in types %}
+                                                    {% if  type.id == speech.speech_type.id %}
+                                                        <option selected
+                                                                value="{{ type.time }}-{{ type.id }}">{{ type }}</option>
 
+                                                    {% else %}
+                                                        <option value="{{ type.time }}-{{ type.id }}">{{ type }}</option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <br>
+                    <div class="inline-flex">
+                        <h4> {% trans 'Special Activities' %}</h4>
+                        <div class="add-activity">
+                            <a data-toggle="modal" data-target="#special-modal"
+                               class="btn btn-success add-button pl-2"><i class="fas fa-plus"></i></a>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="jumbotron">
+                        <ul id="specials" class="connectedSortable droppable" hora="7:00:00">
+                            {% for special in specialActivity %}
+                                <li class="ui-state-default activity" style="background-color: #cccccc;" color="#cccccc"
+                                    time="{{ special.type.time }}" is_speech=""
+                                    desc="{{ special.message }}"
+                                    activity_pk="{{ special.pk }}">
+                                    {{ special }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
 
-<div class="row theader">
-  <div class="col-md-2">Horario</div>
-  <div class="col-md-5">Título</div>
-  <div class="col-md-2">Expositor/a responsable</div>
-  <div class="col-md-1">Salón</div>
-  <div class="col-md-2">Registro</div>
-</div>
+                    <div id="topic-modal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title"> {% trans 'New Speech Topic' %} </h4>
+                                </div>
+                                <div class="modal-body" style="text-align: center">
+                                    <form action="proposal/createTopic/" method="post">
+                                        {% csrf_token %}
+                                        <div class="jumbotron" style="display: inline-grid">
+                                            {{ topicForm }}
+                                            <hr>
+                                            <input class="btn btn-info" type="submit" value="{% trans 'Save' %}">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-	{% for obj in object_list %}
-		
-		<div id="block_{{obj.pk}}" class="row {% if obj.is_speech %}speech_row{% else %} text_row {%endif%}" style="background-color:{{obj.color}}">
+                    <div id="type-modal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title"> {% trans 'New Speech Type' %}</h4>
+                                </div>
+                                <div class="modal-body" style="text-align: center">
+                                    <form action="proposal/createType/" method="post">
+                                        {% csrf_token %}
+                                        <div class="jumbotron" style="display: inline-grid">
+                                            {{ typeForm }}
+                                            <hr>
+                                            <input class="btn btn-info" type="submit" value="{% trans 'Save' %}">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="special-modal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">{% trans 'New Special Activity' %}</h4>
+                                </div>
+                                <div class="modal-body" style="text-align: center">
+                                    <form action="proposal/createSpecial/" method="post">
+                                        {% csrf_token %}
+                                        <div class="jumbotron" style="display: inline-grid;">
+                                            {{ specialForm }}
+                                            <hr>
+                                            <input class="btn btn-info" type="submit" value="{% trans 'Save' %}">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-7">
+            <div class="container">
+                <ul class="days nav nav-tabs">
+                    {% for d in dayList %}
+                        <li role="presentation" class="{% if dia ==  forloop.counter %} active {% endif %}">
+                        {% if view == 'edit' %}
+                            <a class="linkDay" href="{% url 'edit_charlas' %}?dia={{ forloop.counter }}">{{ d }}</a>
+                        {% else %}
+                            <a class="linkDay" href="{% url 'list_charlas' %}?dia={{ forloop.counter }}">{{ d }}</a>
+                        {% endif %}
 
-		{% if obj.is_speech %}
-		  {% for speech in obj.get_speech %}
-		  <div class="row">
-		  <div class="col-md-2">{{ speech.start_time | date:"P" }} a {{ speech.end_time | date:"P" }}
-		  		  	<p style="color:{{ speech.speech.topic.color}}">
-				{{ speech.speech.speech_type.name }}
-				</p>
-				{{speech.registros}}
-				
-		  </div>
-		  <div class="col-md-5">
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="roomContainer">
+                    <ul class="nav nav-tabs flex-column">
+                        {% for room in rooms_list %}
+                            <li role="presentation" class="{% if sala == forloop.counter %} active {% endif %}">
+                            {% if view == 'edit' %}
+                                <a class="linkRoom"href="{% url 'edit_charlas' %}?dia={{ dia }}&sala={{ forloop.counter }}">{{ room }}</a>
+                            {% else %}
+                                <a class="linkRoom"href="{% url 'list_charlas' %}?dia={{ dia }}&sala={{ forloop.counter }}">{{ room }}</a>
+                            {% endif %}
+                            </li>
+                        {% endfor %}
+                        <li role="presentation" class="">
+                            <a id="addroom" href="#" data-toggle="modal" data-target="#room_modal">{% trans 'Add' %}</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="scheduleContainer">
+                    <button class="btn btn-success" id="send_activities" name="send_activities"
+                            onclick="send_activities_list()">{% trans 'Submit' %}</button>
+                    <table class="table">
+                        <thead class="thead">
+                        <tr>
+                            <th>Horario</th>
+                            <th>Actividad</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="horaCalendario">7:00</td>
+                            <td class="droppable" hora="7:00:00" id="td-7" lasthour="7:00:00">
+                                <ul id="hour-7" hora="7:00:00" class="connectedSortable"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="horaCalendario">8:00</td>
+                            <td class="droppable" hora="8:00:00" id="td-8" lasthour="8:00:00">
+                                <ul id="hour-8" hora="8:00:00" class="connectedSortable"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="horaCalendario">9:00</td>
+                            <td class="droppable" hora="9:00:00" id="td-9" lasthour="9:00:00">
+                                <ul id="hour-9" hora="9:00:00" class="connectedSortable"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="horaCalendario">10:00</td>
+                            <td class="droppable" hora="10:00:00" id="td-10" lasthour="10:00:00">
+                                <ul id="hour-10" hora="10:00:00" class="connectedSortable"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="horaCalendario">11:00</td>
+                            <td class="droppable" hora="11:00:00" id="td-11" lasthour="11:00:00">
+                                <ul id="hour-11" hora="11:00:00" class="connectedSortable"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="horaCalendario">12:00</td>
+                            <td class="droppable" hora="12:00:00" id="td-12" lasthour="12:00:00">
+                                <ul id="hour-12" hora="12:00:00" class="connectedSortable"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="horaCalendario">13:00</td>
+                            <td class="droppable" hora="13:00:00" id="td-13" lasthour="13:00:00">
+                                <ul id="hour-13" hora="13:00:00" class="connectedSortable"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="horaCalendario">14:00</td>
+                            <td class="droppable" hora="14:00:00" id="td-14" lasthour="14:00:00">
+                                <ul id="hour-14" hora="14:00:00" class="connectedSortable"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="horaCalendario">15:00</td>
+                            <td class="droppable" hora="15:00:00" id="td-15" lasthour="15:00:00">
+                                <ul id="hour-15" hora="15:00:00" class="connectedSortable"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="horaCalendario">16:00</td>
+                            <td class="droppable" hora="16:00:00" id="td-16" lasthour="16:00:00">
+                                <ul id="hour-16" hora="15:00:00" class="connectedSortable"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="horaCalendario">17:00</td>
+                            <td class="droppable" hora="17:00:00" id="td-17" lasthour="17:00:00">
+                                <ul id="hour-17" hora="17:00:00" class="connectedSortable"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="horaCalendario">18:00</td>
+                            <td class="droppable" hora="18:00:00" id="td-18" lasthour="18:00:00">
+                                <ul id="hour-18" hora="18:00:00" class="connectedSortable"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="horaCalendario">19:00</td>
+                            <td class="droppable" hora="19:00:00" id="td-19" lasthour="19:00:00">
+                                <ul id="hour-19" hora="19:00:00" class="connectedSortable"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="horaCalendario">20:00</td>
+                            <td class="droppable" hora="20:00:00" id="td-20" lasthour="20:00:00">
+                                <ul id="hour-20" hora="20:00:00" class="connectedSortable"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="horaCalendario">21:00</td>
+                            <td class="droppable" hora="21:00:00" id="td-21" lasthour="21:00:00">
+                                <ul id="hour-21" hora="21:00:00" class="connectedSortable"></ul>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="container">
+        <div class="scheduleContainer">
+            {% for obj in object_list %}
+                {% if obj.is_speech and obj.room.name == room_name %}
+                    {% for speech in obj.get_speech %}
+                        {% if speech.room.name == room_name %}
+                            <div class="speech_actvity"
+                                 start_datetime="{{ speech.start_time | date:"Y-n-j G:i:s" }}"
+                                 end_datetime="{{ speech.end_time | date:"Y-n-j G:i:s" }}"
+                                 start_time="{{ speech.start_time | date:"G:i" }}"
+                                 start_hour="{{ speech.start_time | date:"G" }}"
+                                 end_time="{{ speech.end_time | date:"G:i" }}"
+                                 color="{{ speech.speech.topic.color }}"
+                                 name="{{ speech.speech.title }}"
+                                 activity_pk="{{ speech.speech.pk }}"
+                                 title="{{ speech.speech.title }}"
+                                 room_name="{{ speech.room.name }}"
+                                 room_pk="{{ speech.room.pk }}"
+                                 obj_pk="{{ obj.pk }}"
+                                 speech_pk="{{ speech.speech.pk }}"
+                                 room_id="{{ room_id }}"
+                                 is_speech="true"
+                                 speech_type="{{ speech.speech.speech_type.pk }}"
+                                 desc="none"
+                                 time={{ speech.speech.speech_type.time }}
 
-			<a href="{% url 'detail_charla' speech.speech.pk %}" target="_blank"> {{ speech.speech.title }} </a>
-		  </div>
-		  <div class="col-md-2">{{ speech.speech.user.get_full_name }}</div>
-		  <div class="col-md-1">{{ speech.room.name }}</div>
-		  <div class="col-md-2">  {% get_registro speech as nreg%}  <a href="{{nreg.url}}"> {{nreg.message}} </a> </div>
-		  </div>
-			{% endfor %}
-			
-		{% else %}
-		
-		<div class="col-md-2 text-center"> {{ obj.start_time | date:"P" }} a {{ obj.end_time | date:"P" }} </div>
-		<div class="col-md-10 text-center"> {{obj.text}}</div>
-		
-		{% endif %}
-		</div>	
-	{% endfor %}
+                            >
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    {% if obj.room.name == room_name %}
+                        {% for speech_schedule in obj.get_speech %}
+                            <div class="special_actvity"
+                                 start_datetime="{{ obj.start_time | date:"Y-n-j G:i:s" }}"
+                                 end_datetime="{{ obj.end_time | date:"Y-n-j G:i:s" }}"
+                                 start_time="{{ obj.start_time | date:"G:i" }}"
+                                 start_hour="{{ obj.start_time | date:"G" }}"
+                                 end_time="{{ obj.end_time | date:"G:i" }}"
+                                 color="{{ '#858585' }}"
+                                 time="{{ speech_schedule.special.type.time }}"
+                                 desc="{{ obj.text }}"
+                                 room_pk="{{ speech_schedule.room.pk }}"
+                                 obj_pk="{{ obj.pk }}"
+                                 activity_pk="{{ speech_schedule.special.pk }}"
+                                 room_id="{{ room_id }}"
+                                 is_speech=""
+                            >
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
 
-<br><br>
+    <br><br>
+
+    <p id="actualDay" hidden>{{ diaActual.year }}-{{ diaActual.month }}-{{ diaActual.day }}</p>
+    <p id="actualRoom" hidden>{{ room_id }}</p>
+    <br><br>
+
+    <div class="modal fade" role="dialog" id="room_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h2 class="modal-title text-center">{% trans 'Create Room' %}</h2>
+                </div>
+                <div class="modal-body">
+                    <form name="roomForm" action="proposal/createRoom/" method="post">
+                        {% csrf_token %}
+                        {{ room_form|bootstrap }}
+                        <input name="form_id" value="roomForm" hidden>
+                        <br>
+                        <div class="form-group text-center">
+                            <input type="submit" name="action" class="btn btn-primary" value="{% trans 'Save Room' %}">
+                            <button type="button" class="btn btn-secondary"
+                                    data-dismiss="modal">{% trans 'Close' %}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form id="delete_activity" method="post" style="margin-left: 10%">
+        {% csrf_token %}
+        <input name="form_id" value="delete" hidden>
+        <input name='block' id="obj_pk" value="{{ obj.pk }}" hidden>
+        <input name='room' id="room_pk" value="{{ room_id }}" hidden>
+    </form>
+'{{ view }}'
+{% endblock %}
+
+{% block js %}
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        activities_dicHTML = '{{ activities_dic|safe }}';
+        stored_activities_dicHTML = '{{ stored_activities_dic|safe }}';
+
+        var types = {{ types_serializer|safe }};
+        var transNoResult= '{% trans 'No results matched' %}';
+        var transNoTime= '{% trans 'No time available in the requested position' %}';
+        var tokenHTML = '{{csrf_token}}';
+        var room_name = '{{ room_name }}';
+        var room_id = '{{ room_id }}';
+        var url_maskHTML = '{% url 'detail_charla' pk=0 %}';
+        var editOrDisplay = '{{ view }}';
+    </script>
+    <script src="{% static 'js/Blockschedule_list.js' %}"></script>
 {% endblock %}

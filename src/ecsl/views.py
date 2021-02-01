@@ -13,8 +13,10 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from paypal.standard.forms import PayPalPaymentsForm
 from django.views.decorators.csrf import csrf_exempt
+from datetime import date
 from captcha.fields import CaptchaField
 from django.core.mail import EmailMessage, send_mail
+from django.core.mail import send_mail
 from django.db.models import Count, Q
 
 
@@ -48,10 +50,12 @@ class Index(TemplateView):
                     proposal = False
             except Exception as e:
                 pass
-            beca = Becas.objects.filter(user=self.request.user).first()
+            beca = Becas.objects.filter(user=self.request.user, event=current_event).first()
             if beca:
+                context['becas_period'] = True
                 context['beca'] = reverse_lazy('becas-detail')
             else:
+                context['becas_period'] = current_event.is_beca_active
                 context['beca'] = reverse_lazy('becas-create')
             if proposal:
                 context['speech_url'] = proposal
@@ -371,6 +375,7 @@ def checkout(request):
     return render(request, 'ecsl/checkout.html', locals())
 
 
+@method_decorator(login_required, name='dispatch')
 class BecasCreate(CreateView):
     model = Becas
     fields = [
@@ -396,14 +401,19 @@ class BecasCreate(CreateView):
                 self.request, _("Sorry, first you have to update your data and then proceed with the registration"))
             return redirect(reverse_lazy('index'))
 
-        beca = Becas.objects.filter(user=request.user).first()
+        event = EventECSL.objects.filter(current=True).first()
+        beca = Becas.objects.filter(user=request.user, event=event).first()
         if beca:
             return redirect("becas-detail", pk=beca.pk)
 
-        event = EventECSL.objects.filter(current=True).first()
         if not event.is_beca_active:
-            messages.success(
-                request, _("Sorry, but the scholarship application period is not available at the time. "
+            if not event.beca_start or not event.beca_end:
+                messages.success(
+                    request, _("Sorry, but the scholarship application period has not been established yet. "
+                               "We will let you know via email when this occurs."))
+            else:
+                messages.success(
+                    request, _("Sorry, but the scholarship application period is not available at the time. "
                            "Application period: %(start)s - %(end)s") % {
                              'start': event.beca_start.strftime("%b %-d, %Y")
                              , 'end': event.beca_end.strftime("%b %-d, %Y")})
@@ -417,6 +427,7 @@ class BecasCreate(CreateView):
         return reverse_lazy('index')
 
 
+@method_decorator(login_required, name='dispatch')
 class BecasDetail(DetailView):
     model = Becas
     fields = [
@@ -424,7 +435,8 @@ class BecasDetail(DetailView):
     ]
 
     def dispatch(self, request, *args, **kwargs):
-        beca = Becas.objects.filter(pk=kwargs['pk']).first()
+        event = EventECSL.objects.filter(current=True).first()
+        beca = Becas.objects.filter(pk=kwargs['pk'], event=event).first()
         if not beca or beca.user.id != request.user.id:
             messages.success(
                 request, _("Sorry, but the scholarship application you are looking for does not exist"))

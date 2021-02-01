@@ -4,6 +4,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from datetime import date
 
+from ecsl.managers import CurrentEventManager
+
 
 class PaymentOption(models.Model):
     name = models.CharField(max_length=255, verbose_name=_('Nombre'))
@@ -11,6 +13,8 @@ class PaymentOption(models.Model):
         max_length=30, verbose_name=_('Identificación'), null=True)
     tipo = models.CharField(max_length=255, verbose_name=_('Opción de envío'))
     email = models.EmailField()
+    event = models.ForeignKey('EventECSL', on_delete=models.CASCADE, null=True, blank=False, verbose_name=_("Event"))
+    objects = CurrentEventManager()
 
     def __str__(self):
         return "%s -- %s (%s)" % (self.tipo, self.name, self.identification)
@@ -126,6 +130,7 @@ class Inscription(models.Model):
         null=True, blank=True, help_text="Si viaja en avión agregue el número de vuelo.")
     aparecer_en_participantes = models.BooleanField(default=True)
     event = models.ForeignKey('EventECSL', on_delete=models.CASCADE, null=True, verbose_name=_("Event"))
+    objects = CurrentEventManager()
 
     @property
     def name(self):
@@ -143,6 +148,8 @@ class Package(models.Model):
     name = models.CharField(max_length=40, default='',verbose_name=_("nombre"))
     description = models.CharField(max_length=100, default='', verbose_name=_("descripción"))
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name=_('precio'))
+    event = models.ForeignKey('EventECSL', on_delete=models.CASCADE, null=True, blank=False, verbose_name=_("Event"))
+    objects = CurrentEventManager()
 
     def __str__(self):
         return self.name
@@ -164,7 +171,7 @@ class Payment(models.Model):
     confirmado = models.BooleanField(default=False)
     event = models.ForeignKey('EventECSL', on_delete=models.CASCADE, null=True, verbose_name=_("Event"))
     package = models.ForeignKey(Package, on_delete=models.CASCADE, null=True, verbose_name=_("Paquete"))
-
+    objects = CurrentEventManager()
 
     @property
     def name(self):
@@ -203,8 +210,8 @@ class Becas(models.Model):
 
     )
 
-    user = models.OneToOneField(
-        User, on_delete=models.CASCADE, verbose_name=_('Usuario'))
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, verbose_name=_('User'), null=True)
     razon = models.TextField(
         verbose_name="Dinos porqué deberíamos darte la beca")
     aportes_a_la_comunidad = models.TextField(
@@ -214,11 +221,11 @@ class Becas(models.Model):
     observaciones = models.TextField(
         verbose_name="¿Alguna observación adicional?")
     estado = models.SmallIntegerField(choices=ESTADOS, default=0)
-    event = models.ForeignKey('EventECSL', on_delete=models.CASCADE, null=True, verbose_name=_("Event"))
-
+    event = models.ForeignKey('EventECSL', on_delete=models.CASCADE, null=True, blank=False, verbose_name=_("Event"))
+    objects = CurrentEventManager()
 
     def __str__(self):
-        return self.user.get_full_name()
+        return self.user.get_full_name() + " | " + str(self.event)
 
     class Meta:
         verbose_name = "Beca"
@@ -243,13 +250,17 @@ class EventECSL(models.Model):
     start_date_proposal = models.DateField(verbose_name=_("Start Date Proposal"), blank=True, null=True)
     end_date_proposal = models.DateField(verbose_name=_("End Date Proposal"), blank=True, null=True)
     email_event = models.CharField(max_length=50, null=True, verbose_name=_('Email Event'))
-    beca_start = models.DateField(verbose_name=_("Scholarship application start period"), null=True)
-    beca_end = models.DateField(verbose_name=_("Scholarship application end period"), null=True)
+    beca_start = models.DateField(verbose_name=_("Scholarship application start period"), null=True, blank=True)
+    beca_end = models.DateField(verbose_name=_("Scholarship application end period"), null=True, blank=True)
     max_inscription = models.IntegerField(default=250, null=True, verbose_name=_("Maximum Inscriptions"))
 
     @property
     def is_beca_active(self):
-        return self.beca_start <= date.today() <= self.beca_end and self.current
+        return (self.beca_start and self.beca_end) and self.beca_start <= date.today() <= self.beca_end and self.current
+
+    @property
+    def check_becas_start_date(self):
+        return self.beca_start and self.beca_start == timezone.localtime().date()
 
     @property
     def checking_period(self):

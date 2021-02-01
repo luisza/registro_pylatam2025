@@ -14,16 +14,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib.auth.decorators import permission_required
 
 from ecsl import views
 from proposal.views import get_participants
 from django.conf.urls.static import static
 from django.conf import settings
 from ecsl.charlas import Charlas, CharlaDetail, register_user_to_speech,\
-    desregistrar_charla, MyAgenda
+    desregistrar_charla, MyAgenda, EditCharlas
 from ecsl.webservice import get_calendar_json
 from ajax_select import urls as ajax_select_urls
 from django.urls import include, path, re_path
+
+
 
 urlpatterns = [
     re_path(r'^ajax_select/', include(ajax_select_urls)),
@@ -45,7 +48,8 @@ urlpatterns = [
     re_path(r'^registro/update/(?P<pk>\d+)$',  views.PaymentUpdate.as_view(),
         name='edit_payment'),
     re_path(r'^proposal/', include('proposal.urls')),
-    re_path(r'^agenda$', Charlas.as_view(), name="list_charlas"),
+    re_path(r'^agenda$', (Charlas.as_view()), name="list_charlas"),
+    re_path(r'^edit-agenda$', (EditCharlas.as_view()), name="edit_charlas"),
     re_path(r'^miagenda$', MyAgenda.as_view(), name="mi_agenda"),
     re_path(r'participantes.js$', get_participants, name="participantes"),
 

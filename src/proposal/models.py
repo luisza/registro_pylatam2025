@@ -1,13 +1,16 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+
+from ecsl.managers import CurrentEventManager
 from ecsl.models import EventECSL
-# Create your models here.
 
 
 class Topic(models.Model):
     name = models.CharField(max_length=150, verbose_name=_("Name"))
     color = models.CharField(max_length=10, default="#fff")
+    event = models.ForeignKey(EventECSL, on_delete=models.CASCADE, null=True, blank=False, verbose_name=_("Event"))
+    objects = CurrentEventManager()
 
     def __str__(self):
         return self.name
@@ -19,9 +22,13 @@ class Topic(models.Model):
 
 class SpeechType(models.Model):
     name = models.CharField(max_length=150, verbose_name=_("Name"))
+    time = models.IntegerField(default=10, verbose_name=_("Duration (in minutes)"))
+    event = models.ForeignKey(EventECSL, null=True, default=None, on_delete=models.CASCADE, verbose_name=_("Event"))
+    is_special = models.BooleanField(default=False, verbose_name=_('Is Special Activity'))
+    objects = CurrentEventManager()
 
     def __str__(self):
-        return self.name
+        return _("%s (%d minutes)") % (self.name, self.time)
 
     class Meta:
         verbose_name = "Tipo de actividad"
@@ -29,7 +36,6 @@ class SpeechType(models.Model):
 
 
 class Speech(models.Model):
-
     class SKILL_LEVEL:
         EVERYONE = 1
         NOVICE = 2
@@ -61,7 +67,10 @@ class Speech(models.Model):
     presentacion = models.FileField(upload_to='presentaciones/',
                                     verbose_name=_("Presentation"),
                                     null=True, blank=True)
-    event = models.ForeignKey(EventECSL, default="", on_delete=models.CASCADE, verbose_name=_("Event"))
+    event = models.ForeignKey(EventECSL, null=True, blank=False, on_delete=models.CASCADE, verbose_name=_("Event"))
+    is_scheduled = models.BooleanField(default=False, verbose_name=_('is Scheduled'))
+
+    objects = CurrentEventManager()
 
     @property
     def speaker_name(self):
@@ -91,8 +100,10 @@ class Speech(models.Model):
 
 class Room(models.Model):
     name = models.CharField(max_length=100, verbose_name=_('Nombre'))
-    spaces = models.SmallIntegerField(default=30)
-    map = models.ImageField(upload_to="mapa", null=True, blank=True)
+    spaces = models.SmallIntegerField(default=30, verbose_name=_('Spaces'))
+    map = models.ImageField(upload_to="mapa", null=True, blank=True, verbose_name=_('Map'))
+    event = models.ForeignKey(EventECSL, on_delete=models.CASCADE, verbose_name=_("Event"), null=True, default=None)
+    objects = CurrentEventManager()
 
     def __str__(self):
         return self.name
@@ -117,24 +128,22 @@ class Register_Speech(models.Model):
 class SpeechSchedule(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
-    speech = models.ForeignKey(Speech, on_delete=models.CASCADE)
-    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    speech = models.ForeignKey(Speech, on_delete=models.CASCADE, null=True, blank=True)
+    special = models.ForeignKey('SpecialActivity', on_delete=models.CASCADE, null=True, blank=True)
+    room = models.ForeignKey('Room', on_delete=models.CASCADE, null=True, default=None)
 
     def __str__(self):
-        return "(%s %s) %s en %s" % (self.start_time.strftime("%Y-%m-%d %H:%M"),
+        return "(%s %s) %s" % (self.start_time.strftime("%Y-%m-%d %H:%M"),
                                      self.end_time.strftime("%Y-%m-%d %H:%M"),
-                                     self.speech.title, self.room.name)
+                                     self.room.name)
 
     @property
     def title(self):
-        return self.speech
+        return self.room.name + " "+str(self.start_time)+" "+str(self.end_time)
 
     def registros(self):
         regs = Register_Speech.objects.filter(speech=self).count()
         total = self.room.spaces - regs
-
-        if self.speech.pk == 14:
-            return ""
 
         dev = "Lleno"
         if total > 0:
@@ -147,21 +156,38 @@ class SpeechSchedule(models.Model):
         verbose_name_plural = "Horarios de actividades"
 
 
+class SpecialActivity(models.Model):
+    name = models.CharField(max_length=100, verbose_name=_('Name'))
+    type = models.ForeignKey(SpeechType, null=True, on_delete=models.CASCADE, verbose_name=_("Type"))
+    message = models.TextField(null=True, blank=True, verbose_name=_("Message"))
+    room = models.ForeignKey('Room', null=True, default=None, blank=True, on_delete=models.CASCADE, verbose_name=_("Room"))
+    event = models.ForeignKey(EventECSL, default="", on_delete=models.CASCADE, verbose_name=_("Event"))
+    is_scheduled = models.BooleanField(default=False, verbose_name=_('is Scheduled'))
+    objects = CurrentEventManager()
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Actividad Especial"
+        verbose_name_plural = "Actividades Especiales"
+
+
 class BlockSchedule(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     is_speech = models.BooleanField()
     text = models.TextField(null=True, blank=True)
     color = models.CharField(max_length=10)
+    room = models.ForeignKey('Room', null=True, default=None, on_delete=models.CASCADE, verbose_name=_("Room"))
 
     def __str__(self):
         return "%s %s" % (self.start_time.strftime("%Y-%m-%d %H:%M"),
-                          self.end_time.strftime("%Y-%m-%d %H:%M"), )
+                          self.end_time.strftime("%Y-%m-%d %H:%M"),)
 
     def get_speech(self, user=None):
         query = SpeechSchedule.objects.filter(
-            start_time__gte=self.start_time,
-            start_time__lte=self.end_time,
+            start_time=self.start_time,
         )
         if user:
             query = query.filter(register_speech__user=user)

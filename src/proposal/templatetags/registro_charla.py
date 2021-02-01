@@ -41,11 +41,12 @@ def get_registro(context, schedule):
 
     if registro:
         dev['url'] = reverse('desregistrar_charla', kwargs={
-                             'pk': registro.pk}) + "?dia=%d" % (dia,)
+                             'pk': registro.pk}) + "?dia=%d&fecha=%s" % (dia,schedule.start_time)
         dev['message'] = "Desregistrarme"
     else:
+        print(schedule.start_time)
         dev['url'] = reverse('registra_charla', kwargs={
-                             'pk': schedule.speech.pk}) + "?dia=%d" % (dia,)
+                             'pk': schedule.speech.pk}) + "?dia=%d&year=%d&month=%d&day=%d&hour=%d&minute=%d&second=%d" % (dia,schedule.start_time.year,schedule.start_time.month, schedule.start_time.day,schedule.start_time.hour-6,schedule.start_time.minute,schedule.start_time.second)
         dev['message'] = "Registrarme"
     return dev
 

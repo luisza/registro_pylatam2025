@@ -1,0 +1,157 @@
+.theader {
+    text-decoration: blond;
+    background-color: #98978b;
+    padding: 10px 2px;
+    text-align: center;
+    color: #fff;
+    margin-bottom: 5px;
+}
+
+.speech_row {
+
+    padding: 10px 5px;
+    text-align: left;
+}
+
+.speech_row .row {
+    border: solid 1px #fff;
+    padding: 5px 0px;
+}
+
+.text_row {
+    padding: 10px 0px;
+    color: #fff;
+    font-weight: bold;
+}
+
+.days {
+    padding-left: 10%;
+}
+
+.roomContainer {
+    display: inline-block;
+    width: 10%;
+    height: fit-content;
+}
+
+.scheduleContainer {
+    float: right;
+    width: 89%;
+    padding: 1%;
+}
+
+.container {
+    margin-left: 2%;
+}
+
+.inline-flex {
+    display: inline-flex;
+    vertical-align: middle;
+    margin-top: 1%;
+}
+
+hr {
+    margin: 4% 0;
+}
+
+.sidebar-select {
+    width: 95%;
+    text-overflow: ellipsis;
+    height: 3rem;
+    padding-right: 15%;
+    font-size: 12px;
+}
+
+.add-button {
+    vertical-align: middle;
+    align-items: center;
+    height: 3rem;
+    width: 3rem;
+    padding: 0;
+    line-height: 3rem;
+}
+
+.add-activity {
+    align-self: center;
+    margin-left: 4rem;
+}
+
+.jumbotron {
+    padding: 5%;
+    margin: 0;
+}
+
+.activity {
+    border: none;
+    border-radius: 1rem;
+    padding: 1rem;
+    margin-top: 1rem;
+    width: 90%;
+    cursor: pointer;
+    text-align: center;
+    list-style: none;
+}
+td ul {
+    margin: 0;
+}
+
+
+.delete_btn {
+    margin-left: 2%;
+}
+
+@media screen and (min-width: 768px) {
+    .container .jumbotron, .container-fluid .jumbotron {
+        padding: 5%;
+        margin: 0;
+    }
+}
+
+.ui-state-highlight {
+    height: 40px;
+    border: none;
+    border-radius: 1rem;
+    padding: 1rem;
+    margin-top: 1rem;
+    width: 90%;
+    background-color: cornflowerblue;
+    list-style: none;
+}
+
+.horaCalendario{
+    width: 40px;
+}
+
+td{
+    text-align: center;
+}
+
+th{
+    text-align: center;
+}
+
+ /* The alert message box */
+.alert {
+  padding: 20px;
+  background-color: #f44336; /* Red */
+  color: white;
+  margin-bottom: 15px;
+}
+
+/* The close button */
+.closebtn {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* When moving the mouse over the close button */
+.closebtn:hover {
+  color: black;
+}
+
