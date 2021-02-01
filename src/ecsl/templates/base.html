@@ -25,7 +25,7 @@
     {# NAV #}
     <nav class="navbar navbar-dark bg-inverse">
         <a class="navbar-brand" href="{% url 'index' %}"><strong>ECSL</strong></a>
-        <ul class="nav navbar-nav">
+        <ul class="nav navbar-nav" style="padding: 0;">
 
             {% if request.user.is_authenticated %}
                 <li><a href="{% url 'profile' %}">Mis datos</a></li>
@@ -41,7 +41,7 @@
             <li><a href="{% url 'contact-us' %}"> Contáctenos </a></li>
 
         </ul>
-        <ul class="nav navbar-nav navbar-right">
+        <ul class="nav navbar-nav navbar-right" style="padding: 0;">
             <li role="presentation" class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
                    aria-expanded="false">

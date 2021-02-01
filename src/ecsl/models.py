@@ -103,7 +103,7 @@ class Inscription(models.Model):
                                         help_text="Use ctrl o command en mac para seleccionar más de uno",
                                         verbose_name=_("Encuentros anteriores en los que ha participado"))
     alimentary_restriction = models.TextField(null=True, blank=True,
-                                              verbose_name=_('¿Tiene alguna necesidad específica de alimentación y hospedaje o alguna condición de salud especial?.'))
+                                              verbose_name=_('¿Tiene alguna necesidad específica de alimentación y hospedaje o alguna condición de salud especial?'))
     health_consideration = models.TextField(
         verbose_name=_('Condiciones de Salud'), null=True, blank=True)
     gustos_manias = models.ManyToManyField(Gustos,
@@ -115,7 +115,7 @@ class Inscription(models.Model):
 
     comentario_general = models.TextField(
         null=True, blank=True,
-        verbose_name=_('Si tiene algún comentario y/o si quiere colaborar con la organización del 9° ECSL por favor comente en este espacio.'))
+        verbose_name=_('Si tiene algún comentario y/o si quiere colaborar con la organización del ECSL por favor comente en este espacio.'))
 
     camiseta = models.CharField(max_length=10, choices=CAMISETA)
     hora_de_llegada = models.CharField(
