@@ -114,7 +114,7 @@ function control_validate_update(start_position, o_time, n_time) {
     old_posiciones = add_new_positions(start_position, o_time)
     old_local = old_posiciones.length
     posiciones = add_new_positions(start_position, n_time)
-    if (posiciones.length == 1) {
+    if (posiciones.length == 1 && n_time == 10) {
         return true
     }
     if (posiciones != false) {
@@ -516,6 +516,7 @@ function send_filter(types, topics) {
 
                 result_types = JSON.parse(data.types)
                 for (var i = 0; i < filter_speech.length; i++) {
+                    $(".container_type_time_" + filter_speech[i]['activity_pk']).children().empty()
                     for (var j = 0; j < result_types.length; j++) {
                         if (Object.values(result_types[j])[1] == filter_speech[i]['speech_type']) {
 
@@ -551,6 +552,9 @@ function update_times(speech_pk, speech_time, old_time, in_schedule) {
     if (in_schedule == true) {
         if (control_validate_update(start_position, old_time, type_values[0]) == true) {
             update_time_array_activitiy_rescheduled(speech_pk, start_position, old_time, type_values[0])
+            $(".container_type_time_" + speech_pk)[0].firstElementChild.setAttribute('onchange',
+            'update_times(' + speech_pk + ',' + 'this,' + type_values[0] + ',' + 0 + ')')
+            stored_activities_dic["1-"+speech_pk]['time']=type_values[0];
             $("#li_" + speech_pk).attr('time', type_values[0])
             $("#li_" + speech_pk).attr('type', type_values[1])
             $("#li_" + speech_pk).attr('start_time', $("#actualDay").text() + " " + $("#li_" + speech_pk).parent().attr('hora'))
@@ -563,9 +567,11 @@ function update_times(speech_pk, speech_time, old_time, in_schedule) {
                 }
             }
         } else if (control_validate_update(start_position, old_time, type_values[0]) == false) {
+           PaintActivities();
             alert(transNoTime);
         }
     } else {
+        activities_dic["1-"+speech_pk]['time']=type_values[0];
         $(".container_type_time_" + speech_pk)[0].firstElementChild.setAttribute('onchange',
             'update_times(' + speech_pk + ',' + 'this,' + type_values[0] + ',' + 0 + ')')
         $("#li_" + speech_pk).attr('time', type_values[0])
@@ -580,7 +586,6 @@ function update_times(speech_pk, speech_time, old_time, in_schedule) {
             }
         }
     }
-    PaintActivities();
 }
 
 function refresh_special_poll() {
