@@ -13,7 +13,7 @@ from proposal.models import SpeechSchedule, Topic, Speech, Register_Speech, \
     BlockSchedule, SpeechType, SpecialActivity
 import datetime
 from django.views.generic.detail import DetailView
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.urls.base import reverse
@@ -204,6 +204,10 @@ class Charlas(CharlaContext, ListView):
         context['view'] = 'display'
         return context
 
+
+def edit_agenda(request):
+
+    return render(request, 'proposal/edit_agenda.html')
 
 @method_decorator(login_required, name='dispatch')
 class EditCharlas(PermissionRequiredMixin, CharlaContext, ListView):
