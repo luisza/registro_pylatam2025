@@ -2,6 +2,10 @@ from django.urls import path
 from ecsl.webservice import get_calendar_json
 from ecsl import charlas as speechviews
 from ecsl import views
+from ecsl import payment
+from ecsl import becas
+from ecsl import Profile
+from ecsl import contact
 
 urlpatterns = [
     path('', views.Index.as_view(), name="index"),
@@ -15,22 +19,22 @@ urlpatterns = [
         speechviews.register_user_to_speech, name="registra_charla"),
     path('charla/desregistrar/<int:pk>',
         speechviews.desregistrar_charla, name="desregistrar_charla"),
-    path('accounts/profile/', views.profile_view, name="profile"),
+    path('accounts/profile/', Profile.profile_view, name="profile"),
     path('register/profile/create',
-            views.CreateProfile.as_view(), name='create_profile'),
-    path('register/profile/update/<int:pk>', views.UpdateProfile.as_view(),
+            Profile.CreateProfile.as_view(), name='create_profile'),
+    path('register/profile/update/<int:pk>', Profile.UpdateProfile.as_view(),
             name='edit_profile'),
-    path('registro', views.payment_view, name='payment'),
-    path('registro/create', views.CreateRegister.as_view(), name='create_payment'),
-    path('registro/update/<int:pk>', views.PaymentUpdate.as_view(),
+    path('registro', payment.payment_view, name='payment'),
+    path('registro/create', Profile.CreateRegister.as_view(), name='create_payment'),
+    path('registro/update/<int:pk>', payment.PaymentUpdate.as_view(),
             name='edit_payment'),
 
-    path('process-payment/<str:text>', views.process_payment, name='process_payment'),
-    path('payment-done/', views.payment_done, name='payment_done'),
-    path('payment-cancelled/', views.payment_canceled, name='payment_cancelled'),
+    path('process-payment/<str:text>', payment.process_payment, name='process_payment'),
+    path('payment-done/', payment.payment_done, name='payment_done'),
+    path('payment-cancelled/', payment.payment_canceled, name='payment_cancelled'),
     path('sineventos/', views.noEvents, name='no-events'),
-    path('becas/', views.BecasCreate.as_view(), name="becas-create"),
-    path('becas/detail/<int:pk>', views.BecasDetail.as_view(), name="becas-detail"),
-    path('contact/', views.contactUs, name='contact-us'),
-    path('contact/send/', views.contact, name='contact'),
+    path('becas/', becas.BecasCreate.as_view(), name="becas-create"),
+    path('becas/detail/<int:pk>', becas.BecasDetail.as_view(), name="becas-detail"),
+    path('contact/', contact.contactUs, name='contact-us'),
+    path('contact/send/', contact.contact, name='contact'),
 ]
