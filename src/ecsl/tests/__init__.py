@@ -1,3 +1,10 @@
+from .test_CreateProfile import CreateProfileTest
+from .test_DesregistrarCharlas import DesregistrarCharlaTest
+from .test_MyAgenda import MyAgendaTest
+from .test_PaymentUpdate import PaymentUpdateTest
+from .test_PaymentCancelled import PaymentCancelledTest
+from .test_ProcessPayment import ProcessPaymentTest
+
 from .test_NoEvents import TestNoEvent
 from .test_becas import TestBecas
 from .test_contact import TestContact
