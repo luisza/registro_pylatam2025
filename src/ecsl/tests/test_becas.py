@@ -12,7 +12,6 @@ from django.test import TestCase, Client, RequestFactory, override_settings
 from django.urls import reverse
 from django.contrib.auth.models import User
 from ecsl.models import EventECSL, Inscription, Payment, PaymentOption, Package, Becas
-from ecsl.views import Index, CustomContactFormCaptcha, contact
 
 import tempfile
 
