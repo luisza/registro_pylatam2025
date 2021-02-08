@@ -144,11 +144,17 @@ class CreateTopic(generic.CreateView):
     form_class = TopicForm
     success_url = reverse_lazy('list_charlas')
 
+    def form_invalid(self, form):
+        return redirect(reverse_lazy('list_charlas'))
+
 
 class CreateType(generic.CreateView):
     model = SpeechType
     form_class = TypeForm
     success_url = reverse_lazy('list_charlas')
+
+    def form_invalid(self, form):
+        return redirect(reverse_lazy('list_charlas'))
 
 
 class CreateSpecialActivity(generic.CreateView):
