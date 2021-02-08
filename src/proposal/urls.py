@@ -21,4 +21,5 @@ urlpatterns = [
     path('createRoom/', views.CreateRoom.as_view(), name='create-room'),
     path('filterSpeeches/', views.get_all_speeches, name='filter-speeches'),
     path('createSpecial/', views.CreateSpecialActivity.as_view(), name='create-special'),
+    path('participantes.js', views.get_participants, name="participantes"),
 ]

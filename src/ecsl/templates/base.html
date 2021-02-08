@@ -23,47 +23,7 @@
 <body>
 <div class="{% block container %}container{% endblock %}">
     {# NAV #}
-    <nav class="navbar navbar-dark bg-inverse">
-        <a class="navbar-brand" href="{% url 'index' %}"><strong>ECSL</strong></a>
-        <ul class="nav navbar-nav" style="padding: 0;">
-
-            {% if request.user.is_authenticated %}
-                <li><a href="{% url 'profile' %}">Mis datos</a></li>
-                <li><a href="{% url 'payment' %}">Registro</a></li>
-                <li><a href="{% url 'mi_agenda' %}"> Mi Agenda</a></li>
-                {% if perms.proposal.add_blockschedule %}
-                    <li><a href="{% url 'edit_charlas' %}">{% trans 'Edit Agenda' %}</a></li>
-                {% endif %}
-            {% else %}
-                <li><a href="{% url 'django_registration_register' %}">{% trans 'Register' %} </a></li>
-            {% endif %}
-            <li><a href="{% url 'list_charlas' %}">Agenda</a></li>
-            <li><a href="{% url 'contact-us' %}"> Contáctenos </a></li>
-
-        </ul>
-        <ul class="nav navbar-nav navbar-right" style="padding: 0;">
-            <li role="presentation" class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
-                   aria-expanded="false">
-                    {% trans 'User:' %} {{ request.user.get_full_name }}<span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-                    {% if request.user.is_authenticated %}
-
-                        <li><a href="{% url 'profile' %}"> {% trans 'Profile' %} </a></li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'password_reset' %}">{% trans "Change password" %}</a></li>
-
-                        <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">{% trans "Log out" %}</a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">{% trans "Log in" %}</a></li>
-                    {% endif %}
-                </ul>
-            </li>
-        </ul>
-    </nav>
-
+    {% include 'partial/top_navbar.html' %}
     {# CONTENT #}
 
     {% if messages %}
@@ -85,54 +45,7 @@
     {% endblock %}
 </div>
 {# FOOTER #}
-<footer class="footer">
-    <div class="row">
-        <div class="col-sm-4 contact-container">
-            <div>
-                <ul class="list-inline contact-ul">
-                    <li>
-                        <a>
-                            <i class="fas fa-phone-square contact-container"></i>
-                        </a>
-                            <label>{% phone %}</label>
-                    </li>
-                    <li>
-                        <a>
-                            <i class="fas fa-map-marker-alt"></i>
-                        </a>
-                            <label>{% location %}</label>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="col-sm-4 text_footer">
-            Encuentro Centroamericano de Software Libre
-        </div>
-        <div class="col-sm-4">
-            <div class="footer-container">
-
-                <ul class="list-inline">
-                    <li>
-                        <a>
-                            <i class="fab fa-facebook"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a>
-                            <i class="fa fa-fw fa-twitter"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a>
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    </div>
-</footer>
+{% include 'partial/footer.html' %}
 <div class="jsmessage"></div>
 {# JS #}
 <script src="{% static 'js/jquery-1.10.2.min.js' %}"></script>

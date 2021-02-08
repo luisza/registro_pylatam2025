@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 from __future__ import absolute_import
 import os
 from django.urls.base import reverse_lazy
+import sys
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -232,3 +234,6 @@ LOGGING = {
 LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'ecsl/locale'),
 )
+
+if 'test' in sys.argv:
+    CAPTCHA_TEST_MODE = True

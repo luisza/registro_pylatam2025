@@ -1,0 +1,61 @@
+{% load static %}
+{% load i18n %}
+
+
+<nav class="navbar navbar-dark bg-inverse">
+    <a class="navbar-brand" href="{% url 'index' %}"><strong>ECSL</strong></a>
+    <ul class="nav navbar-nav" style="padding: 0;">
+
+        {% if request.user.is_authenticated and request.user.is_staff %}
+<li class="dropdown">
+  <a class="dropdown-toggle" type="button" id="admindw" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    {% trans 'Admin' %}
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" aria-labelledby="admindw">
+    <li><a href="{% url 'admin:ecsl_eventecsl_changelist' %}" target="_blank">{% trans 'Events' %}</a></li>
+    <li><a href="{% url 'admin:ecsl_becas_changelist' %}" target="_blank">{% trans 'Becas' %}</a></li>
+    {% if perms.proposal.add_blockschedule %}
+      <li><a href="{% url 'edit_charlas' %}">{% trans 'Build Agenda' %}</a></li>
+    {% endif %}
+    <li><a href="{% url 'admin:ecsl_payment_changelist' %}" target="_blank">{% trans 'Payment' %}</a></li>
+    <li><a href="{% url 'admin:proposal_speech_changelist' %}" target="_blank">{% trans 'Speech' %}</a></li>
+    <li role="separator" class="divider"></li>
+    <li><a href="/admin" target="_blank">{% trans 'More options in admin site' %}</a></li>
+  </ul>
+</li>
+        {% endif %}
+        {% if request.user.is_authenticated %}
+            <li><a href="{% url 'profile' %}">Mis datos</a></li>
+            <li><a href="{% url 'payment' %}">Registro</a></li>
+            <li><a href="{% url 'mi_agenda' %}"> Mi Agenda</a></li>
+
+        {% else %}
+            <li><a href="{% url 'django_registration_register' %}">{% trans 'Register' %} </a></li>
+        {% endif %}
+        <li><a href="{% url 'list_charlas' %}">Agenda</a></li>
+        <li><a href="{% url 'contact-us' %}"> Contáctenos </a></li>
+
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+        <li role="presentation" class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+               aria-expanded="false">
+                {% trans 'User:' %} {{ request.user.get_full_name }}<span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                {% if request.user.is_authenticated %}
+
+                    <li><a href="{% url 'profile' %}"> {% trans 'Profile' %} </a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'password_reset' %}">{% trans "Change password" %}</a></li>
+
+                    <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">{% trans "Log out" %}</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">{% trans "Log in" %}</a></li>
+                {% endif %}
+            </ul>
+        </li>
+    </ul>
+</nav>
