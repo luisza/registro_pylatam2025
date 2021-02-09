@@ -1,20 +1,17 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from .forms import SpeechForm, TopicForm, TypeForm, SpecialActivityForm, RoomsCreateForm
+from .forms import SpeechForm
 from django.urls import reverse, reverse_lazy
 from proposal.models import Speech, Room, SpeechSchedule
 from ecsl.models import Payment, Inscription, EventECSL
-import hashlib
-import urllib
 from django.http.response import HttpResponseRedirect
 from django.views import generic
 from django.utils.translation import ugettext_lazy as _
 from django.http import JsonResponse
 from django.core import serializers
+from .models import SpeechType
 
 # Create your views here.
-from .models import Topic, SpeechType, SpecialActivity
-
 
 class SpeechListView(generic.ListView):
     template_name = 'proposal/speech_list.html'
@@ -106,68 +103,6 @@ def get_all_speeches(request):
             types = SpeechType.objects.filter(is_special=False)
             types = serializers.serialize('json', types)
         return JsonResponse(data={'result': result, 'color': colors, 'times': times, 'types': types,})
-
-
-def get_participants(request):
-    dev = []
-    default = "https://ecsl2017.softwarelibre.ca/wp-content/uploads/2017/01/cropped-photo_2017-01-30_20-55-06.jpg".encode(
-        'utf-8')
-    size = 50
-    for payment in Payment.objects.all().order_by('?'):
-        email = payment.user.email.lower().encode('utf-8')
-
-        insc = Inscription.objects.filter(user=payment.user).first()
-        if insc and insc.aparecer_en_participantes:
-            name = payment.user.get_full_name()
-
-            url = "https://www.gravatar.com/avatar/%s?%s" % (hashlib.md5(
-                email).hexdigest(), urllib.parse.urlencode({'d': default, 's': str(size)}))
-
-            dev.append({'url': url, 'name': name})
-
-    return JsonResponse(dev, safe=False)
-
-
-class CreateRoom(generic.CreateView):
-    model = Room
-    form_class = RoomsCreateForm
-    success_url = reverse_lazy('list_charlas')
-
-    def form_valid(self, form):
-        form.instance.event = EventECSL.objects.filter(current=True).first()
-        response = super(CreateRoom, self).form_valid(form)
-        return response
-
-
-class CreateTopic(generic.CreateView):
-    model = Topic
-    form_class = TopicForm
-    success_url = reverse_lazy('list_charlas')
-
-    def form_invalid(self, form):
-        return redirect(reverse_lazy('list_charlas'))
-
-
-class CreateType(generic.CreateView):
-    model = SpeechType
-    form_class = TypeForm
-    success_url = reverse_lazy('list_charlas')
-
-    def form_invalid(self, form):
-        return redirect(reverse_lazy('list_charlas'))
-
-
-class CreateSpecialActivity(generic.CreateView):
-    model = SpecialActivity
-    form_class = SpecialActivityForm
-    success_url = reverse_lazy('list_charlas')
-
-    def form_valid(self, form):
-        event = EventECSL.objects.filter(current=True).first()
-        if event:
-            form.instance.event = event
-            response = super(CreateSpecialActivity, self).form_valid(form)
-        return response
 
 
 def deleteView(request, speech_id):

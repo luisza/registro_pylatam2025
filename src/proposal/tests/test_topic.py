@@ -1,7 +1,5 @@
 import tempfile
-
-from django.contrib.messages import get_messages
-from django.test import TestCase, RequestFactory
+from django.test import RequestFactory
 
 # Create your tests here.
 # Create Type
@@ -11,15 +9,11 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 
 from ecsl.models import EventECSL
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
 from django.test import TestCase, Client
-import datetime
 
 from proposal.models import SpeechType, Topic, Speech
-
-from proposal.forms import SpeechForm
-
-from proposal.views import CreateType, CreateTopic, createUpdateview
+from proposal.topics import CreateTopic
 
 
 class TestTopic(TestCase):
@@ -79,13 +73,15 @@ class TestTopic(TestCase):
                     'color': '#cccccc',
                     'event': self.event.pk
                   }
+        self.user.user_permissions.add(Permission.objects.get(codename='add_topic'))
+        self.user.save()
         request = self.factory.post(reverse('proposal:create-topic'), dataDic)
         request.user = self.user
         view = CreateTopic()
         view.setup(request)
         response = view.dispatch(request)
         self.assertEqual(Topic.objects.last().name, 'Test')
-        self.assertRedirects(response, reverse_lazy('list_charlas'), fetch_redirect_response=False)
+        self.assertRedirects(response, reverse_lazy('edit_charlas'), fetch_redirect_response=False)
 
     # CTo2:
     def test_Create_Topic_not_Logged(self):
@@ -95,12 +91,14 @@ class TestTopic(TestCase):
                    'color': '#cccccc',
                    'event': self.event.pk
                    }
+        self.user.user_permissions.add(Permission.objects.get(codename='add_topic'))
+        self.user.save()
         request = self.factory.post(reverse('proposal:create-topic'), dataDic)
         view = CreateTopic()
         view.setup(request)
         response = view.dispatch(request)
         self.assertEqual(Topic.objects.last().name, 'Test')
-        self.assertRedirects(response, reverse_lazy('list_charlas'), fetch_redirect_response=False)
+        self.assertRedirects(response, reverse_lazy('edit_charlas'), fetch_redirect_response=False)
 
     # CTo3:
     def test_Create_Topic_form_invalid(self):
@@ -112,11 +110,13 @@ class TestTopic(TestCase):
                    }
         request = self.factory.post(reverse('proposal:create-topic'), dataDic)
         request.user = self.user
+        self.user.user_permissions.add(Permission.objects.get(codename='add_topic'))
+        self.user.save()
         view = CreateTopic()
         view.setup(request)
         response = view.dispatch(request)
         self.assertFalse(Topic.objects.last())
-        self.assertRedirects(response, reverse_lazy('list_charlas'), fetch_redirect_response=False)
+        self.assertRedirects(response, reverse_lazy('edit_charlas'), fetch_redirect_response=False)
 
     # CTo1:
     def test_Create_Topic_two_events(self):
@@ -138,9 +138,11 @@ class TestTopic(TestCase):
                    }
         request = self.factory.post(reverse('proposal:create-topic'), dataDic)
         request.user = self.user
+        self.user.user_permissions.add(Permission.objects.get(codename='add_topic'))
+        self.user.save()
         view = CreateTopic()
         view.setup(request)
         response = view.dispatch(request)
         self.assertEqual(Topic.objects.filter(event=self.event.pk).last().name, 'Test')
         self.assertFalse(Topic.objects.filter(event=event2.pk).last())
-        self.assertRedirects(response, reverse_lazy('list_charlas'), fetch_redirect_response=False)
+        self.assertRedirects(response, reverse_lazy('edit_charlas'), fetch_redirect_response=False)

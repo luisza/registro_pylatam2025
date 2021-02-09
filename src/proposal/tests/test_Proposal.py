@@ -1,25 +1,22 @@
 import tempfile
 
 from django.contrib.messages import get_messages
-from django.test import TestCase, RequestFactory
+from django.test import RequestFactory
 
 # Create your tests here.
 # Create Type
 
 # CTy1
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 from django.utils import timezone
 
 from ecsl.models import EventECSL
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
-import datetime
 
 from proposal.models import SpeechType, Topic, Speech
 
-from proposal.forms import SpeechForm
-
-from proposal.views import CreateType, CreateTopic, createUpdateview
+from proposal.views import createUpdateview
 
 
 class TestViews(TestCase):

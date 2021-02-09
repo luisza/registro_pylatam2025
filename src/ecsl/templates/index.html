@@ -105,7 +105,7 @@
 {% block js %}
 
     <script>
-        $.get("{% url "proposal:participantes" %}", function (data) {
+        $.get("{% url "participantes" %}", function (data) {
 
             var li = '<div class="col-md-1"> <img width="50px" heigth="50px"  src="url" alt="altnombre" class="img-circle"></div>';
             li += '<div class="col-md-3">nombre</div>';

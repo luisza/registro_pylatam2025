@@ -37,4 +37,5 @@ urlpatterns = [
     path('becas/detail/<int:pk>', becas.BecasDetail.as_view(), name="becas-detail"),
     path('contact/', contact.contactUs, name='contact-us'),
     path('contact/send/', contact.contact, name='contact'),
+    path('participantes.js', views.get_participants, name="participantes"),
 ]
