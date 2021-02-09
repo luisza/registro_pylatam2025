@@ -1,6 +1,4 @@
 from django.contrib import admin, messages
-
-# Register your models here.
 from django.contrib.auth.models import Permission
 
 from proposal.models import SpeechType, Topic, Speech, SpeechSchedule, Room,\

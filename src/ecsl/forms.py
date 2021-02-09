@@ -4,10 +4,11 @@ Created on 2 jun. 2017
 @author: luis
 '''
 from django import forms
-from ecsl.models import Inscription, Payment, PaymentOption, EventECSL
-from proposal.models import SpeechSchedule, Topic, Speech, Register_Speech, \
-    BlockSchedule, Room
 from django.utils.translation import ugettext_lazy as _
+
+from ecsl.models import Inscription, Payment, PaymentOption
+from proposal.models import SpeechSchedule
+
 
 class ProfileForm(forms.ModelForm):
     first_name = forms.CharField(label=_("First name"))
@@ -74,7 +75,6 @@ class PaymentForm(forms.ModelForm):
 
 
 class ContactForm(forms.Form):
-
     Name = forms.CharField(
         label=False,
         min_length=2,
@@ -121,10 +121,12 @@ class ContactForm(forms.Form):
         )
     )
 
+
 class scheduleForm(forms.ModelForm):
     is_speech = forms.BooleanField(required=False)
     text = forms.CharField(max_length=250)
     color = forms.CharField(max_length=10)
+
     class Meta:
-        model= SpeechSchedule
-        fields= '__all__'
+        model = SpeechSchedule
+        fields = '__all__'

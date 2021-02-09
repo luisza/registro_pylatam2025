@@ -8,6 +8,7 @@ from ecsl.models import EventECSL
 from proposal.forms import RoomsCreateForm
 from proposal.models import Room
 
+
 @method_decorator(login_required, name='dispatch')
 class CreateRoom(PermissionRequiredMixin, generic.CreateView):
     model = Room

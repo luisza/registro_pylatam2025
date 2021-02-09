@@ -1,15 +1,17 @@
 from django.contrib import messages
-from django.shortcuts import render, redirect
-from .forms import SpeechForm
-from django.urls import reverse, reverse_lazy
-from proposal.models import Speech, Room, SpeechSchedule
-from ecsl.models import Payment, Inscription, EventECSL
-from django.http.response import HttpResponseRedirect
-from django.views import generic
-from django.utils.translation import ugettext_lazy as _
-from django.http import JsonResponse
 from django.core import serializers
+from django.http import JsonResponse
+from django.http.response import HttpResponseRedirect
+from django.shortcuts import render, redirect
+from django.urls import reverse, reverse_lazy
+from django.utils.translation import ugettext_lazy as _
+from django.views import generic
+
+from ecsl.models import EventECSL
+from proposal.models import Speech
+from .forms import SpeechForm
 from .models import SpeechType
+
 
 # Create your views here.
 
@@ -65,6 +67,7 @@ def get_color_speech(request, result):
             colors.append(speech.topic.color)
     return colors
 
+
 def get_times_speech(request, result):
     times = None
     if result:
@@ -102,7 +105,7 @@ def get_all_speeches(request):
             colors = get_color_speech(request, result_query)
             types = SpeechType.objects.filter(is_special=False)
             types = serializers.serialize('json', types)
-        return JsonResponse(data={'result': result, 'color': colors, 'times': times, 'types': types,})
+        return JsonResponse(data={'result': result, 'color': colors, 'times': times, 'types': types, })
 
 
 def deleteView(request, speech_id):
@@ -125,7 +128,7 @@ def createUpdateview(request, speech_id=None):
     elif not event:
         return redirect(reverse('index'))
     elif request.user.is_authenticated:
-        if speech_id!= None:
+        if speech_id != None:
             if Speech.objects.filter(id=speech_id).first().user != request.user:
                 return redirect(reverse_lazy('index'))
         try:

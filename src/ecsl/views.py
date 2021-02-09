@@ -96,17 +96,6 @@ class Index(TemplateView):
         return context
 
 
-
-
-
-
-
-
-
-
-
-
-
 def get_participants(request):
     dev = []
     default = "https://ecsl2017.softwarelibre.ca/wp-content/uploads/2017/01/cropped-photo_2017-01-30_20-55-06.jpg".encode(

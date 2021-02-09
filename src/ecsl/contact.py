@@ -1,11 +1,12 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.urls.base import reverse, reverse_lazy
-from django.contrib import messages
-from ecsl.forms import ProfileForm, PaymentForm, ContactForm
-from django.utils.translation import ugettext_lazy as _
-from django.conf import settings
 from captcha.fields import CaptchaField
-from django.core.mail import EmailMessage, send_mail
+from django.conf import settings
+from django.contrib import messages
+from django.core.mail import EmailMessage
+from django.shortcuts import render, redirect
+from django.urls.base import reverse
+from django.utils.translation import ugettext_lazy as _
+
+from ecsl.forms import ContactForm
 
 
 class CustomContactFormCaptcha(ContactForm):

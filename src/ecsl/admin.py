@@ -1,5 +1,4 @@
 from django.contrib import admin
-# Register your models here.
 from ecsl.models import Inscription, Gustos, PaymentOption, Payment, Becas, EventECSL, Package
 from ecsl.csv_export import export_payment, export_afiliation, \
     export_stats_afiliation, export_payment_option_stats, export_stats_payments, \

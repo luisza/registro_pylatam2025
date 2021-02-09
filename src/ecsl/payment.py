@@ -1,17 +1,19 @@
 import random
+
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls.base import reverse, reverse_lazy
-from django.contrib.auth.decorators import login_required
-from ecsl.models import Inscription, Payment, Becas, EventECSL, Package, PaymentOption
 from django.utils.decorators import method_decorator
-from django.views.generic.edit import CreateView, UpdateView
-from django.contrib import messages
-from ecsl.forms import ProfileForm, PaymentForm, ContactForm
 from django.utils.translation import ugettext_lazy as _
-from django.conf import settings
-from paypal.standard.forms import PayPalPaymentsForm
 from django.views.decorators.csrf import csrf_exempt
-from django.core.mail import send_mail
+from django.views.generic.edit import UpdateView
+from paypal.standard.forms import PayPalPaymentsForm
+
+from ecsl.forms import PaymentForm
+from ecsl.models import Payment, EventECSL, Package, PaymentOption
 
 
 @login_required
@@ -150,6 +152,3 @@ def payment_done(request):
 def payment_canceled(request):
     return render(request, 'ecsl/payment_cancelled.html')
 
-
-def checkout(request):
-    return render(request, 'ecsl/checkout.html', locals())

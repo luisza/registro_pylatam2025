@@ -3,29 +3,28 @@ Created on 5 jun. 2017
 
 @author: luis
 '''
+import datetime
 import json
 
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core import serializers
-from django.utils import timezone
-from django.views.generic.list import ListView
-from proposal.models import SpeechSchedule, Topic, Speech, Register_Speech, \
-    BlockSchedule, SpeechType, SpecialActivity
-import datetime
-from django.views.generic.detail import DetailView
-from django.shortcuts import get_object_or_404, redirect, render
-from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib import messages
-from django.urls.base import reverse
-from ecsl.models import Payment, EventECSL
 from django.db.models.query_utils import Q
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls.base import reverse
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
-from proposal.models import Room
+from django.views.generic.detail import DetailView
+from django.views.generic.list import ListView
+
 from ecsl.forms import scheduleForm
+from ecsl.models import Payment, EventECSL
 from proposal.forms import TopicForm, TypeForm, SpecialActivityForm, RoomsCreateForm
-from json import dumps
-from django.forms.models import model_to_dict
+from proposal.models import Room
+from proposal.models import SpeechSchedule, Topic, Speech, Register_Speech, \
+    BlockSchedule, SpeechType, SpecialActivity
 
 SPECIAL_ACTIVITY_COLOR = "#cccccc"
 
@@ -206,8 +205,8 @@ class Charlas(CharlaContext, ListView):
 
 
 def edit_agenda(request):
-
     return render(request, 'proposal/edit_agenda.html')
+
 
 @method_decorator(login_required, name='dispatch')
 class EditCharlas(PermissionRequiredMixin, CharlaContext, ListView):
@@ -291,7 +290,7 @@ class EditCharlas(PermissionRequiredMixin, CharlaContext, ListView):
                                                         end_time=timezone.datetime.strptime(
                                                             activities['end_time'], "%Y-%m-%d %H:%M:%S"),
                                                         special=SpecialActivity.objects.filter(
-                                                        id=int(activities['activity_pk'])).first(),
+                                                            id=int(activities['activity_pk'])).first(),
                                                         room=Room.objects.filter(id=int(activities['room'])).first(), )
                     speech = SpeechSchedule.objects.filter(room=speechSchedule.room,
                                                            start_time__lt=speechSchedule.end_time,

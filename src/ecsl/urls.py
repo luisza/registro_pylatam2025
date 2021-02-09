@@ -1,11 +1,12 @@
 from django.urls import path
-from ecsl.webservice import get_calendar_json
-from ecsl import charlas as speechviews
-from ecsl import views
-from ecsl import payment
-from ecsl import becas
+
 from ecsl import Profile
+from ecsl import becas
+from ecsl import charlas as speechviews
 from ecsl import contact
+from ecsl import payment
+from ecsl import views
+from ecsl.webservice import get_calendar_json
 
 urlpatterns = [
     path('', views.Index.as_view(), name="index"),
@@ -16,18 +17,18 @@ urlpatterns = [
 
     path('charla/<int:pk>', speechviews.CharlaDetail.as_view(), name="detail_charla"),
     path('charla/registro/<int:pk>',
-        speechviews.register_user_to_speech, name="registra_charla"),
+         speechviews.register_user_to_speech, name="registra_charla"),
     path('charla/desregistrar/<int:pk>',
-        speechviews.desregistrar_charla, name="desregistrar_charla"),
+         speechviews.desregistrar_charla, name="desregistrar_charla"),
     path('accounts/profile/', Profile.profile_view, name="profile"),
     path('register/profile/create',
-            Profile.CreateProfile.as_view(), name='create_profile'),
+         Profile.CreateProfile.as_view(), name='create_profile'),
     path('register/profile/update/<int:pk>', Profile.UpdateProfile.as_view(),
-            name='edit_profile'),
+         name='edit_profile'),
     path('registro', payment.payment_view, name='payment'),
     path('registro/create', Profile.CreateRegister.as_view(), name='create_payment'),
     path('registro/update/<int:pk>', payment.PaymentUpdate.as_view(),
-            name='edit_payment'),
+         name='edit_payment'),
 
     path('process-payment/<str:text>', payment.process_payment, name='process_payment'),
     path('payment-done/', payment.payment_done, name='payment_done'),

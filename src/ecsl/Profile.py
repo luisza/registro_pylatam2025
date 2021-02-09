@@ -1,13 +1,15 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.urls.base import reverse, reverse_lazy
-from django.contrib.auth.decorators import login_required
-from ecsl.models import Inscription, Payment, Becas, EventECSL, Package, PaymentOption
-from django.utils.decorators import method_decorator
-from django.views.generic.edit import CreateView, UpdateView
 from django.contrib import messages
-from ecsl.forms import ProfileForm, PaymentForm, ContactForm
-from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from django.shortcuts import redirect, get_object_or_404
+from django.urls.base import reverse, reverse_lazy
+from django.utils.decorators import method_decorator
+from django.utils.translation import ugettext_lazy as _
+from django.views.generic.edit import CreateView, UpdateView
+
+from ecsl.forms import ProfileForm, PaymentForm
+from ecsl.models import Inscription, Payment, EventECSL
+
 
 @method_decorator(login_required, name='dispatch')
 class CreateProfile(CreateView):
@@ -68,7 +70,6 @@ def profile_view(request):
         return redirect(reverse('edit_profile', args=(profile.pk,)))
     except:
         return redirect(reverse('create_profile'))
-
 
 
 @method_decorator(login_required, name='dispatch')

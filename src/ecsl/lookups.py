@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from django.db.models.query_utils import Q
 from proposal.models import Speech
 
+
 @register('users')
 class TagsLookup(LookupChannel):
 
