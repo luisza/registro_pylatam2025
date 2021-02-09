@@ -55,6 +55,20 @@ ul {
     padding: 50px;
 }
 
+.navbar-right{
+    padding: 0px;
+}
+
+.social-media{
+    padding: 0px;
+}
+
+.bg-inverse{
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+
 #test{
     position: fixed;
     left: 20%;

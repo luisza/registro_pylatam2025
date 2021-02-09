@@ -627,5 +627,6 @@ $(function displayOrEdit() {
         $('.activity').draggable({disabled: true});
         $('.connectedSortable').sortable({disabled: true});
         $('.selectType').remove();
+        $('.container').css({'margin-left': 'auto'})
     }
 });
