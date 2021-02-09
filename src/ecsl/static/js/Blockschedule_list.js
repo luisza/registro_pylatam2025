@@ -146,12 +146,10 @@ function add_new_positions(start_position, new_time) {
 function update_time_array_activitiy_rescheduled(speech_pk, start_position, old_time, new_time) {
     new_time = parseInt(new_time);
     activity_pk = "1-" + speech_pk;
-    for(var i = start_position; i < old_time/10 + start_position; i++)
-    {
+    for (var i = start_position; i < old_time / 10 + start_position; i++) {
         time_array[i] = null;
     }
-    for(var i = start_position; i < new_time/10 + start_position; i++)
-    {
+    for (var i = start_position; i < new_time / 10 + start_position; i++) {
         time_array[i] = activity_pk;
     }
 }
@@ -365,9 +363,9 @@ $(function () {
                     $('#info-page').empty()
                     $('#info-page').append(alerta)
                     PaintActivities()
-                    if(ui.draggable.attr('is_speech')!= "") {
+                    if (ui.draggable.attr('is_speech') != "") {
                         send_filter(null, null)
-                    }else {
+                    } else {
                         refresh_special_poll()
                     }
                 }
@@ -553,8 +551,8 @@ function update_times(speech_pk, speech_time, old_time, in_schedule) {
         if (control_validate_update(start_position, old_time, type_values[0]) == true) {
             update_time_array_activitiy_rescheduled(speech_pk, start_position, old_time, type_values[0])
             $(".container_type_time_" + speech_pk)[0].firstElementChild.setAttribute('onchange',
-            'update_times(' + speech_pk + ',' + 'this,' + type_values[0] + ',' + 0 + ')')
-            stored_activities_dic["1-"+speech_pk]['time']=type_values[0];
+                'update_times(' + speech_pk + ',' + 'this,' + type_values[0] + ',' + 0 + ')')
+            stored_activities_dic["1-" + speech_pk]['time'] = type_values[0];
             $("#li_" + speech_pk).attr('time', type_values[0])
             $("#li_" + speech_pk).attr('type', type_values[1])
             $("#li_" + speech_pk).attr('start_time', $("#actualDay").text() + " " + $("#li_" + speech_pk).parent().attr('hora'))
@@ -567,11 +565,19 @@ function update_times(speech_pk, speech_time, old_time, in_schedule) {
                 }
             }
         } else if (control_validate_update(start_position, old_time, type_values[0]) == false) {
-           PaintActivities();
+            var time = null
+            var old_time = stored_activities_dic["1-" + speech_pk]['time']
+            for (var i = 0; i < types.length; i++)
+                if (Object.values(types[i])[1] == stored_activities_dic["1-" + speech_pk].speech_type){
+                    stored_activities_dic["1-" + speech_pk]['time'] = Object.values(types[i])[2]['time'];
+                    time = Object.values(types[i])[2]['time']
+                    update_time_array_activitiy_rescheduled(speech_pk, start_position, old_time, time)
+                }
+            PaintActivities();
             alert(transNoTime);
         }
     } else {
-        activities_dic["1-"+speech_pk]['time']=type_values[0];
+        activities_dic["1-" + speech_pk]['time'] = type_values[0];
         $(".container_type_time_" + speech_pk)[0].firstElementChild.setAttribute('onchange',
             'update_times(' + speech_pk + ',' + 'this,' + type_values[0] + ',' + 0 + ')')
         $("#li_" + speech_pk).attr('time', type_values[0])
