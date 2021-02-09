@@ -62,5 +62,4 @@ db.sqlite3
 .idea/
 .settings/
 media/
-
-jappsite/environment.py
+coverage_html_report/

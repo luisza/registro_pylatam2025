@@ -1,6 +1,7 @@
 # .coveragerc to control coverage.py
 [run]
 branch = True
+include = src/*
 
 [report]
 # Regexes for lines to exclude from consideration
@@ -20,6 +21,11 @@ exclude_lines =
     if 0:
     if __name__ == .__main__.:
 
+omit =
+    src/ECSL/settings/*
+    src/*/migrations/*
+
+show_missing = True
 ignore_errors = True
 
 [html]
