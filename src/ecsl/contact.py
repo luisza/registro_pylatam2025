@@ -32,9 +32,9 @@ def contact(request):
             if (EmailMessage(
                     form.cleaned_data.get("Subject"),
                     'Nombre:' + form.cleaned_data.get('Name') + '\n' + form.cleaned_data.get("Message"),
-                    settings.DEFAULT_FROM_EMAIL,
-                    [request.user.email],
-                    headers={'Reply-To': request.user.email},
+                    request.POST['Email'],
+                    [settings.DEFAULT_FROM_EMAIL],
+                    headers={'Reply-To': request.POST['Email']},
             ).send()):
                 messages.success(request, _('Thanks! Your message was sent successfully'))
         else:
