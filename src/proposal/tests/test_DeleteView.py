@@ -36,10 +36,9 @@ class DeleteViewTest(TestCase):
         """
             When accessing via URL, user should be redirected to the index page.
         """
-
-        target = '/proposal/' + str(self.speech.pk) + '/delete/'
-        redirect_to = '/'
-        not_logged_in_user(self, target, redirect_to)
+        response = self.client.post(reverse('proposal:delete', kwargs={'speech_id': self.speech.pk}))
+        self.assertRedirects(response, reverse('proposal:speech-list'), status_code=302, target_status_code=200,
+                             fetch_redirect_response=False)
 
     def test_delete_view_get_method(self):
         """

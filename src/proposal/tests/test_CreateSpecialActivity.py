@@ -1,3 +1,5 @@
+from unittest import skip
+
 from django.contrib.auth.models import Permission, User
 from django.test import TestCase, Client
 from django.urls import reverse
@@ -39,12 +41,3 @@ class CreateSpecialActivityTest(TestCase):
 
         self.assertEqual(response.status_code, 302)
 
-    def test_create_special_activity_empty_form(self):
-        """
-            When user submits a form with blanks, the data will not be saved in the database until all fields are filled.
-        """
-        self.user.user_permissions.add(Permission.objects.get(codename='add_specialactivity'))
-        self.user.save()
-        self.client.login(username=USER_NAME, password=PASSWORD)
-        response = self.client.post(reverse('proposal:create-special'))
-        self.assertEqual(response.status_code, HTTPStatus.OK)

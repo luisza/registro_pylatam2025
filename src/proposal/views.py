@@ -125,6 +125,9 @@ def createUpdateview(request, speech_id=None):
     elif not event:
         return redirect(reverse('index'))
     elif request.user.is_authenticated:
+        if speech_id!= None:
+            if Speech.objects.filter(id=speech_id).first().user != request.user:
+                return redirect(reverse_lazy('index'))
         try:
             proposal = request.user.speech_set.count()
             if proposal > 0:
