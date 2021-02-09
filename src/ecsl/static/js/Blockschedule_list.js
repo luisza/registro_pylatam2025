@@ -390,7 +390,6 @@ $(function () {
         }
         lista.push(element)
     }
-    PaintActivities()
 });
 
 $(function () {
@@ -404,6 +403,7 @@ $(function () {
             'is_speech': blocks[i].getAttribute("is_speech"),
             'room': blocks[i].getAttribute("room_pk"),
             'description': blocks[i].getAttribute("desc"),
+            'type': blocks[i].getAttribute('speech_type')
         }
         lista.push(element)
     }
@@ -589,7 +589,6 @@ function update_times(speech_pk, speech_time, old_time, in_schedule) {
 }
 
 function refresh_special_poll() {
-    console.log(stored_activities_dic)
     special_activities = []
     activities_dic_list = Object.values(activities_dic)
     for (var i = 0; i < activities_dic_list.length; i++) {
