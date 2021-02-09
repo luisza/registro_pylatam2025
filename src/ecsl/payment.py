@@ -22,6 +22,7 @@ def payment_view(request):
     except:
         return redirect(reverse('create_payment'))
 
+
 @method_decorator(login_required, name='dispatch')
 class PaymentUpdate(UpdateView):
     model = Payment
@@ -61,9 +62,23 @@ class PaymentUpdate(UpdateView):
                   )
         return response
 
+
+@login_required
 def process_payment(request, text):
     order = ''
     host = request.get_host()
+
+    no_inscription = False
+    try:
+        request.user.inscription
+    except:
+        no_inscription = True
+
+    if no_inscription:
+        messages.success(
+            request, _("Sorry, first you have to update your data and then proceed with the registration"))
+        return redirect(reverse_lazy('index'))
+
     inscription = request.user.inscription
     price = Package.objects.filter(name=text).first()
 
@@ -92,7 +107,8 @@ def process_payment(request, text):
 
     alreadyPaid = Payment.objects.filter(user=request.user, event=current_event).first()
 
-    if alreadyPaid and alreadyPaid.confirmado == True:
+    if alreadyPaid and alreadyPaid.confirmado or \
+            alreadyPaid and not alreadyPaid.confirmado and alreadyPaid.option.name != 'Paypal':
         messages.success(
             request, _("There was no transaction, you already paid for this event"))
         return redirect(reverse_lazy('index'))

@@ -19,4 +19,4 @@ class PaymentCancelledTest(TestCase):
     def test_payment_cancelled(self):
         self.client.login(username=USER_NAME, password=PASSWORD)
         response = self.client.get(reverse('payment_cancelled'))
-        self.assertRedirects(response, reverse('index'))
+        self.assertTemplateUsed(response, 'ecsl/payment_cancelled.html')
