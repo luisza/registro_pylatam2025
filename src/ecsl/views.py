@@ -1,4 +1,8 @@
+import hashlib
 import random
+import urllib
+
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.base import TemplateView
 from django.urls.base import reverse, reverse_lazy
@@ -101,4 +105,24 @@ class Index(TemplateView):
 
 
 
+
+
+def get_participants(request):
+    dev = []
+    default = "https://ecsl2017.softwarelibre.ca/wp-content/uploads/2017/01/cropped-photo_2017-01-30_20-55-06.jpg".encode(
+        'utf-8')
+    size = 50
+    for payment in Payment.objects.all().order_by('?'):
+        email = payment.user.email.lower().encode('utf-8')
+
+        insc = Inscription.objects.filter(user=payment.user).first()
+        if insc and insc.aparecer_en_participantes:
+            name = payment.user.get_full_name()
+
+            url = "https://www.gravatar.com/avatar/%s?%s" % (hashlib.md5(
+                email).hexdigest(), urllib.parse.urlencode({'d': default, 's': str(size)}))
+
+            dev.append({'url': url, 'name': name})
+
+    return JsonResponse(dev, safe=False)
 

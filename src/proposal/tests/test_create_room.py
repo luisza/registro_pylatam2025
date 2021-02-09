@@ -14,7 +14,7 @@ class CreateRoomTestCase(GeneralSetUp, TestCase):
         self.current_event = self.create_event()
         user = User.objects.create(username='userexample')
         user.set_password('password')
-        user.user_permissions.add(Permission.objects.get(codename='add_blockschedule'))
+        user.user_permissions.add(Permission.objects.get(codename='add_room'))
         user.save()
         cliente = Client()
         cliente.login(username="userexample", password='password')
@@ -26,7 +26,7 @@ class CreateRoomTestCase(GeneralSetUp, TestCase):
         cliente.post(reverse('proposal:create-room'), room)
         self.assertIsNotNone(Room.objects.all().first())
 
-    @skip('we need to add permission on createRoom view')
+
     def test_createRoom_with_out_permission(self):
         self.current_event = self.create_event()
         user = User.objects.create(username='userexample')

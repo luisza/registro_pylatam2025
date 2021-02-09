@@ -1,3 +1,4 @@
+from django.contrib.auth.models import Permission, User
 from django.test import TestCase, Client
 from django.urls import reverse
 from ecsl.tests.shared_methods import create_user, create_eventECSL, not_logged_in_user, create_type, create_topic, \
@@ -26,6 +27,9 @@ class CreateSpecialActivityTest(TestCase):
             A form to create a special activity is displayed. It has three fields: name, type and message. After
             submitting the user must be redirected to de list_charlas page.
         """
+        self.user.user_permissions.add(Permission.objects.get(codename='add_specialactivity'))
+        self.user.save()
+
         self.client.login(username=USER_NAME, password=PASSWORD)
         response = self.client.post(reverse('proposal:create-special'), data={
             'name': 'Special Activity Test',
@@ -39,6 +43,8 @@ class CreateSpecialActivityTest(TestCase):
         """
             When user submits a form with blanks, the data will not be saved in the database until all fields are filled.
         """
+        self.user.user_permissions.add(Permission.objects.get(codename='add_specialactivity'))
+        self.user.save()
         self.client.login(username=USER_NAME, password=PASSWORD)
         response = self.client.post(reverse('proposal:create-special'))
         self.assertEqual(response.status_code, HTTPStatus.OK)

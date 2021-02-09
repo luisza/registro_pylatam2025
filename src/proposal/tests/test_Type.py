@@ -1,25 +1,18 @@
 import tempfile
-
-from django.contrib.messages import get_messages
-from django.test import TestCase, RequestFactory
+from django.test import RequestFactory
+from django.urls import reverse, reverse_lazy
+from django.utils import timezone
+from ecsl.models import EventECSL
+from django.contrib.auth.models import User, Permission
+from django.test import TestCase, Client
+from proposal.models import SpeechType, Topic, Speech
+from proposal.types import CreateType
 
 # Create your tests here.
 # Create Type
 
 # CTy1
-from django.urls import reverse, reverse_lazy
-from django.utils import timezone
 
-from ecsl.models import EventECSL
-from django.contrib.auth.models import User
-from django.test import TestCase, Client
-import datetime
-
-from proposal.models import SpeechType, Topic, Speech
-
-from proposal.forms import SpeechForm
-
-from proposal.views import CreateType, CreateTopic, createUpdateview
 
 
 class TestType(TestCase):
@@ -80,13 +73,15 @@ class TestType(TestCase):
                    'time': 60,
                    'event': self.event.pk,
                    'is_special': True}
+        self.user.user_permissions.add(Permission.objects.get(codename='add_speechtype'))
+        self.user.save()
         request = self.factory.post(reverse('proposal:create-type'), dataDic)
         request.user = self.user
         view = CreateType()
         view.setup(request)
         response = view.dispatch(request)
         self.assertEqual(SpeechType.objects.last().name, 'Test')
-        self.assertRedirects(response, reverse_lazy('list_charlas'), fetch_redirect_response=False)
+        self.assertRedirects(response, reverse_lazy('edit_charlas'), fetch_redirect_response=False)
 
     # CTy2:
     def test_Create_Type_not_Logged(self):
@@ -96,12 +91,15 @@ class TestType(TestCase):
                    'time': 60,
                    'event': self.event.pk,
                    'is_special': True}
+        self.user.user_permissions.add(Permission.objects.get(codename='add_speechtype'))
+        self.user.save()
         request = self.factory.post(reverse('proposal:create-type'), dataDic)
+        request.user = self.user
         view = CreateType()
         view.setup(request)
         response = view.dispatch(request)
         self.assertEqual(SpeechType.objects.last().name, 'Test')
-        self.assertRedirects(response, reverse_lazy('list_charlas'), fetch_redirect_response=False)
+        self.assertRedirects(response, reverse_lazy('edit_charlas'), fetch_redirect_response=False)
 
     # CTy3:
     def test_Create_Type_Invalid_Form(self):
@@ -111,12 +109,14 @@ class TestType(TestCase):
                    'time': 60,
                    'event': self.event,
                    'is_special': True}
+        self.user.user_permissions.add(Permission.objects.get(codename='add_speechtype'))
+        self.user.save()
         request = self.factory.post(reverse('proposal:create-type'), dataDic)
         view = CreateType()
         view.setup(request)
         response = view.dispatch(request)
         self.assertFalse(SpeechType.objects.last())
-        self.assertRedirects(response, reverse_lazy('list_charlas'), fetch_redirect_response=False)
+        self.assertRedirects(response, reverse_lazy('edit_charlas'), fetch_redirect_response=False)
 
     # CTy4:
     def test_Create_Type_Two_Events(self):
@@ -136,10 +136,12 @@ class TestType(TestCase):
                    'time': 60,
                    'event': self.event.pk,
                    'is_special': True}
+        self.user.user_permissions.add(Permission.objects.get(codename='add_speechtype'))
+        self.user.save()
         request = self.factory.post(reverse('proposal:create-type'), dataDic)
         view = CreateType()
         view.setup(request)
         response = view.dispatch(request)
         self.assertEqual(SpeechType.objects.filter(event=self.event.pk).last().name, 'Test')
         self.assertFalse(SpeechType.objects.filter(event=event2.pk))
-        self.assertRedirects(response, reverse_lazy('list_charlas'), fetch_redirect_response=False)
+        self.assertRedirects(response, reverse_lazy('edit_charlas'), fetch_redirect_response=False)

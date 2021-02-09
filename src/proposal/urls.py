@@ -7,7 +7,7 @@ Free as freedom will be 27/10/2016
 '''
 
 from __future__ import unicode_literals
-from proposal import views
+from proposal import views, types, topics, special_activities, rooms
 from django.urls import path
 
 app_name = 'proposal'
@@ -16,10 +16,9 @@ urlpatterns = [
     path('create/', views.createUpdateview, name='create'),
     path('<int:speech_id>/update/', views.createUpdateview, name='update'),
     path('<int:speech_id>/delete/', views.deleteView, name='delete'),
-    path('createTopic/', views.CreateTopic.as_view(), name='create-topic'),
-    path('createType/', views.CreateType.as_view(), name='create-type'),
-    path('createRoom/', views.CreateRoom.as_view(), name='create-room'),
+    path('createTopic/', topics.CreateTopic.as_view(), name='create-topic'),
+    path('createType/', types.CreateType.as_view(), name='create-type'),
+    path('createRoom/', rooms.CreateRoom.as_view(), name='create-room'),
     path('filterSpeeches/', views.get_all_speeches, name='filter-speeches'),
-    path('createSpecial/', views.CreateSpecialActivity.as_view(), name='create-special'),
-    path('participantes.js', views.get_participants, name="participantes"),
+    path('createSpecial/', special_activities.CreateSpecialActivity.as_view(), name='create-special'),
 ]
