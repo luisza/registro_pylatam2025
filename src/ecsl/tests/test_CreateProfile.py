@@ -88,7 +88,7 @@ class CreateProfileTest(TestCase):
         inscriptions = Inscription.objects.filter(user=self.user).count()  # Checking no inscription were created
         # inscriptions 0 due to user should not be able to register for an event that does not exist
         self.assertEqual(inscriptions, 0)
-        self.assertRedirects(response, reverse('no-events'))
+        self.assertEqual(response.status_code, 302)
 
         Inscription.objects.filter(user=self.user).delete()
         EventECSL.objects.filter(pk=self.event.pk).update(current=True)

@@ -40,6 +40,19 @@ class ProcessPaymentTest(TestCase):
         self.assertEqual(response.context['price'].name, self.package.name)
         self.assertEqual(response.context['price'].price, self.package.price)
 
+    def test_process_payment_paypal_payment_not_confirmed(self):
+        """
+            Since the PayPal payment was not completed, the payment process should be able to continue.
+        """
+        paypal_payment = create_paypal_payment(self.user, self.event, self.package, self.paypal_option)
+        paypal_payment.confirmado = False
+        paypal_payment.save()
+        self.client.login(username=USER_NAME, password=PASSWORD)
+        response = self.client.get(reverse('process_payment', kwargs={'text': self.package.name}))
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+
+        paypal_payment.delete()
+
     def test_process_payment_not_logged_in_user(self):
         """
             This page should not be allowed for accessing to not logged in users. They should be redirected to the login
@@ -68,39 +81,12 @@ class ProcessPaymentTest(TestCase):
         self.assertRedirects(response, reverse('index'))
         paypal_payment.delete()
 
-    def test_process_payment_paypal_payment_not_confirmed(self):
-        """
-            Since the PayPal payment was not completed, the payment process should be able to continue.
-        """
-        paypal_payment = create_paypal_payment(self.user, self.event, self.package, self.paypal_option)
-        paypal_payment.confirmado = False
-        paypal_payment.save()
-
-        self.client.login(username=USER_NAME, password=PASSWORD)
-        response = self.client.get(reverse('process_payment', kwargs={'text': self.package.name}))
-        self.assertEqual(response.status_code, HTTPStatus.OK)
-
-        paypal_payment.delete()
-
     def test_process_payment_no_paypal_payment_confirmed(self):
         """
             Since there is a confirmed payment, the user must be redirected to the index in order to avoid multiple
             payment problems.
         """
         payment = create_payment(self.user, self.payment_option, self.event, self.package)
-
-        self.client.login(username=USER_NAME, password=PASSWORD)
-        response = self.client.get(reverse('process_payment', kwargs={'text': self.package.name}))
-        self.assertRedirects(response, reverse('index'))
-
-    def test_process_payment_no_paypal_payment_not_confirmed(self):
-        """
-            If the user has done a payment using any other option than PayPal, the user must be redirected to the index
-            page although the payment is not confirmed, this is just to avoid multiple payment problems.
-        """
-        payment = create_payment(self.user, self.payment_option, self.event, self.package)
-        payment.confirmado = False
-        payment.save()
 
         self.client.login(username=USER_NAME, password=PASSWORD)
         response = self.client.get(reverse('process_payment', kwargs={'text': self.package.name}))
@@ -136,3 +122,23 @@ class ProcessPaymentTest(TestCase):
         Payment.objects.filter(user=self.user, package=self.package).delete()
         self.package.price = 50
         self.package.save()
+
+    def test_process_payment_no_paypal_payment_not_confirmed(self):
+        """
+            If the user has done a payment using any other option than PayPal, the user must be redirected to the index
+            page although the payment is not confirmed, this is just to avoid multiple payment problems.
+        """
+        Payment.objects.filter(user=self.user.pk).delete()
+        new_payment_option = PaymentOption.objects.create(name="Ejemplo2",
+                                     identification='123456',
+                                     tipo='SINPE',
+                                     email='ejemploSinpe@mail.com',
+                                     event=self.event)
+        payment = create_payment(self.user, new_payment_option, self.event, self.package)
+        payment.confirmado = False
+        payment.save()
+        self.client.login(username=USER_NAME, password=PASSWORD)
+        response = self.client.get(reverse('process_payment', kwargs={'text': self.package.name}))
+        self.assertRedirects(response, reverse('index'))
+
+        payment.delete()
