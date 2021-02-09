@@ -226,8 +226,10 @@ class TestViews(TestCase):
                 'notes': 'none',
                 'speech_type': self.speechType.pk
                 }
+        print(self.speech.pk)
+
         request= self.factory.post(url, dataDic)
         request.user = newuser
         response= createUpdateview(request)
         self.assertEqual(response.url, reverse('proposal:speech-list'))
-        self.assertFalse(Speech.objects.last())
+        self.assertNotEqual(Speech.objects.first().title,'testSpeech')

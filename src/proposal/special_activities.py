@@ -15,7 +15,6 @@ class CreateSpecialActivity(PermissionRequiredMixin, generic.CreateView):
     success_url = reverse_lazy('edit_charlas')
     permission_required = 'proposal.add_specialactivity'
 
-
     def form_valid(self, form):
         event = EventECSL.objects.filter(current=True).first()
         if event:

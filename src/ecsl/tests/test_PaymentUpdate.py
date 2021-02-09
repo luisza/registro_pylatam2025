@@ -71,7 +71,7 @@ class PaymentUpdateTest(TestCase):
         self.client.login(username=USER_NAME, password=PASSWORD)
         self.payment.delete()
         response = self.client.get(reverse('edit_payment', kwargs={'pk': 0}))
-        self.assertRedirects(response, reverse('create_payment'))
+        self.assertEqual(response.status_code, 404)
         self.payment = create_payment(self.user, self.payment_option, self.event, self.package)
 
     def test_payment_update_no_event(self):
