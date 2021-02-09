@@ -21,9 +21,13 @@
     {% block css %}{% endblock %}
 </head>
 <body>
+
+ {# NAV #}
+
+{% include 'partial/top_navbar.html' %}
+
 <div class="{% block container %}container{% endblock %}">
-    {# NAV #}
-    {% include 'partial/top_navbar.html' %}
+
     {# CONTENT #}
 
     {% if messages %}
