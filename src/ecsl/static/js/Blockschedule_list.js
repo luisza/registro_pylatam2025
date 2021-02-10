@@ -557,6 +557,8 @@ function update_times(speech_pk, speech_time, old_time, in_schedule) {
             $("#li_" + speech_pk).attr('type', type_values[1])
             $("#li_" + speech_pk).attr('start_time', $("#actualDay").text() + " " + $("#li_" + speech_pk).parent().attr('hora'))
             $("#li_" + speech_pk).attr('end_time', addhoras($("#li_" + speech_pk).parent().attr('hora'), type_values[0]))
+            $('#'+ speech_pk).attr('speech_type', type_values[1])
+            $('#'+ speech_pk).attr('time', type_values[0])
             for (var i = 0; i < lista.length; i++) {
                 if (lista[i]['activity_pk'] == speech_pk) {
                     lista[i]['type'] = type_values[1]
@@ -564,11 +566,12 @@ function update_times(speech_pk, speech_time, old_time, in_schedule) {
                     lista[i]['end_time'] = addhoras($("#li_" + speech_pk).parent().attr('hora'), type_values[0])
                 }
             }
+            PaintActivities();
         } else if (control_validate_update(start_position, old_time, type_values[0]) == false) {
             var time = null
             var old_time = stored_activities_dic["1-" + speech_pk]['time']
             for (var i = 0; i < types.length; i++)
-                if (Object.values(types[i])[1] == stored_activities_dic["1-" + speech_pk].speech_type){
+                if (Object.values(types[i])[1] == stored_activities_dic["1-" + speech_pk].speech_type) {
                     stored_activities_dic["1-" + speech_pk]['time'] = Object.values(types[i])[2]['time'];
                     time = Object.values(types[i])[2]['time']
                     update_time_array_activitiy_rescheduled(speech_pk, start_position, old_time, time)

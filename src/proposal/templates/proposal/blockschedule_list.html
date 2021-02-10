@@ -351,7 +351,7 @@
                 {% if obj.is_speech and obj.room.name == room_name %}
                     {% for speech in obj.get_speech %}
                         {% if speech.room.name == room_name %}
-                            <div class="speech_actvity"
+                            <div class="speech_actvity" id="{{ speech.speech.pk }}"
                                  start_datetime="{{ speech.start_time | date:"Y-n-j G:i:s" }}"
                                  end_datetime="{{ speech.end_time | date:"Y-n-j G:i:s" }}"
                                  start_time="{{ speech.start_time | date:"G:i" }}"
