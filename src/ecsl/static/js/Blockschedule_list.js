@@ -284,7 +284,7 @@ function PaintActivities() {
                             '</div>' + '</li>');
                     } else {
                         if (starthour != first) {
-                            $('#hour-' + starthour).append('<div class="activity painted contained" style="background-color:' + stored_activities_dic[time_array[i]].color + '">' + initprint + " a " + pkend + " " + '</div>');
+                            $('#hour-' + starthour).append('<div class="activity painted contained ' +'paint-'+ + stored_activities_dic[time_array[i]].activity_pk +'" + style="background-color:' + stored_activities_dic[time_array[i]].color + '">' + initprint + " a " + pkend + " " + '</div>');
                         }
                     }
                 }
@@ -328,6 +328,14 @@ $(function () {
                 delete_temp_activity(ui.draggable.attr('activity_pk'), ui.draggable.attr('is_speech'));
                 if (ui.draggable.attr('db')) {
                     delete_actity(room_id, ui.draggable.attr('db'));
+                }
+                for (var i = 0; i < time_array.length; i++) {
+                    if (time_array[i] != null) {
+                        if (time_array[i].split('-')[1] == ui.draggable.attr('id').split('_')[1]) {
+                            time_array[i] = null
+                            $(".paint-"+ui.draggable.attr('id').split('_')[1]).remove()
+                        }
+                    }
                 }
             } else {
                 if (ui.draggable.attr('is_speech') == 'true') {
@@ -541,7 +549,6 @@ function send_filter(types, topics) {
                     $(".container_type_time_" + filter_speech[i]['activity_pk']).children().attr('onchange', 'update_times(' + filter_speech[i]['activity_pk'] + ', this ,' + data.times[i] + ',' + 0 + ')')
 
                 }
-                $('.draggable').draggable();
             } else {
                 $('#speeches').append('<p>' + transNoResult + '</p>')
             }
