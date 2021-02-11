@@ -37,7 +37,7 @@ function validate_activity_scheduling(activity_pk, hour, time) {
     var can_be_stored = false;
     hour = (hour - 7) * 6;
     var valid_start_position = -1;
-    if (hour == 84 && time/10 > 6){
+    if (hour == 84 && time / 10 > 6) {
         return -1;
     }
     for (var i = hour; !can_be_stored && i < hour + 6; i++) {
@@ -260,8 +260,8 @@ function PaintActivities() {
                             ' activity_pk="' + stored_activities_dic[time_array[i]]["activity_pk"] + '"' + ' color="' + stored_activities_dic[time_array[i]]["color"] + '"' +
                             ' is_speech="' + stored_activities_dic[time_array[i]]["is_speech"] + '"' + ' desc="' + stored_activities_dic[time_array[i]]["desc"] + '"' +
                             ' time="' + stored_activities_dic[time_array[i]]["time"] + '"' + ' start_hour= "' + stored_activities_dic[time_array[i]]["start_hour"] + '"' +
-                            'db="' + stored_activities_dic[time_array[i]]["obj_pk"] + ' "start_time="' + stored_activities_dic[time_array[i]]["start_time"] + '"' +
-                            'end_time="' + stored_activities_dic[time_array[i]]["end_time"] + '"' +
+                            'db="' + stored_activities_dic[time_array[i]]["obj_pk"] + ' "start_time="' + stored_activities_dic[time_array[i]]["start_datetime"] + '"' +
+                            'end_time="' + stored_activities_dic[time_array[i]]["end_datetime"] + '"' +
                             'id="li_' + stored_activities_dic[time_array[i]]["activity_pk"] + '"' +
                             '">'
 
@@ -302,8 +302,8 @@ function PaintActivities() {
     var blocks = document.getElementsByClassName("speech_actvity")
     var option = null
     for (var i = 0; i < blocks.length; i++) {
-        option = '<option disabled>'+' Asked Time ' +blocks[i].getAttribute('speech_time_asked')+ ' min'+'</option>'
-                    $(".container_type_time_" + blocks[i].getAttribute("activity_pk")).children().append(option)
+        option = '<option disabled>' + ' Asked Time ' + blocks[i].getAttribute('speech_time_asked') + ' min' + '</option>'
+        $(".container_type_time_" + blocks[i].getAttribute("activity_pk")).children().append(option)
         for (var j = 0; j < types.length; j++) {
             if (Object.values(types[j])[1] == blocks[i].getAttribute('speech_type')) {
                 option = '<option selected value="' + Object.values(types[j]['fields'])[1] +
@@ -340,6 +340,8 @@ $(function () {
                 var startPosition = validate_activity_scheduling(activity_pk, parseInt(hour), parseInt(time));
                 if (startPosition >= 0) {
                     update_stored_dic(startPosition, activity_pk)
+                    ui.draggable.attr('start_time', stored_activities_dic[activity_pk]['start_datetime'])
+                    ui.draggable.attr('end_time', stored_activities_dic[activity_pk]['end_datetime'])
                     var element = {
                         'activity_pk': stored_activities_dic[activity_pk]['activity_pk'],
                         'color': stored_activities_dic[activity_pk]['color'],
@@ -367,7 +369,7 @@ $(function () {
                         '</div>'
                     $('#info-page').empty()
                     $('#info-page').append(alerta)
-                    window.scrollTo(0,0)
+                    window.scrollTo(0, 0)
                     PaintActivities()
                     if (ui.draggable.attr('is_speech') != "") {
                         send_filter(null, null)
@@ -456,7 +458,7 @@ function send_activities_list() {
                 'agenda': JSON.stringify(lista),
             },
             success: function (data) {
-               document.location.reload(true)
+                document.location.reload(true)
             }
         });
     } else {
@@ -521,7 +523,7 @@ function send_filter(types, topics) {
                 result_types = JSON.parse(data.types)
                 for (var i = 0; i < filter_speech.length; i++) {
                     $(".container_type_time_" + filter_speech[i]['activity_pk']).children().empty()
-                    option = '<option disabled>'+' Asked Time ' +filter_speech[i]['speech_time_asked']+ ' min'+'</option>'
+                    option = '<option disabled>' + ' Asked Time ' + filter_speech[i]['speech_time_asked'] + ' min' + '</option>'
                     $(".container_type_time_" + filter_speech[i]['activity_pk']).children().append(option)
                     for (var j = 0; j < result_types.length; j++) {
                         if (Object.values(result_types[j])[1] == filter_speech[i]['speech_type']) {
@@ -556,6 +558,10 @@ function update_times(speech_pk, speech_time, old_time, in_schedule) {
     var start_minute = parseInt($("#li_" + speech_pk).parent().attr('hora').split(":")[1]) / 10
     var start_position = start_hour + start_minute
     if (in_schedule == true) {
+        var type_values = speech_time.value.split('-')
+        var start_hour = (parseInt($("#li_" + speech_pk).attr('start_time').split(" ")[1].split(":")[0]) - 7) * 6;
+        var start_minute = parseInt($("#li_" + speech_pk).attr('start_time').split(" ")[1].split(":")[1]) / 10
+        var start_position = start_hour + start_minute
         if (control_validate_update(start_position, old_time, type_values[0]) == true) {
             update_time_array_activitiy_rescheduled(speech_pk, start_position, old_time, type_values[0])
             $(".container_type_time_" + speech_pk)[0].firstElementChild.setAttribute('onchange',
@@ -563,15 +569,17 @@ function update_times(speech_pk, speech_time, old_time, in_schedule) {
             stored_activities_dic["1-" + speech_pk]['time'] = type_values[0];
             $("#li_" + speech_pk).attr('time', type_values[0])
             $("#li_" + speech_pk).attr('type', type_values[1])
-            $("#li_" + speech_pk).attr('start_time', $("#actualDay").text() + " " + $("#li_" + speech_pk).parent().attr('hora'))
-            $("#li_" + speech_pk).attr('end_time', addhoras($("#li_" + speech_pk).parent().attr('hora'), type_values[0]))
-            $('#'+ speech_pk).attr('speech_type', type_values[1])
-            $('#'+ speech_pk).attr('time', type_values[0])
+            $("#li_" + speech_pk).attr('start_time', $("#li_" + speech_pk).attr('start_time'))
+            $("#li_" + speech_pk).attr('end_time', addhoras($("#li_" + speech_pk).attr('start_time').split(" ")[1], type_values[0]))
+            $('#' + speech_pk).attr('speech_type', type_values[1])
+            $('#' + speech_pk).attr('time', type_values[0])
+            stored_activities_dic["1-" + speech_pk]['start_datetime'] = $("#li_" + speech_pk).attr('start_time');
+            stored_activities_dic["1-" + speech_pk]['end_datetime'] = $("#li_" + speech_pk).attr('end_time');
             for (var i = 0; i < lista.length; i++) {
                 if (lista[i]['activity_pk'] == speech_pk) {
                     lista[i]['type'] = type_values[1]
-                    lista[i]['start_time'] = $("#actualDay").text() + " " + $("#li_" + speech_pk).parent().attr('hora')
-                    lista[i]['end_time'] = addhoras($("#li_" + speech_pk).parent().attr('hora'), type_values[0])
+                    lista[i]['start_time'] = $("#li_" + speech_pk).attr('start_time')
+                    lista[i]['end_time'] = addhoras($("#li_" + speech_pk).attr('start_time').split(" ")[1], type_values[0])
                 }
             }
             PaintActivities();
