@@ -37,6 +37,9 @@ function validate_activity_scheduling(activity_pk, hour, time) {
     var can_be_stored = false;
     hour = (hour - 7) * 6;
     var valid_start_position = -1;
+    if (hour == 84 && time/10 > 6){
+        return -1;
+    }
     for (var i = hour; !can_be_stored && i < hour + 6; i++) {
         var occupied = false;
         for (var j = i; !occupied && j < time / 10 + i; j++) {
@@ -299,6 +302,8 @@ function PaintActivities() {
     var blocks = document.getElementsByClassName("speech_actvity")
     var option = null
     for (var i = 0; i < blocks.length; i++) {
+        option = '<option disabled>'+' Asked Time ' +blocks[i].getAttribute('speech_time_asked')+ ' min'+'</option>'
+                    $(".container_type_time_" + blocks[i].getAttribute("activity_pk")).children().append(option)
         for (var j = 0; j < types.length; j++) {
             if (Object.values(types[j])[1] == blocks[i].getAttribute('speech_type')) {
                 option = '<option selected value="' + Object.values(types[j]['fields'])[1] +
@@ -362,6 +367,7 @@ $(function () {
                         '</div>'
                     $('#info-page').empty()
                     $('#info-page').append(alerta)
+                    window.scrollTo(0,0)
                     PaintActivities()
                     if (ui.draggable.attr('is_speech') != "") {
                         send_filter(null, null)
@@ -450,11 +456,11 @@ function send_activities_list() {
                 'agenda': JSON.stringify(lista),
             },
             success: function (data) {
-                location.reload()
+               document.location.reload(true)
             }
         });
     } else {
-        location.reload()
+        document.location.reload(true)
     }
 }
 
@@ -515,6 +521,8 @@ function send_filter(types, topics) {
                 result_types = JSON.parse(data.types)
                 for (var i = 0; i < filter_speech.length; i++) {
                     $(".container_type_time_" + filter_speech[i]['activity_pk']).children().empty()
+                    option = '<option disabled>'+' Asked Time ' +filter_speech[i]['speech_time_asked']+ ' min'+'</option>'
+                    $(".container_type_time_" + filter_speech[i]['activity_pk']).children().append(option)
                     for (var j = 0; j < result_types.length; j++) {
                         if (Object.values(result_types[j])[1] == filter_speech[i]['speech_type']) {
 

@@ -5,6 +5,11 @@ from django.contrib.auth.models import User
 
 class Command(BaseCommand):
 
+    def set_asked_time(self, speeches):
+        for speech in speeches:
+            speech.speech_time_asked = speech.speech_type.time
+        return speeches
+
 
     def speech_creator(self):
 
@@ -26,7 +31,7 @@ class Command(BaseCommand):
 
 
     def control_function(self):
-        self.util_save_objects(self.speech_creator())
+        self.util_save_objects(self.set_asked_time(self.speech_creator()))
 
 
     def handle(self, *args, **options):

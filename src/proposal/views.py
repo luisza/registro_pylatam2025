@@ -148,6 +148,7 @@ def createUpdateview(request, speech_id=None):
         speech_form = SpeechForm(request.POST)
         if speech_form.is_valid():
             form = speech_form.save(commit=False)
+            form.speech_time_asked = form.speech_type.time
             form.user = request.user
             form.event = event
             form.save()

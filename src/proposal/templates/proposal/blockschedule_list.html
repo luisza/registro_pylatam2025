@@ -8,7 +8,7 @@
 {% endblock %}
 {% block content %}
     <div id="info-page">
-    <h2> Temáticas </h2>
+        <h2> Temáticas </h2>
     </div>
 
     <form id="activityForm" name="activityForm" method="post" hidden>
@@ -104,7 +104,7 @@
                                                     class="btn btn-primary selectType" id="type_time"
                                                     onchange="update_times({{ speech.pk }},this, {{ speech.speech_type.time }}, 0)">
 
-
+                                                <option disabled> Asked Time {{ speech.speech_time_asked }} min</option>
                                                 {% for type in types %}
                                                     {% if  type.id == speech.speech_type.id %}
                                                         <option selected
@@ -212,11 +212,11 @@
                 <ul class="days nav nav-tabs">
                     {% for d in dayList %}
                         <li role="presentation" class="{% if dia ==  forloop.counter %} active {% endif %}">
-                        {% if view == 'edit' %}
-                            <a class="linkDay" href="{% url 'edit_charlas' %}?dia={{ forloop.counter }}">{{ d }}</a>
-                        {% else %}
-                            <a class="linkDay" href="{% url 'list_charlas' %}?dia={{ forloop.counter }}">{{ d }}</a>
-                        {% endif %}
+                            {% if view == 'edit' %}
+                                <a class="linkDay" href="{% url 'edit_charlas' %}?dia={{ forloop.counter }}">{{ d }}</a>
+                            {% else %}
+                                <a class="linkDay" href="{% url 'list_charlas' %}?dia={{ forloop.counter }}">{{ d }}</a>
+                            {% endif %}
 
                         </li>
                     {% endfor %}
@@ -225,11 +225,13 @@
                     <ul class="nav nav-tabs flex-column">
                         {% for room in rooms_list %}
                             <li role="presentation" class="{% if sala == forloop.counter %} active {% endif %}">
-                            {% if view == 'edit' %}
-                                <a class="linkRoom"href="{% url 'edit_charlas' %}?dia={{ dia }}&sala={{ forloop.counter }}">{{ room }}</a>
-                            {% else %}
-                                <a class="linkRoom"href="{% url 'list_charlas' %}?dia={{ dia }}&sala={{ forloop.counter }}">{{ room }}</a>
-                            {% endif %}
+                                {% if view == 'edit' %}
+                                    <a class="linkRoom"
+                                       href="{% url 'edit_charlas' %}?dia={{ dia }}&sala={{ forloop.counter }}">{{ room }}</a>
+                                {% else %}
+                                    <a class="linkRoom"
+                                       href="{% url 'list_charlas' %}?dia={{ dia }}&sala={{ forloop.counter }}">{{ room }}</a>
+                                {% endif %}
                             </li>
                         {% endfor %}
                         <li role="presentation" class="">
@@ -370,6 +372,7 @@
                                  speech_type="{{ speech.speech.speech_type.pk }}"
                                  desc="none"
                                  time={{ speech.speech.speech_type.time }}
+                                 speech_time_asked={{ speech.speech.speech_time_asked }}
 
                             >
                             </div>
@@ -449,8 +452,8 @@
         stored_activities_dicHTML = '{{ stored_activities_dic|safe }}';
 
         var types = {{ types_serializer|safe }};
-        var transNoResult= '{% trans 'No results matched' %}';
-        var transNoTime= '{% trans 'No time available in the requested position' %}';
+        var transNoResult = '{% trans 'No results matched' %}';
+        var transNoTime = '{% trans 'No time available in the requested position' %}';
         var tokenHTML = '{{csrf_token}}';
         var room_name = '{{ room_name }}';
         var room_id = '{{ room_id }}';

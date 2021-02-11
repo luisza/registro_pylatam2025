@@ -62,14 +62,13 @@ class Speech(models.Model):
         verbose_name=_("Skill level required"))
     notes = models.TextField(blank=True,
                              verbose_name=_("Notes for audience"))
-    speech_type = models.ForeignKey(SpeechType, on_delete=models.CASCADE, verbose_name=_("Speech Type"))
-
+    speech_type = models.ForeignKey(SpeechType, on_delete=models.CASCADE, verbose_name=_("Speech Types"))
     presentacion = models.FileField(upload_to='presentaciones/',
                                     verbose_name=_("Presentation"),
                                     null=True, blank=True)
     event = models.ForeignKey(EventECSL, null=True, blank=False, on_delete=models.CASCADE, verbose_name=_("Event"))
     is_scheduled = models.BooleanField(default=False, verbose_name=_('is Scheduled'))
-
+    speech_time_asked = models.IntegerField(default=0, verbose_name=_("Time Asked"))
     objects = CurrentEventManager()
 
     @property

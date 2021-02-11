@@ -9,7 +9,7 @@ class SpeechForm(forms.ModelForm):
 
     class Meta:
         model = Speech
-        exclude = ('user', 'event', 'is_scheduled',)
+        exclude = ('user', 'event', 'is_scheduled', 'speech_time_asked')
 
 
 class TopicForm(forms.ModelForm):

@@ -138,6 +138,7 @@ def build_activities_dic(speeches, special_activities):
         temp_dic['speech_topic'] = speech.topic.pk
         temp_dic["desc"] = "none"
         temp_dic["is_scheduled"] = speech.is_scheduled
+        temp_dic["speech_time_asked"] = speech.speech_time_asked
         activities_dic[temp_key] = temp_dic
 
     return activities_dic
