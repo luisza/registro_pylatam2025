@@ -284,7 +284,7 @@ function PaintActivities() {
                             '</div>' + '</li>');
                     } else {
                         if (starthour != first) {
-                            $('#hour-' + starthour).append('<div class="activity painted contained ' +'paint-'+ + stored_activities_dic[time_array[i]].activity_pk +'" + style="background-color:' + stored_activities_dic[time_array[i]].color + '">' + initprint + " a " + pkend + " " + '</div>');
+                            $('#hour-' + starthour).append('<div class="activity painted contained ' + 'paint-' + +stored_activities_dic[time_array[i]].activity_pk + '" + style="background-color:' + stored_activities_dic[time_array[i]].color + '">' + initprint + " a " + pkend + " " + '</div>');
                         }
                     }
                 }
@@ -333,7 +333,7 @@ $(function () {
                     if (time_array[i] != null) {
                         if (time_array[i].split('-')[1] == ui.draggable.attr('id').split('_')[1]) {
                             time_array[i] = null
-                            $(".paint-"+ui.draggable.attr('id').split('_')[1]).remove()
+                            $(".paint-" + ui.draggable.attr('id').split('_')[1]).remove()
                         }
                     }
                 }
@@ -347,6 +347,7 @@ $(function () {
                 time = ui.draggable.attr("time");
                 var startPosition = validate_activity_scheduling(activity_pk, parseInt(hour), parseInt(time));
                 if (startPosition >= 0) {
+
                     update_stored_dic(startPosition, activity_pk)
                     ui.draggable.attr('start_time', stored_activities_dic[activity_pk]['start_datetime'])
                     ui.draggable.attr('end_time', stored_activities_dic[activity_pk]['end_datetime'])
@@ -358,12 +359,12 @@ $(function () {
                         'is_speech': stored_activities_dic[activity_pk]['is_speech'],
                         'room': room_id,
                         'description': stored_activities_dic[activity_pk]['desc'],
+                        'type': stored_activities_dic[activity_pk]['speech_type'],
                     }
 
                     if (ui.draggable.attr('type')) {
                         element['type'] = ui.draggable.attr('type');
                     }
-
                     PaintActivities();
                     var value = activities_in_list(element)
                     if (value == false) {
@@ -582,6 +583,8 @@ function update_times(speech_pk, speech_time, old_time, in_schedule) {
             $('#' + speech_pk).attr('time', type_values[0])
             stored_activities_dic["1-" + speech_pk]['start_datetime'] = $("#li_" + speech_pk).attr('start_time');
             stored_activities_dic["1-" + speech_pk]['end_datetime'] = $("#li_" + speech_pk).attr('end_time');
+            activities_dic[activity_pk]['time'] = parseInt(type_values[0])
+            activities_dic[activity_pk]['speech_type'] = parseInt(type_values[1])
             for (var i = 0; i < lista.length; i++) {
                 if (lista[i]['activity_pk'] == speech_pk) {
                     lista[i]['type'] = type_values[1]
