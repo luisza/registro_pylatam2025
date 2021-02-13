@@ -96,6 +96,11 @@ function update_stored_dic(start_Position, activity_pk) {
     element["activity_pk"] = parseInt(activity_pk.split('-')[1])
     element["desc"] = activities_dic[activity_pk].desc
     element["color"] = activities_dic[activity_pk].color
+    if (Object.keys(stored_activities_dic).length > 0 && activity_pk.split(':')[0] == 0) {
+        element['obj_pk'] = stored_activities_dic[activity_pk]['obj_pk']
+        element['room_pk'] = stored_activities_dic[activity_pk]['room_pk']
+        element['title'] = stored_activities_dic[activity_pk]['title']
+    }
 
     if (parseInt(activity_pk.split('-')[0])) {
         element["is_speech"] = "true"
@@ -228,18 +233,19 @@ function PaintActivities() {
                 if (initprint.split(':')[1] == '0') {
                     initprint = initprint.split(':')[0] + ':00'
                 }
+                if (hours == 1 && pkend.split(":")[1] == "00" && stored_activities_dic[time_array[i]]["time"] < 60) {
+                    limit = limit -1
+                }
+
                 if (stored_activities_dic[time_array[i]]["time"] >= 60) {
                     if (pkend.split(':')[1] == '00') {
                         limit = limit - 1;
                     }
                 }
 
-
                 for (starthour; starthour <= limit; starthour++) {
                     if (stored_activities_dic[time_array[i]].is_speech == "") {
                         text = stored_activities_dic[time_array[i]]['desc']
-                        select = '<div class="col-sm-4"></div>'
-
                         li = '<li class="ui-state-default activity painted" style="background-color: ' + stored_activities_dic[time_array[i]]["color"] + ';"' +
                             ' activity_pk="' + stored_activities_dic[time_array[i]]["activity_pk"] + '" color="' + stored_activities_dic[time_array[i]]["color"] + '"' +
                             ' is_speech= "" ' + ' desc="' + stored_activities_dic[time_array[i]]["desc"] + '"' +
@@ -267,21 +273,39 @@ function PaintActivities() {
 
                     }
                     if (starthour == first && stored_activities_dic[time_array[i]]["is_scheduled"]) {
-                        $('#hour-' + starthour).append(
-                            li +
-                            '<div class="row">' +
-                            '<div class="col-md-2 text-center">' +
-                            initprint + ' a ' + pkend +
-                            '</div>' +
-                            '<div class="col-md-5 text-center">' +
-                            text
-                            +
-                            '</div>' +
-                            select +
-                            '<div class="col-md-1 text-center">' +
-                            '<button onclick="delete_actity(' + stored_activities_dic[time_array[i]]["room_pk"] + ', ' + stored_activities_dic[time_array[i]]["obj_pk"] + ')" class="btn btn-danger btn-sm deleteButton"> X </button>' +
-                            '</div>' +
-                            '</div>' + '</li>');
+                        if (stored_activities_dic[time_array[i]].is_speech == "") {
+                            $('#hour-' + starthour).append(
+                                li +
+                                '<div class="row">' +
+                                '<div class="col-md-2 text-center">' +
+                                initprint + ' a ' + pkend +
+                                '</div>' +
+                                '<div class="col-md-8 text-center">' +
+                                 stored_activities_dic[time_array[i]]['title']
+                                +
+                                '</div>' +
+                                '<div class="col-md-2 text-center">' +
+                                '<button onclick="delete_actity(' + stored_activities_dic[time_array[i]]["room_pk"] + ', ' + stored_activities_dic[time_array[i]]["obj_pk"] + ')" class="btn btn-danger btn-sm deleteButton"> X </button>' +
+                                '</div>' +
+                                '</div>' + '</li>');
+
+                        }else {
+                            $('#hour-' + starthour).append(
+                                li +
+                                '<div class="row">' +
+                                '<div class="col-md-2 text-center">' +
+                                initprint + ' a ' + pkend +
+                                '</div>' +
+                                '<div class="col-md-5 text-center">' +
+                                text
+                                +
+                                '</div>' +
+                                select +
+                                '<div class="col-md-1 text-center">' +
+                                '<button onclick="delete_actity(' + stored_activities_dic[time_array[i]]["room_pk"] + ', ' + stored_activities_dic[time_array[i]]["obj_pk"] + ')" class="btn btn-danger btn-sm deleteButton"> X </button>' +
+                                '</div>' +
+                                '</div>' + '</li>');
+                        }
                     } else {
                         if (starthour != first) {
                             $('#hour-' + starthour).append('<div class="activity painted contained ' + 'paint-' + +stored_activities_dic[time_array[i]].activity_pk + '" + style="background-color:' + stored_activities_dic[time_array[i]].color + '">' + initprint + " a " + pkend + " " + '</div>');
@@ -329,14 +353,16 @@ $(function () {
                 if (ui.draggable.attr('db')) {
                     delete_actity(room_id, ui.draggable.attr('db'));
                 }
-                for (var i = 0; i < time_array.length; i++) {
-                    if (time_array[i] != null) {
-                        if (time_array[i].split('-')[1] == ui.draggable.attr('id').split('_')[1]) {
-                            time_array[i] = null
-                            $(".paint-" + ui.draggable.attr('id').split('_')[1]).remove()
-                        }
-                    }
-                }
+                 if(ui.draggable.attr('is_speech') == 'true') {
+                     for (var i = 0; i < time_array.length; i++) {
+                         if (time_array[i] != null) {
+                             if (time_array[i].split('-')[1] == ui.draggable.attr('id').split('_')[1]) {
+                                 time_array[i] = null
+                                 $(".paint-" + ui.draggable.attr('id').split('_')[1]).remove()
+                             }
+                         }
+                     }
+                 }
             } else {
                 if (ui.draggable.attr('is_speech') == 'true') {
                     activity_pk = "1-" + ui.draggable.attr('activity_pk');
@@ -347,7 +373,6 @@ $(function () {
                 time = ui.draggable.attr("time");
                 var startPosition = validate_activity_scheduling(activity_pk, parseInt(hour), parseInt(time));
                 if (startPosition >= 0) {
-
                     update_stored_dic(startPosition, activity_pk)
                     ui.draggable.attr('start_time', stored_activities_dic[activity_pk]['start_datetime'])
                     ui.draggable.attr('end_time', stored_activities_dic[activity_pk]['end_datetime'])

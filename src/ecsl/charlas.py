@@ -183,6 +183,7 @@ def build_stored_activities_dic(object_list, room):
                     temp_dic["desc"] = obj.text
                     temp_dic["is_speech"] = ""
                     temp_dic["is_scheduled"] = speech.special.is_scheduled
+                    temp_dic["title"] = speech.special.name
                     activities_dic["0-" + str(speech.special.pk)] = temp_dic
     return activities_dic
 
