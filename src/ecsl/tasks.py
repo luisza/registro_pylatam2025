@@ -1,11 +1,11 @@
 from django.http import HttpResponse
 from ecsl.models import EventECSL
-from ECSL.celery import app
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.core.mail import BadHeaderError, EmailMessage
-
-from ECSL import settings
+import importlib
+from django.conf import settings
+app = importlib.import_module(settings.CELERY_MODULE).app
 
 
 def send_period_email_notification(event, subject, email_body):

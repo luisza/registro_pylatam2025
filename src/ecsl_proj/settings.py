@@ -79,7 +79,7 @@ MIDDLEWARE = [
 if DEBUG_TOOLBAR:
     MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware',]
 
-ROOT_URLCONF = 'ECSL.urls'
+ROOT_URLCONF = 'ecsl_proj.urls'
 
 TEMPLATES = [
     {
@@ -97,7 +97,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'ECSL.wsgi.application'
+WSGI_APPLICATION = 'ecsl_proj.wsgi.application'
 
 
 # Database
@@ -180,7 +180,7 @@ PASSWORD_HASHERS = [
 ]
 
 
-CELERY_MODULE = "ECSL.celery"
+CELERY_MODULE = "ecsl_proj.celery"
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
