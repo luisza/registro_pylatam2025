@@ -12,7 +12,7 @@ if [ -z "$DEVELOPMENT" ]; then
   fi
   supervisord -n
 else
-  runuser -p -c "celery -A ECSL worker -l INFO -B --scheduler django_celery_beat.schedulers:DatabaseScheduler" ecsl &
+  runuser -p -c "celery -A ecsl_proj worker -l INFO -B --scheduler django_celery_beat.schedulers:DatabaseScheduler" ecsl &
   runuser -p -c "python manage.py runserver 0.0.0.0:8000" ecsl
 fi
 
