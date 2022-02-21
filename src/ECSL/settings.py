@@ -237,3 +237,5 @@ LOCALE_PATHS = (
 
 if 'test' in sys.argv:
     CAPTCHA_TEST_MODE = True
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
