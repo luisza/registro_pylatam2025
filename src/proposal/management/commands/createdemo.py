@@ -17,6 +17,7 @@ class Command(BaseCommand):
         parser.add_argument('--rooms', type=int, default=3, help='Número de salas')
         parser.add_argument('--speechusers', type=int, default=6, help='Número de charlistas')
         parser.add_argument('--nocurrent', default=True, action='store_false')
+        parser.add_argument('--clean', type=bool, default=False, help='Limpiar la base de datos actual')
 
     def create_random_color(self):
         color = "%06x" % random.randint(0, 0xFFFFFF)
@@ -114,6 +115,11 @@ class Command(BaseCommand):
         Speech.objects.bulk_create(speeaches)
         return speeaches
 
+    def clean_db(self):
+        """ Cleans db stored data """
+        # All models class depends on cascade with Events
+        EventECSL.objects.all().delete()
+
     def handle(self, *args, **options):
         try:
             from dateutil.relativedelta import relativedelta
@@ -125,3 +131,7 @@ class Command(BaseCommand):
         self.create_speechtype(event)
         self.create_topics(event)
         self.speech_creator(options, event)
+
+        # Handles clean db
+        if options['clean']:
+            self.clean_db()
