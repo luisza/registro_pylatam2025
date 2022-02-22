@@ -14,6 +14,8 @@ services:
 
   db:
     image: mariadb
+    ports:
+      - '3306:3306'
     container_name: "ecsl_db"
     environment:
       MYSQL_ROOT_PASSWORD: ecslpassword
@@ -22,18 +24,18 @@ services:
       MYSQL_PASSWORD: ecsl
     networks:
       - ecslapps
-  
-  registro:
-    image: registroecsl
-    container_name: "ecsl_registro"
-    environment:
-      CELERY_BROKER_URL: "amqp://ecsl:ecsl@rabbitmq:5672/ecslvhost"
-      DB_HOST: db
-      EMAIL_HOST: demoemail
-    networks:
-      - ecslapps
-    ports:
-      - 8080:80
+
+  #registro:
+    #image: registroecsl
+    #container_name: "ecsl_registro"
+    #environment:
+      #CELERY_BROKER_URL: "amqp://ecsl:ecsl@rabbitmq:5672/ecslvhost"
+      #DB_HOST: db
+      #EMAIL_HOST: demoemail
+    #networks:
+      #- ecslapps
+    #ports:
+      #- 8080:80
 
   demoemail:
     image: mailhog/mailhog
