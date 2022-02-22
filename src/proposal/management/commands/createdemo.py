@@ -18,8 +18,8 @@ class Command(BaseCommand):
         parser.add_argument('--rooms', type=int, default=3, help='Número de salas')
         parser.add_argument('--speechusers', type=int, default=6, help='Número de charlistas')
         parser.add_argument('--nocurrent', default=True, action='store_false')
-        parser.add_argument('--clean', type=bool, default=False, help='Limpiar la base de datos actual')
         parser.add_argument('--specialactivities', type=int, default=3, help='Número de actividades especiales')
+        parser.add_argument('--clean', type=bool, default=False, help='Limpiar la base de datos actual')
 
 
     def create_random_color(self):
@@ -143,13 +143,14 @@ class Command(BaseCommand):
         except:
             print("Please install  python-dateutil")
             exit(1)
+
+        # Handles clean db
+        if options['clean']:
+            self.clean_db()
+
         event = self.create_event(options)
         self.create_room(options, event)
         self.create_speechtype(event)
         self.create_topics(event)
         self.speech_creator(options, event)
         self.special_activity_creator(options, event)
-
-        # Handles clean db
-        if options['clean']:
-            self.clean_db()
