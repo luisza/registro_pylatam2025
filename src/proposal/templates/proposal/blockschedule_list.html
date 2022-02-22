@@ -57,6 +57,7 @@
                                             <option value={{ topic.id }}>{{ topic }}</option>
                                         {% endfor %}
                                     </select>
+                                </form>
                             </div>
                         </div>
                         <div class="col-md-6 inline-flex">
@@ -89,8 +90,6 @@
                     <div class="jumbotron">
                         <ul id="speeches" class="connectedSortable droppable" hora="7:00:00">
                             {% for speech in speeches %}
-
-
                                 <li id="li_{{ speech.pk }}" class="ui-state-default activity"
                                     style="background-color: {{ speech.topic.color }};"
                                     activity_pk="{{ speech.pk }}" color="{{ speech.topic.color }}"
@@ -207,258 +206,16 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-7">
-            <div class="container">
-                <ul class="days nav nav-tabs">
-                    {% for d in dayList %}
-                        <li role="presentation" class="{% if dia ==  forloop.counter %} active {% endif %}">
-                            {% if view == 'edit' %}
-                                <a class="linkDay" href="{% url 'edit_charlas' %}?dia={{ forloop.counter }}">{{ d }}</a>
-                            {% else %}
-                                <a class="linkDay" href="{% url 'list_charlas' %}?dia={{ forloop.counter }}">{{ d }}</a>
-                            {% endif %}
-
-                        </li>
-                    {% endfor %}
-                </ul>
-                <div class="roomContainer">
-                    <ul class="nav nav-tabs flex-column">
-                        {% for room in rooms_list %}
-                            <li role="presentation" class="{% if sala == forloop.counter %} active {% endif %}">
-                                {% if view == 'edit' %}
-                                    <a class="linkRoom"
-                                       href="{% url 'edit_charlas' %}?dia={{ dia }}&sala={{ forloop.counter }}">{{ room }}</a>
-                                {% else %}
-                                    <a class="linkRoom"
-                                       href="{% url 'list_charlas' %}?dia={{ dia }}&sala={{ forloop.counter }}">{{ room }}</a>
-                                {% endif %}
-                            </li>
-                        {% endfor %}
-                        <li role="presentation" class="">
-                            <a id="addroom" href="#" data-toggle="modal" data-target="#room_modal">{% trans 'Add' %}</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="scheduleContainer">
-                    <button class="btn btn-success" id="send_activities" name="send_activities"
-                            onclick="send_activities_list()">{% trans 'Submit' %}</button>
-                    <table class="table">
-                        <thead class="thead">
-                        <tr>
-                            <th>Horario</th>
-                            <th>Actividad</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td class="horaCalendario">7:00</td>
-                            <td class="droppable" hora="7:00:00" id="td-7" lasthour="7:00:00">
-                                <ul id="hour-7" hora="7:00:00" class="connectedSortable"></ul>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="horaCalendario">8:00</td>
-                            <td class="droppable" hora="8:00:00" id="td-8" lasthour="8:00:00">
-                                <ul id="hour-8" hora="8:00:00" class="connectedSortable"></ul>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="horaCalendario">9:00</td>
-                            <td class="droppable" hora="9:00:00" id="td-9" lasthour="9:00:00">
-                                <ul id="hour-9" hora="9:00:00" class="connectedSortable"></ul>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="horaCalendario">10:00</td>
-                            <td class="droppable" hora="10:00:00" id="td-10" lasthour="10:00:00">
-                                <ul id="hour-10" hora="10:00:00" class="connectedSortable"></ul>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="horaCalendario">11:00</td>
-                            <td class="droppable" hora="11:00:00" id="td-11" lasthour="11:00:00">
-                                <ul id="hour-11" hora="11:00:00" class="connectedSortable"></ul>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="horaCalendario">12:00</td>
-                            <td class="droppable" hora="12:00:00" id="td-12" lasthour="12:00:00">
-                                <ul id="hour-12" hora="12:00:00" class="connectedSortable"></ul>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="horaCalendario">13:00</td>
-                            <td class="droppable" hora="13:00:00" id="td-13" lasthour="13:00:00">
-                                <ul id="hour-13" hora="13:00:00" class="connectedSortable"></ul>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="horaCalendario">14:00</td>
-                            <td class="droppable" hora="14:00:00" id="td-14" lasthour="14:00:00">
-                                <ul id="hour-14" hora="14:00:00" class="connectedSortable"></ul>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="horaCalendario">15:00</td>
-                            <td class="droppable" hora="15:00:00" id="td-15" lasthour="15:00:00">
-                                <ul id="hour-15" hora="15:00:00" class="connectedSortable"></ul>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="horaCalendario">16:00</td>
-                            <td class="droppable" hora="16:00:00" id="td-16" lasthour="16:00:00">
-                                <ul id="hour-16" hora="15:00:00" class="connectedSortable"></ul>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="horaCalendario">17:00</td>
-                            <td class="droppable" hora="17:00:00" id="td-17" lasthour="17:00:00">
-                                <ul id="hour-17" hora="17:00:00" class="connectedSortable"></ul>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="horaCalendario">18:00</td>
-                            <td class="droppable" hora="18:00:00" id="td-18" lasthour="18:00:00">
-                                <ul id="hour-18" hora="18:00:00" class="connectedSortable"></ul>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="horaCalendario">19:00</td>
-                            <td class="droppable" hora="19:00:00" id="td-19" lasthour="19:00:00">
-                                <ul id="hour-19" hora="19:00:00" class="connectedSortable"></ul>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="horaCalendario">20:00</td>
-                            <td class="droppable" hora="20:00:00" id="td-20" lasthour="20:00:00">
-                                <ul id="hour-20" hora="20:00:00" class="connectedSortable"></ul>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="horaCalendario">21:00</td>
-                            <td class="droppable" hora="21:00:00" id="td-21" lasthour="21:00:00">
-                                <ul id="hour-21" hora="21:00:00" class="connectedSortable"></ul>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <hr>
-    <div class="container">
-        <div class="scheduleContainer">
-            {% for obj in object_list %}
-                {% if obj.is_speech and obj.room.name == room_name %}
-                    {% for speech in obj.get_speech %}
-                        {% if speech.room.name == room_name %}
-                            <div class="speech_actvity" id="{{ speech.speech.pk }}"
-                                 start_datetime="{{ speech.start_time | date:"Y-n-j G:i:s" }}"
-                                 end_datetime="{{ speech.end_time | date:"Y-n-j G:i:s" }}"
-                                 start_time="{{ speech.start_time | date:"G:i" }}"
-                                 start_hour="{{ speech.start_time | date:"G" }}"
-                                 end_time="{{ speech.end_time | date:"G:i" }}"
-                                 color="{{ speech.speech.topic.color }}"
-                                 name="{{ speech.speech.title }}"
-                                 activity_pk="{{ speech.speech.pk }}"
-                                 title="{{ speech.speech.title }}"
-                                 room_name="{{ speech.room.name }}"
-                                 room_pk="{{ speech.room.pk }}"
-                                 obj_pk="{{ obj.pk }}"
-                                 speech_pk="{{ speech.speech.pk }}"
-                                 room_id="{{ room_id }}"
-                                 is_speech="true"
-                                 speech_type="{{ speech.speech.speech_type.pk }}"
-                                 desc="none"
-                                 time={{ speech.speech.speech_type.time }}
-                                 speech_time_asked={{ speech.speech.speech_time_asked }}
-
-                            >
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
-                    {% if obj.room.name == room_name %}
-                        {% for speech_schedule in obj.get_speech %}
-                            <div class="special_actvity"
-                                 start_datetime="{{ obj.start_time | date:"Y-n-j G:i:s" }}"
-                                 end_datetime="{{ obj.end_time | date:"Y-n-j G:i:s" }}"
-                                 start_time="{{ obj.start_time | date:"G:i" }}"
-                                 start_hour="{{ obj.start_time | date:"G" }}"
-                                 end_time="{{ obj.end_time | date:"G:i" }}"
-                                 color="{{ '#858585' }}"
-                                 time="{{ speech_schedule.special.type.time }}"
-                                 desc="{{ obj.text }}"
-                                 room_pk="{{ speech_schedule.room.pk }}"
-                                 obj_pk="{{ obj.pk }}"
-                                 activity_pk="{{ speech_schedule.special.pk }}"
-                                 room_id="{{ room_id }}"
-                                 is_speech=""
-                            >
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
-        </div>
+        <div class="col-sm-7" id="calendar"></div>
     </div>
 
-    <br><br>
 
-    <p id="actualDay" hidden>{{ diaActual.year }}-{{ diaActual.month }}-{{ diaActual.day }}</p>
-    <p id="actualRoom" hidden>{{ room_id }}</p>
-    <br><br>
-
-    <div class="modal fade" role="dialog" id="room_modal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <h2 class="modal-title text-center">{% trans 'Create Room' %}</h2>
-                </div>
-                <div class="modal-body">
-                    <form name="roomForm" action="proposal/createRoom/" method="post">
-                        {% csrf_token %}
-                        {{ room_form|bootstrap }}
-                        <input name="form_id" value="roomForm" hidden>
-                        <br>
-                        <div class="form-group text-center">
-                            <input type="submit" name="action" class="btn btn-primary" value="{% trans 'Save Room' %}">
-                            <button type="button" class="btn btn-secondary"
-                                    data-dismiss="modal">{% trans 'Close' %}</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <form id="delete_activity" method="post" style="margin-left: 10%">
-        {% csrf_token %}
-        <input name="form_id" value="delete" hidden>
-        <input name='block' id="obj_pk" value="{{ obj.pk }}" hidden>
-        <input name='room' id="room_pk" value="{{ room_id }}" hidden>
-    </form>
 {% endblock %}
 
 {% block js %}
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script>
-        activities_dicHTML = '{{ activities_dic|safe }}';
-        stored_activities_dicHTML = '{{ stored_activities_dic|safe }}';
-
-        var types = {{ types_serializer|safe }};
-        var transNoResult = '{% trans 'No results matched' %}';
-        var transNoTime = '{% trans 'No time available in the requested position' %}';
-        var tokenHTML = '{{csrf_token}}';
-        var room_name = '{{ room_name }}';
-        var room_id = '{{ room_id }}';
-        var url_maskHTML = '{% url 'detail_charla' pk=0 %}';
-        var editOrDisplay = '{{ view }}';
-    </script>
+    <script src="https://cdn.jsdelivr.net/combine/npm/fullcalendar@5.10.1,npm/fullcalendar@5.10.1/locales-all.min.js,npm/fullcalendar@5.10.1/locales-all.min.js,npm/fullcalendar@5.10.1/main.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/combine/npm/fullcalendar@5.10.1/main.min.css,npm/fullcalendar@5.10.1/main.min.css">
     <script src="{% static 'js/Blockschedule_list.js' %}"></script>
 {% endblock %}
