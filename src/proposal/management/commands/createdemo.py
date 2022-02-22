@@ -5,8 +5,9 @@ from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 from django.utils.timezone import now
 import random
+from django.core.files.base import File
 from ecsl.models import EventECSL
-from proposal.models import Room, SpeechType, Topic, Speech
+from proposal.models import Room, SpeechType, Topic, Speech, SpecialActivity
 
 
 class Command(BaseCommand):
@@ -17,6 +18,9 @@ class Command(BaseCommand):
         parser.add_argument('--rooms', type=int, default=3, help='Número de salas')
         parser.add_argument('--speechusers', type=int, default=6, help='Número de charlistas')
         parser.add_argument('--nocurrent', default=True, action='store_false')
+        parser.add_argument('--specialactivities', type=int, default=3, help='Número de actividades especiales')
+        parser.add_argument('--clean', type=bool, default=False, help='Limpiar la base de datos actual')
+
 
     def create_random_color(self):
         color = "%06x" % random.randint(0, 0xFFFFFF)
@@ -78,7 +82,10 @@ class Command(BaseCommand):
             )
 
     def create_event(self, options):
+        f = open("ecsl/static/img/logos/RanaCirculo.png", 'rb')
+        file = File(f)
         event = EventECSL.objects.create(
+            logo=file,
             start_date=now()+relativedelta(months=options['stmont']),
             end_date=now()+relativedelta(months=options['stmont'], days=options['duration']),
             description='Test event',
@@ -93,6 +100,17 @@ class Command(BaseCommand):
             max_inscription=250
         )
         return event
+
+    def special_activity_creator(self, options, event):
+        activities = []
+        for number in range(options['specialactivities']):
+            instance = SpecialActivity(
+                name="Special Activity {}".format(number),
+                type=SpeechType.objects.filter(is_special=True, event=event).order_by("?").first(),
+                message="Message for special activity {}".format(number), is_scheduled=False, event=event
+            )
+            activities.append(instance)
+        SpecialActivity.objects.bulk_create(activities)
 
     def speech_creator(self, options, event):
         speeaches = []
@@ -114,14 +132,25 @@ class Command(BaseCommand):
         Speech.objects.bulk_create(speeaches)
         return speeaches
 
+    def clean_db(self):
+        """ Cleans db stored data """
+        # All models class depends on cascade with Events
+        EventECSL.objects.all().delete()
+
     def handle(self, *args, **options):
         try:
             from dateutil.relativedelta import relativedelta
         except:
             print("Please install  python-dateutil")
             exit(1)
+
+        # Handles clean db
+        if options['clean']:
+            self.clean_db()
+
         event = self.create_event(options)
         self.create_room(options, event)
         self.create_speechtype(event)
         self.create_topics(event)
         self.speech_creator(options, event)
+        self.special_activity_creator(options, event)
