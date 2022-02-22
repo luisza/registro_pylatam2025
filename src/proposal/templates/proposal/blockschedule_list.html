@@ -11,28 +11,8 @@
         <h2> Temáticas </h2>
     </div>
 
-    <form id="activityForm" name="activityForm" method="post" hidden>
-        {% csrf_token %}
-        <label>Inicio</label>
-        {{ form.start_time }}
-        <label>Fin</label>
-        {{ form.end_time }}
-        <label>Speech</label>
-        {{ form.speech }}
-        <label>Room</label>
-        {{ form.room }}
-        <label>Is_peech</label>
-        {{ form.is_speech }}
-        <label>Text</label>
-        {{ form.text }}
-        <label>Color</label>
-        {{ form.color }}
-        <input name="form_id" value="activityForm">
-        <input type="submit" name="action" value={% trans 'Submit' %}>
-    </form>
-
     <div class="row">
-        <div class="col-sm-5" id="filterPanel">
+        <div class="col-md-4" id="filterPanel">
             <h4> {% trans 'Speeches' %} </h4>
             <hr>
             <div class="card">
@@ -206,7 +186,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-7" id="calendar"></div>
+        <div class="col-md-8" id="calendar"></div>
     </div>
 
 
