@@ -1,8 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'timeGridWeek',
-        allDaySlot: false
+    $('.full-calendar').each(function(i, cal) {
+        let calendar = new FullCalendar.Calendar(cal, {
+            initialView: 'timeGridWeek',
+            allDaySlot: false
+        });
+        calendar.render();
     });
-    calendar.render();
 });
