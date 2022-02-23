@@ -25,6 +25,8 @@ document.addEventListener('DOMContentLoaded', function() {
             droppable: true,
             initialView: 'timeGridEventDates',
             allDaySlot: false,
+            slotDuration: { minutes:10 },
+            slotLabelInterval: { hours:1 },
 
             headerToolbar: {
               right: 'timeGridDay,timeGridEventDates'
