@@ -85,6 +85,8 @@ class CharlaContext:
         speeches = Speech.objects.filter(event=current_event, is_scheduled=False)
         special = SpecialActivity.objects.filter(event=current_event, is_scheduled=False)
         context['dayList'] = days
+        context['start_date'] = str(days[0])
+        context['end_date'] = str(days[-1])
         context['object_list'] = charlasDic["dia%s" % (dia)]
         context['dia'] = dia
         context['topics'] = Topic.objects.all()
