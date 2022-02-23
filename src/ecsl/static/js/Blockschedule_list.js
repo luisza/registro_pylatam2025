@@ -1,14 +1,11 @@
 document.addEventListener('DOMContentLoaded', function() {
+    let Calendar = FullCalendar.Calendar;
+    let Draggable = FullCalendar.Draggable;
+    var containerEl = document.getElementById('draggable-events');
     $('.full-calendar').each(function(i, cal) {
-        var Calendar = FullCalendar.Calendar;
-        var Draggable = FullCalendar.Draggable;
-
-        var containerEl = document.getElementById('draggable-events');
-        var calendarEl = document.getElementById('calendar');
-
         // Initialize external events
         new Draggable(containerEl, {
-            itemSelector: '.ui-state-default',
+            itemSelector: '.speech-text',
             eventData: function(eventEl) {
                 return {
                     title: eventEl.innerText
@@ -17,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Initialize the calendar
-        var calendar = new Calendar(cal, {
+        let calendar = new Calendar(cal, {
             editable: true,
             droppable: true,
             initialView: 'timeGridWeek',
