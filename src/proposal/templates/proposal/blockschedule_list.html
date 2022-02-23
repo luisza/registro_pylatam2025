@@ -67,7 +67,7 @@
                         </div>
                     </div>
                     <br>
-                    <div class="jumbotron">
+                    <div class="jumbotron" id="draggable-events">
                         <ul id="speeches" class="connectedSortable droppable" hora="7:00:00">
                             {% for speech in speeches %}
                                 <li id="li_{{ speech.pk }}" class="ui-state-default activity"
@@ -186,7 +186,9 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-8" id="calendar"></div>
+        <div class="col-md-8" id="calendar-container">
+            <div id="calendar"></div>
+        </div>
     </div>
 
 
