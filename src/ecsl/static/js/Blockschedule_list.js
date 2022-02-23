@@ -43,8 +43,9 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             // Remove the dragged event from the panel and located into the calendar obj
             drop: function(info) {
+                console.log(info)
                 // Remove the element from the "Draggable Events" list
-                info.draggedEl.parentNode.removeChild(info.draggedEl);
+                info.draggedEl.parentNode.parentNode.parentNode.removeChild(info.draggedEl.parentNode.parentNode);
             }
         });
         calendar.render();
