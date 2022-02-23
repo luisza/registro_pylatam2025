@@ -1,12 +1,28 @@
 document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
+    let Calendar = FullCalendar.Calendar;
+    let Draggable = FullCalendar.Draggable;
 
-    start_date_parsed = Date.parse(calendarEl.getAttribute('data-start_date'))
+     start_date_parsed = Date.parse(calendarEl.getAttribute('data-start_date'))
     end_date_parsed = Date.parse(calendarEl.getAttribute('data-end_date'))
     end_date_plus_one = end_date_parsed + (3600*1000*24)
 
-    let calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'timeGridEventDates',
+    var containerEl = document.getElementById('draggable-events');
+    $('.full-calendar').each(function(i, cal) {
+        // Initialize external events
+        new Draggable(containerEl, {
+            itemSelector: '.speech-text',
+            eventData: function(eventEl) {
+                return {
+                    title: eventEl.innerText
+                };
+            }
+        });
+
+        // Initialize the calendar
+        let calendar = new Calendar(cal, {
+            editable: true,
+            droppable: true,
+             initialView: 'timeGridEventDates',
         allDaySlot: false,
 
         headerToolbar: {
@@ -21,6 +37,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 buttonText: 'whole event',
           }
-    }});
-    calendar.render();
+        });
+
+        calendar.render();
+    });
 });

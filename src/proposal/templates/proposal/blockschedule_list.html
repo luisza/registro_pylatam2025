@@ -67,7 +67,7 @@
                         </div>
                     </div>
                     <br>
-                    <div class="jumbotron">
+                    <div class="jumbotron" id="draggable-events">
                         <ul id="speeches" class="connectedSortable droppable" hora="7:00:00">
                             {% for speech in speeches %}
                                 <li id="li_{{ speech.pk }}" class="ui-state-default activity"
@@ -75,7 +75,7 @@
                                     activity_pk="{{ speech.pk }}" color="{{ speech.topic.color }}"
                                     time="{{ speech.speech_type.time }}" is_speech="true" desc="none">
                                     <div class="row">
-                                        <div class="col-sm-8">
+                                        <div class="col-sm-8 speech-text">
                                             {{ speech }}
                                         </div>
                                         <div class="col-sm-4 container_type_time_{{ speech.pk }}">
@@ -186,10 +186,49 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-8" id="calendar" data-start_date="{{start_date}}" data-end_date="{{ end_date }}" ></div>
+        <div class="col-md-8" id="calendar-container" data-start_date="{{start_date}}" data-end_date="{{ end_date }}" >
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                {% for room in rooms_list %}
+                        <li class="nav-item">
+                            <a class="nav-item nav-link" id="calendar-{{forloop.counter}}-tab" data-toggle="tab" href="#calendar-{{forloop.counter}}" role="tab" aria-controls="calendar-{{forloop.counter}}" aria-selected="false">{{ room }}</a>
+                        </li>
+                {% endfor %}
+                <li class="nav-item">
+                    <a id="addroom" href="#" data-toggle="modal" data-target="#room_modal">{% trans 'Add' %}</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="calendarContent">
+                {% for room in rooms_list %}
+                    <div class="full-calendar tab-pane fade" id="calendar-{{forloop.counter}}" role="tabpanel" aria-labelledby="calendar-{{forloop.counter}}-tab"></div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="modal fade" role="dialog" id="room_modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h2 class="modal-title text-center">{% trans 'Create Room' %}</h2>
+                    </div>
+                    <div class="modal-body">
+                        <form name="roomForm" action="proposal/createRoom/" method="post">
+                            {% csrf_token %}
+                            {{ room_form|bootstrap }}
+                            <input name="form_id" value="roomForm" hidden>
+                            <br>
+                            <div class="form-group text-center">
+                                <input type="submit" name="action" class="btn btn-primary" value="{% trans 'Save Room' %}">
+                                <button type="button" class="btn btn-secondary"
+                                        data-dismiss="modal">{% trans 'Close' %}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-
 {% endblock %}
 
 {% block js %}
