@@ -186,7 +186,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-8" id="calendar-container" data-start_date="{{start_date}}" data-end_date="{{ end_date }}" >
+        <div class="col-md-8" id="calendar-container" >
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 {% for room in rooms_list %}
                         <li class="nav-item">
@@ -199,7 +199,7 @@
             </ul>
             <div class="tab-content" id="calendarContent">
                 {% for room in rooms_list %}
-                    <div class="full-calendar tab-pane fade" id="calendar-{{forloop.counter}}" role="tabpanel" aria-labelledby="calendar-{{forloop.counter}}-tab"></div>
+                    <div class="full-calendar tab-pane fade" id="calendar-{{forloop.counter}}" role="tabpanel" aria-labelledby="calendar-{{forloop.counter}}-tab" data-start_date="{{start_date}}" data-end_date="{{ end_date }}"></div>
                 {% endfor %}
             </div>
         </div>
