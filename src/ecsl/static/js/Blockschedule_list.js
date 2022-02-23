@@ -36,9 +36,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         start: start_date_parsed,
                         end: end_date_plus_one,
                     },
-                buttonText: 'whole event',
-          }
-        }});
+                    buttonText: 'whole event',
+                },
+            },
+            // Remove the dragged event from the panel and located into the calendar obj
+            drop: function(info) {
+                // Remove the element from the "Draggable Events" list
+                info.draggedEl.parentNode.removeChild(info.draggedEl);
+            }
+        });
         calendar.render();
     });
 });
