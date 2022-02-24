@@ -62,7 +62,6 @@
                                    class="btn btn-info add-button">
                                     <i style="margin-top: 15px" class="fas fa-search"></i>
                                 </a>
-                                </form>
                             </div>
                         </div>
                     </div>
@@ -189,9 +188,9 @@
         <div class="col-md-8" id="calendar-container" >
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 {% for room in rooms_list %}
-                        <li class="nav-item">
-                            <a class="nav-item nav-link" id="calendar-{{forloop.counter}}-tab" data-toggle="tab" href="#calendar-{{forloop.counter}}" role="tab" aria-controls="calendar-{{forloop.counter}}" aria-selected="false">{{ room }}</a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-item nav-link room-tab" id="calendar-{{forloop.counter}}-tab" data-toggle="tab" href="#calendar-{{forloop.counter}}" role="tab" aria-controls="calendar-{{forloop.counter}}" aria-selected="false">{{ room }}</a>
+                    </li>
                 {% endfor %}
                 <li class="nav-item">
                     <a id="addroom" href="#" data-toggle="modal" data-target="#room_modal">{% trans 'Add' %}</a>
