@@ -16,7 +16,7 @@ class Command(BaseCommand):
         parser.add_argument('--stmont', type=int, default=3, help='Meses posteriores a la fecha')
         parser.add_argument('--duration', type=int, default=3, help='Duración del evento en días')
         parser.add_argument('--rooms', type=int, default=3, help='Número de salas')
-        parser.add_argument('--speechusers', type=int, default=6, help='Número de charlistas')
+        parser.add_argument('--speechusers', type=int, default=15, help='Número de charlistas')
         parser.add_argument('--nocurrent', default=True, action='store_false')
         parser.add_argument('--specialactivities', type=int, default=3, help='Número de actividades especiales')
         parser.add_argument('--clean', type=bool, default=False, help='Limpiar la base de datos actual')
@@ -128,6 +128,23 @@ class Command(BaseCommand):
                                          event=event)
             instance.speech_time_asked = instance.speech_type.time
             speeaches.append(instance)
+
+        # Create a speech with a long title
+        user = User.objects.create_user('user%d_%d' % (event.pk, options['speechusers']),
+                                        'user%d_%d@mailinator.com' % (event.pk, options['speechusers']),
+                                        'admin12345')
+
+        instance = Speech(user=user, speaker_information="speaker {}".format(options['speechusers']),
+                          title="Taller sobre seguridad en sistemas empotrados, que utilizan software libre, enfocados "
+                                "en redes 5G", description="description {}".format(options['speechusers']),
+                          topic=Topic.objects.filter(event=event).order_by("?").first(),
+                          audience="audience {}".format(options['speechusers']),
+                          skill_level=1, notes="notes {}".format(options['speechusers']),
+                          speech_type=SpeechType.objects.filter(is_special=False, event=event).
+                          order_by("?").first(), presentacion="presentacion {}".format(options['speechusers']),
+                          event=event)
+        instance.speech_time_asked = instance.speech_type.time
+        speeaches.append(instance)
 
         Speech.objects.bulk_create(speeaches)
         return speeaches

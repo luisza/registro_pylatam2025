@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     let Calendar = FullCalendar.Calendar;
     let Draggable = FullCalendar.Draggable;
-
-
+    var calendars = [];
     var containerEl = document.getElementById('draggable-events');
+    $('#calendar-1-tab').tab('show');
     $('.full-calendar').each(function(i, cal) {
         start_date_parsed = Date.parse(cal.getAttribute('data-start_date'))
         end_date_parsed = Date.parse(cal.getAttribute('data-end_date'))
@@ -27,7 +27,6 @@ document.addEventListener('DOMContentLoaded', function() {
             allDaySlot: false,
             slotDuration: { minutes:10 },
             slotLabelInterval: { hours:1 },
-
             headerToolbar: {
               right: 'timeGridDay,timeGridEventDates'
             },
@@ -48,6 +47,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 info.draggedEl.parentNode.parentNode.parentNode.removeChild(info.draggedEl.parentNode.parentNode);
             }
         });
+        calendars.push(calendar);
         calendar.render();
+    });
+
+    $('.room-tab').on('shown.bs.tab', function(e) {
+        calendar_index = e.target.getAttribute('data-num');
+        calendars[calendar_index-1].render();
     });
 });
