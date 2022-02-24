@@ -4,10 +4,6 @@ document.addEventListener('DOMContentLoaded', function() {
     var calendars = [];
     var containerEl = document.getElementById('draggable-events');
     $('#calendar-1-tab').tab('show');
-    $('.room-tab').on('shown.bs.tab', function(e) {
-        console.log(e);
-    });
-
     $('.full-calendar').each(function(i, cal) {
         start_date_parsed = Date.parse(cal.getAttribute('data-start_date'))
         end_date_parsed = Date.parse(cal.getAttribute('data-end_date'))
@@ -53,5 +49,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         calendars.push(calendar);
         calendar.render();
+    });
+
+    $('.room-tab').on('shown.bs.tab', function(e) {
+        calendar_index = e.target.getAttribute('data-num');
+        calendars[calendar_index-1].render();
     });
 });
