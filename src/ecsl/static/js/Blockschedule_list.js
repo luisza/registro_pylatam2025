@@ -3,6 +3,11 @@ document.addEventListener('DOMContentLoaded', function() {
     let Draggable = FullCalendar.Draggable;
     var calendars = [];
     var containerEl = document.getElementById('draggable-events');
+    $('#calendar-1-tab').tab('show');
+    $('.room-tab').on('shown.bs.tab', function(e) {
+        console.log(e);
+    });
+
     $('.full-calendar').each(function(i, cal) {
         start_date_parsed = Date.parse(cal.getAttribute('data-start_date'))
         end_date_parsed = Date.parse(cal.getAttribute('data-end_date'))
@@ -48,12 +53,5 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         calendars.push(calendar);
         calendar.render();
-    });
-
-    $('.room-tab').each(function(i, room) {
-        room.addEventListener('click', function(){
-            console.log('Rendering');
-            calendars[i].render();
-        });
     });
 });
