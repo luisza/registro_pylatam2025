@@ -15,7 +15,7 @@ class SpeechForm(forms.ModelForm):
 class TopicForm(forms.ModelForm):
     class Meta:
         model = Topic
-        fields = '__all__'
+        exclude = ('objects', 'event', 'color')
 
 
 class TypeForm(forms.ModelForm):

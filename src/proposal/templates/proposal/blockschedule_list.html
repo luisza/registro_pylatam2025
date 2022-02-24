@@ -134,6 +134,8 @@
                                         {% csrf_token %}
                                         <div class="jumbotron" style="display: inline-grid">
                                             {{ topicForm }}
+                                            <label for="topicColorInput" class="form-label">Color:</label>
+                                            <input name="colorPicker" type="color" class="form-control form-control-color " id="topicColorInput" value="#563d7c" title="Color: ">
                                             <hr>
                                             <input class="btn btn-info" type="submit" value="{% trans 'Save' %}">
                                         </div>
