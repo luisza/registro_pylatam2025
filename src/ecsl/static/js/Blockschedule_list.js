@@ -3,6 +3,15 @@ document.addEventListener('DOMContentLoaded', function() {
     let Draggable = FullCalendar.Draggable;
     var calendars = [];
     var containerEl = document.getElementById('draggable-events');
+
+    // Treeview Initialization
+    $('.tree-toggle').click(function () {
+        $(this).parent().children('ul.tree').toggle(200);
+    });
+    $(function(){
+        $('.tree-toggle').parent().children('ul.tree').toggle(200);
+    });
+
     $('#calendar-1-tab').tab('show');
     $('.full-calendar').each(function(i, cal) {
         start_date_parsed = Date.parse(cal.getAttribute('data-start_date'))
@@ -14,7 +23,13 @@ document.addEventListener('DOMContentLoaded', function() {
             itemSelector: '.speech-text',
             eventData: function(eventEl) {
                 return {
-                    title: eventEl.innerText
+                    title: eventEl.innerText,
+                    backgroundColor: eventEl.getAttribute('data-color'),
+                    duration: {minutes:eventEl.getAttribute('data-duration')},
+                    extendedProps: {
+                        speech_id: eventEl.getAttribute('data-speech'),
+                        special_activity_id: eventEl.getAttribute('data-special')
+                    }
                 };
             }
         });
@@ -60,21 +75,17 @@ document.addEventListener('DOMContentLoaded', function() {
         events = []
         for (let i = 0; i < calendars.length; i++) {
             calendars[i].getEvents().forEach(function(event, index) {
-                let { start, end } = event;
-                let room_name = $(`#calendar-${i+1}-tab`).html()
+                let room_id = $(`#calendar-${i+1}-tab`).attr('data-room-id');
                 events.push({
-                    'start_time': start,
-                    'end_time': end,
-                    'room': room_name
+                    'start_time': event.start,
+                    'end_time': event.end,
+                    'room': room_id,
+                    'speech': event.extendedProps.speech_id != undefined ? event.extendedProps.speech_id : null,
+                    'special': event.extendedProps.special_activity_id != undefined ? event.extendedProps.special_activity_id : null
                 });
             });
         }
     });
 });
 
-// Treeview Initialization
-$('.tree-toggle').click(function () {	$(this).parent().children('ul.tree').toggle(200);
-});
-$(function(){
-$('.tree-toggle').parent().children('ul.tree').toggle(200);
-})
+

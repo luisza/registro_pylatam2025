@@ -78,12 +78,11 @@
                                     <ul id="speeches" class="connectedSortable droppable tree" hora="7:00:00">
                                     {% for speech in speeches %}
                                         {% if speech.topic.id == topic.id %}
-                                        <li id="li_{{ speech.pk }}" class="ui-state-default activity"
-                                            style="background-color: {{ speech.topic.color }};"
-                                            speech="{{ speech.pk }}" color="{{ speech.topic.color }}"
-                                            time="{{ speech.speech_type.time }}" is_speech="true" desc="none">
+                                        <li class="ui-state-default activity" style="background-color: {{ speech.topic.color }};">
                                             <div class="row">
-                                                <div class="col-sm-8 speech-text">
+                                                <div class="col-sm-8 speech-text" id="speech_{{ speech.pk }}"
+                                                data-speech="{{ speech.pk }}" data-color="{{ speech.topic.color }}"
+                                                data-duration="{{ speech.speech_type.time }}">
                                                     {{ speech }}
                                                 </div>
                                                 <div class="col-sm-4 container_type_time_{{ speech.pk }}">
@@ -128,7 +127,7 @@
                                 <li class="ui-state-default activity" style="background-color: #cccccc;" color="#cccccc"
                                     time="{{ special.type.time }}" is_speech=""
                                     desc="{{ special.message }}"
-                                    special="{{ special.pk }}">
+                                    special="special_{{ special.pk }}">
                                     {{ special }} / {{ special.type.time }} min
                                 </li>
                             {% endfor %}
@@ -208,7 +207,7 @@
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 {% for room in rooms_list %}
                     <li class="nav-item">
-                        <a class="nav-item nav-link room-tab" id="calendar-{{forloop.counter}}-tab" data-toggle="tab" data-num="{{forloop.counter}}" href="#calendar-{{forloop.counter}}" role="tab" aria-controls="calendar-{{forloop.counter}}" aria-selected="false">{{ room }}</a>
+                        <a class="nav-item nav-link room-tab" id="calendar-{{forloop.counter}}-tab" data-toggle="tab" data-room-id="{{room.id}}" data-num="{{forloop.counter}}" href="#calendar-{{forloop.counter}}" role="tab" aria-controls="calendar-{{forloop.counter}}" aria-selected="false">{{ room }}</a>
                     </li>
                 {% endfor %}
                 <li class="nav-item">
@@ -256,10 +255,10 @@
           document.getElementById("eventTimeValue").innerHTML = val + " minutos";
         }
     </script>
+    <script src="https://cdn.jsdelivr.net/combine/npm/fullcalendar@5.10.1,npm/fullcalendar@5.10.1/locales-all.min.js,npm/fullcalendar@5.10.1/locales-all.min.js,npm/fullcalendar@5.10.1/main.min.js"></script>
     <script src='https://cdn.jsdelivr.net/npm/rrule@2.6.4/dist/es5/rrule.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/rrule@5.5.0/main.global.min.js'></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script src="https://cdn.jsdelivr.net/combine/npm/fullcalendar@5.10.1,npm/fullcalendar@5.10.1/locales-all.min.js,npm/fullcalendar@5.10.1/locales-all.min.js,npm/fullcalendar@5.10.1/main.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/combine/npm/fullcalendar@5.10.1/main.min.css,npm/fullcalendar@5.10.1/main.min.css">
     <script src="{% static 'js/Blockschedule_list.js' %}"></script>
 {% endblock %}
