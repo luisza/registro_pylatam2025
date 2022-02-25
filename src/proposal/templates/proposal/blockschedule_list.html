@@ -71,8 +71,8 @@
                             {% for speech in speeches %}
                                 <li id="li_{{ speech.pk }}" class="ui-state-default activity"
                                     style="background-color: {{ speech.topic.color }};"
-                                    activity_pk="{{ speech.pk }}" color="{{ speech.topic.color }}"
-                                    time="{{ speech.speech_type.time }}" is_speech="true" desc="none">
+                                    speech="{{ speech.pk }}" color="{{ speech.topic.color }}"
+                                    time="{{ speech.speech_type.time }}" desc="none">
                                     <div class="row">
                                         <div class="col-sm-8 speech-text">
                                             {{ speech }}
@@ -114,7 +114,7 @@
                                 <li class="ui-state-default activity" style="background-color: #cccccc;" color="#cccccc"
                                     time="{{ special.type.time }}" is_speech=""
                                     desc="{{ special.message }}"
-                                    activity_pk="{{ special.pk }}">
+                                    special="{{ special.pk }}">
                                     {{ special }} / {{ special.type.time }} min
                                 </li>
                             {% endfor %}
@@ -201,6 +201,7 @@
                     <a id="addroom" href="#" data-toggle="modal" data-target="#room_modal">{% trans 'Add' %}</a>
                 </li>
             </ul>
+            <button type="button" id="save" class="btn btn-success">Guardar</button>
             <div class="tab-content" id="calendarContent">
                 {% for room in rooms_list %}
                     <div class="full-calendar tab-pane fade" id="calendar-{{forloop.counter}}" role="tabpanel" aria-labelledby="calendar-{{forloop.counter}}-tab" data-start_date="{{start_date}}" data-end_date="{{ end_date }}"></div>
@@ -241,6 +242,8 @@
           document.getElementById("eventTimeValue").innerHTML = val + " minutos";
         }
     </script>
+    <script src='https://cdn.jsdelivr.net/npm/rrule@2.6.4/dist/es5/rrule.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/rrule@5.5.0/main.global.min.js'></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdn.jsdelivr.net/combine/npm/fullcalendar@5.10.1,npm/fullcalendar@5.10.1/locales-all.min.js,npm/fullcalendar@5.10.1/locales-all.min.js,npm/fullcalendar@5.10.1/main.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/combine/npm/fullcalendar@5.10.1/main.min.css,npm/fullcalendar@5.10.1/main.min.css">

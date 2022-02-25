@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
             droppable: true,
             initialView: 'timeGridEventDates',
             allDaySlot: false,
+            forceEventDuration: true,
             slotDuration: { minutes:10 },
             slotLabelInterval: { hours:1 },
             headerToolbar: {
@@ -42,7 +43,6 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             // Remove the dragged event from the panel and located into the calendar obj
             drop: function(info) {
-                console.log(info)
                 // Remove the element from the "Draggable Events" list
                 info.draggedEl.parentNode.parentNode.parentNode.removeChild(info.draggedEl.parentNode.parentNode);
             }
@@ -54,5 +54,20 @@ document.addEventListener('DOMContentLoaded', function() {
     $('.room-tab').on('shown.bs.tab', function(e) {
         calendar_index = e.target.getAttribute('data-num');
         calendars[calendar_index-1].render();
+    });
+
+    $('#save').on('click', function(e) {
+        events = []
+        for (let i = 0; i < calendars.length; i++) {
+            calendars[i].getEvents().forEach(function(event, index) {
+                let { start, end } = event;
+                let room_name = $(`#calendar-${i+1}-tab`).html()
+                events.push({
+                    'start_time': start,
+                    'end_time': end,
+                    'room': room_name
+                });
+            });
+        }
     });
 });
