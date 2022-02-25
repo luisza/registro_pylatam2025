@@ -15,13 +15,13 @@ class SpeechForm(forms.ModelForm):
 class TopicForm(forms.ModelForm):
     class Meta:
         model = Topic
-        exclude = ('objects', 'event', 'color')
+        exclude = ('event', 'color')
 
 
 class TypeForm(forms.ModelForm):
     class Meta:
         model = SpeechType
-        fields = '__all__'
+        exclude = ('event','time',)
 
 
 class SpecialActivityForm(forms.ModelForm):
