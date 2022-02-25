@@ -131,7 +131,7 @@
                                 <div class="modal-body" style="text-align: center">
                                     <form action="proposal/createTopic/" method="post">
                                         {% csrf_token %}
-                                        <div class="jumbotron" style="display: inline-grid">
+                                        <div class="jumbotron" style="display: inline-grid; overflow: hidden">
                                             {{ topicForm }}
                                             <label for="topicColorInput" class="form-label">Color:</label>
                                             <input name="colorPicker" type="color" class="form-control form-control-color " id="topicColorInput" value="#563d7c" title="Choose your color">
