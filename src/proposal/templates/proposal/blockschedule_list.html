@@ -251,9 +251,8 @@
 
 {% block js %}
     <script>
-        function changeTimeValue(val) {
-          document.getElementById("eventTimeValue").innerHTML = val + " minutos";
-        }
+        var save_url = "{% url 'proposal:events-list' %}"
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     </script>
     <script src="https://cdn.jsdelivr.net/combine/npm/fullcalendar@5.10.1,npm/fullcalendar@5.10.1/locales-all.min.js,npm/fullcalendar@5.10.1/locales-all.min.js,npm/fullcalendar@5.10.1/main.min.js"></script>
     <script src='https://cdn.jsdelivr.net/npm/rrule@2.6.4/dist/es5/rrule.min.js'></script>

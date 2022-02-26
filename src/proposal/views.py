@@ -6,14 +6,17 @@ from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
+from rest_framework import viewsets
+from rest_framework.generics import ListCreateAPIView
 
 from ecsl.models import EventECSL
-from proposal.models import Speech
+from proposal.models import Speech, SpeechSchedule
 from .forms import SpeechForm
 from .models import SpeechType
 
-
 # Create your views here.
+from .serializers import SpeechScheduleSerializer
+
 
 class SpeechListView(generic.ListView):
     template_name = 'proposal/speech_list.html'
@@ -169,3 +172,12 @@ def createUpdateview(request, speech_id=None):
         return HttpResponseRedirect(reverse('proposal:speech-list'))
     else:
         return render(request, "proposal/speech_form.html", context)
+
+
+class EventScheduleViewSet(viewsets.ModelViewSet):
+    queryset = SpeechSchedule.objects.all()
+    model = SpeechSchedule
+    serializer_class = SpeechScheduleSerializer
+
+    def get_serializer(self, *args, **kwargs):
+        return self.serializer_class(data=self.request.data, many=True)

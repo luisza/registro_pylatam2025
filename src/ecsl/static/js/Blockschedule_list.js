@@ -8,9 +8,14 @@ document.addEventListener('DOMContentLoaded', function() {
     $('.tree-toggle').click(function () {
         $(this).parent().children('ul.tree').toggle(200);
     });
+
     $(function(){
         $('.tree-toggle').parent().children('ul.tree').toggle(200);
     });
+
+    function changeTimeValue(val) {
+        document.getElementById("eventTimeValue").innerHTML = val + " minutos";
+    }
 
     $('#calendar-1-tab').tab('show');
     $('.full-calendar').each(function(i, cal) {
@@ -85,6 +90,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
         }
+
+        fetch(save_url, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            mode: 'same-origin',
+            body: JSON.stringify(events)
+        }).then(res => res.json())
+          .then(res => console.log(res));
     });
 });
 
