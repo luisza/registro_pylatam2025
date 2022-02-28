@@ -3,6 +3,11 @@ document.addEventListener('DOMContentLoaded', function() {
     let Draggable = FullCalendar.Draggable;
     var calendars = [];
     var containerEl = document.getElementById('draggable-events');
+
+    function changeTimeValue(val) {
+        document.getElementById("eventTimeValue").innerHTML = val + " minutos";
+    }
+
     $('#calendar-1-tab').tab('show');
     $('.full-calendar').each(function(i, cal) {
         start_date_parsed = Date.parse(cal.getAttribute('data-start_date'))
@@ -14,7 +19,13 @@ document.addEventListener('DOMContentLoaded', function() {
             itemSelector: '.speech-text',
             eventData: function(eventEl) {
                 return {
-                    title: eventEl.innerText
+                    title: eventEl.innerText,
+                    backgroundColor: eventEl.getAttribute('data-color'),
+                    duration: {minutes:eventEl.getAttribute('data-duration')},
+                    extendedProps: {
+                        speech_id: eventEl.getAttribute('data-speech'),
+                        special_activity_id: eventEl.getAttribute('data-special')
+                    }
                 };
             }
         });
@@ -25,6 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
             droppable: true,
             initialView: 'timeGridEventDates',
             allDaySlot: false,
+            forceEventDuration: true,
             slotDuration: { minutes:10 },
             slotLabelInterval: { hours:1 },
             headerToolbar: {
@@ -42,7 +54,6 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             // Remove the dragged event from the panel and located into the calendar obj
             drop: function(info) {
-                console.log(info)
                 // Remove the element from the "Draggable Events" list
                 info.draggedEl.parentNode.parentNode.parentNode.removeChild(info.draggedEl.parentNode.parentNode);
             }
@@ -55,4 +66,34 @@ document.addEventListener('DOMContentLoaded', function() {
         calendar_index = e.target.getAttribute('data-num');
         calendars[calendar_index-1].render();
     });
+
+    $('#save').on('click', function(e) {
+        events = []
+        for (let i = 0; i < calendars.length; i++) {
+            calendars[i].getEvents().forEach(function(event, index) {
+                let room_id = $(`#calendar-${i+1}-tab`).attr('data-room-id');
+                events.push({
+                    'start_time': event.start,
+                    'end_time': event.end,
+                    'room': room_id,
+                    'speech': event.extendedProps.speech_id != undefined ? event.extendedProps.speech_id : null,
+                    'special': event.extendedProps.special_activity_id != undefined ? event.extendedProps.special_activity_id : null
+                });
+            });
+        }
+
+        fetch(save_url, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            mode: 'same-origin',
+            body: JSON.stringify(events)
+        }).then(res => res.json())
+          .then(res => console.log(res));
+    });
 });
+
+

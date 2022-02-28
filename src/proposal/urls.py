@@ -7,8 +7,16 @@ Free as freedom will be 27/10/2016
 '''
 
 from __future__ import unicode_literals
+
+from rest_framework.routers import DefaultRouter
+
 from proposal import views, types, topics, special_activities, rooms
-from django.urls import path
+from django.urls import path, include
+
+from proposal.views import EventScheduleViewSet
+
+router = DefaultRouter()
+router.register(r'schedule/events', EventScheduleViewSet, basename='events')
 
 app_name = 'proposal'
 urlpatterns = [
@@ -22,3 +30,5 @@ urlpatterns = [
     path('filterSpeeches/', views.get_all_speeches, name='filter-speeches'),
     path('createSpecial/', special_activities.CreateSpecialActivity.as_view(), name='create-special'),
 ]
+
+urlpatterns += router.urls
