@@ -4,15 +4,6 @@ document.addEventListener('DOMContentLoaded', function() {
     var calendars = [];
     var containerEl = document.getElementById('draggable-events');
 
-    // Treeview Initialization
-    $('.tree-toggle').click(function () {
-        $(this).parent().children('ul.tree').toggle(200);
-    });
-
-    $(function(){
-        $('.tree-toggle').parent().children('ul.tree').toggle(200);
-    });
-
     function changeTimeValue(val) {
         document.getElementById("eventTimeValue").innerHTML = val + " minutos";
     }
