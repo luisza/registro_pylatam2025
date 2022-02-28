@@ -21,13 +21,11 @@ class CreateType(generic.CreateView):
         new_type = SpeechType.objects.create(
             name=form.cleaned_data['name'],
             time=form.data['eventTime'],
-            event=EventECSL.objects.filter(current=True).first(),
-            # que pasa si tengo 2 current True, pueden haber varios current
-            # dentro del form mando el id del build agenda.
+            event=EventECSL.objects.filter(pk=event_id),
         )
         instance = {
             "type_name": new_type.name,
-            "type_color": new_type.color,
+            "type_time": new_type.time,
             "type_event": new_type.event,
         }
         return JsonResponse(instance)
