@@ -45,23 +45,26 @@
                     </div>
                     <br>
                     <!-- START  Speeches Panel -->
-                    <div class="jumbotron" id="draggable-events">
-                        <ul class="nav nav-list nav-menu-list-style">
+                    <div class="jumbotron" id="draggable-events" style="padding: 0;">
+                        <ul class="nav nav-list nav-menu-list-style" style="width: 100%; padding: 0;">
                             {% for topic in topics %}
                                 <li>
                                     <label class="tree-toggle glyphicon-icon-rpad">
                                         {{topic}}
                                         <span class="menu-collapsible-icon glyphicon glyphicon-chevron-down"></span>
                                     </label>
-                                    <ul id="speeches" class="connectedSortable droppable tree" hora="7:00:00">
+                                    <ul id="speeches" class="connectedSortable droppable tree" hora="7:00:00" style="width: 100%; padding: 0;">
                                     {% for speech in speeches %}
                                         {% if speech.topic.id == topic.id %}
-                                        <li class="ui-state-default activity" style="border-style: solid;">
-                                            <div class="row">
-                                                <div class="col-sm-8 speech-text" id="speech_{{ speech.pk }}"
+                                        <li class="ui-state-default activity" style="border-style: solid; width: 100%; padding: 0; margin-top: 5px;">
+                                            <div class="row" style="margin: 5px 0px 5px 0px;">
+                                                <div class="col-sm-6 speech-text" id="speech_{{ speech.pk }}"
                                                 data-speech="{{ speech.pk }}" data-color="{{ speech.topic.color }}"
-                                                data-duration="{{ speech.speech_type.time }}">
+                                                data-duration="{{ speech.speech_type.time }}" style="text-overflow: ellipsis;overflow: hidden;">
                                                     {{ speech }}
+                                                </div>
+                                                <div class="col-sm-6 speech-text">
+                                                    {{ speech.speech_type.time }} min - {{ speech.speech_type.name }}
                                                 </div>
                                             </div>
                                         </li>
