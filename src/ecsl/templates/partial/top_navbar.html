@@ -15,9 +15,6 @@
   <ul class="dropdown-menu" aria-labelledby="admindw">
     <li><a href="{% url 'admin:ecsl_eventecsl_changelist' %}" target="_blank">{% trans 'Events' %}</a></li>
     <li><a href="{% url 'admin:ecsl_becas_changelist' %}" target="_blank">{% trans 'Becas' %}</a></li>
-    {% if perms.proposal.add_blockschedule %}
-      <li><a href="{% url 'edit_charlas' %}">{% trans 'Build Agenda' %}</a></li>
-    {% endif %}
     <li><a href="{% url 'admin:ecsl_payment_changelist' %}" target="_blank">{% trans 'Payment' %}</a></li>
     <li><a href="{% url 'admin:proposal_speech_changelist' %}" target="_blank">{% trans 'Speech' %}</a></li>
     <li role="separator" class="divider"></li>

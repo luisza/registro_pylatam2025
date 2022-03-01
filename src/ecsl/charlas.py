@@ -12,6 +12,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core import serializers
 from django.db.models.query_utils import Q
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse_lazy
 from django.urls.base import reverse
 from django.utils import timezone
 from django.utils.decorators import method_decorator
@@ -229,6 +230,7 @@ class EditCharlas(PermissionRequiredMixin, CharlaContext, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['view'] = 'edit'
+        context['event_id'] = self.kwargs['pk']
         return context
 
     def post(self, request, *args, **kwargs):

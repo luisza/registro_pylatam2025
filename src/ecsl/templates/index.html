@@ -67,7 +67,7 @@
                                <i class="fas fa-calendar-alt"></i> {% trans 'Agenda' %}
                             </a>
                             {% if request.user.is_authenticated and request.user.is_staff %}
-                            <a class="btn btn-primary" data-event_id="{{event_id}}" href="{% url 'edit_charlas' %}">
+                            <a class="btn btn-primary" href="{% url 'edit_charlas' pk=event_id %}">
                                <i class="fas fa-pen-square"></i> {% trans 'Build agenda' %}
                             </a>
                             {% endif %}

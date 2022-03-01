@@ -106,7 +106,7 @@
                                     <h4 class="modal-title"> {% trans 'New Speech Topic' %} </h4>
                                 </div>
                                 <div class="modal-body" style="text-align: center">
-                                    <form action="proposal/createTopic/" method="post">
+                                    <form method="post" id="createTopic-form">
                                         {% csrf_token %}
                                         <div class="jumbotron" style="display: inline-grid; overflow: hidden">
                                             {{ topicForm }}
@@ -129,7 +129,7 @@
                                     <h4 class="modal-title"> {% trans 'New Speech Type' %}</h4>
                                 </div>
                                 <div class="modal-body" style="text-align: center">
-                                    <form action="proposal/createType/" method="post" oninput="changeTimeValue(eventTime.valueAsNumber)">
+                                    <form action="proposal/createType/" method="post" oninput="changeTimeValue(eventTime.valueAsNumber)" id="createType-form">
                                         {% csrf_token %}
                                         <div class="jumbotron" style="display: inline-grid; overflow: hidden">
                                             {{ typeForm }}
@@ -217,6 +217,8 @@
     <script>
         var save_url = "{% url 'proposal:events-list' %}"
         const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        var event_id = "{{ event_id }}";
+        var create_topic_url = "{% url 'proposal:create-topic' %}";
     </script>
     <script src="https://cdn.jsdelivr.net/combine/npm/fullcalendar@5.10.1,npm/fullcalendar@5.10.1/locales-all.min.js,npm/fullcalendar@5.10.1/locales-all.min.js,npm/fullcalendar@5.10.1/main.min.js"></script>
     <script src='https://cdn.jsdelivr.net/npm/rrule@2.6.4/dist/es5/rrule.min.js'></script>

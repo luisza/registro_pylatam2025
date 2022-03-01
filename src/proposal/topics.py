@@ -15,6 +15,9 @@ class CreateTopic(generic.CreateView):
     model = Topic
     form_class = TopicForm
 
+    def get_form(self):
+        return self.form_class(self.request.POST)
+
     def form_valid(self, form):
         event_id = self.request.POST.get('event_id')
         new_topic = Topic.objects.create(
