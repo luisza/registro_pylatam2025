@@ -10,36 +10,20 @@
     <div id="info-page">
         <h2> Temáticas </h2>
     </div>
-
+    <br>
     <div class="row">
         <div class="col-md-4" id="filterPanel">
-            <h4> {% trans 'Speeches' %} </h4>
-            <hr>
             <div class="card">
                 <div class="card-body">
-                    <div class="row flex">
-                        <div class="col-md-6 inline-flex">
-                            <div class="col-2">
-                                <span class="input-group-btn">
-                                    <a style="height: 40px;" data-toggle="modal"
-                                       data-target="#topic-modal" class="btn btn-info add-button">
-                                        <i class="fas fa-plus" style="margin-top: 15px"></i>
-                                    </a>
-                                </span>
-                            </div>
-                            <div class="col-10">
-                                <form id="filter" method="post">
-                                    {% csrf_token %}
-                                    <select class="btn sidebar-select btn-primary" style="height: 40px" name="topic"
-                                            id="topic">
-                                        <option selected value="None">{% trans 'Topic' %}</option>
-                                        {% for topic in topics %}
-                                            <option value={{ topic.id }}>{{ topic }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </form>
-                            </div>
+                    <div class="inline-flex">
+                        <h4> {% trans 'Topic' %} </h4>
+                        <div class="add-activity">
+                            <a data-toggle="modal" data-target="#topic-modal"
+                               class="btn btn-info add-button pl-2"><i class="fas fa-plus"></i></a>
                         </div>
+                    </div>
+                    <hr>
+                    <div class="row flex">
                         <div class="col-md-6 inline-flex">
                             <div class="col-2">
                                 <span class="input-group-btn">
@@ -57,50 +41,30 @@
                                     {% endfor %}
                                 </select>
                             </div>
-                            <div class="col-1">
-                                <a style="height: 40px" onclick="send_filter(0,0)" id="search"
-                                   class="btn btn-info add-button">
-                                    <i style="margin-top: 15px" class="fas fa-search"></i>
-                                </a>
-                            </div>
                         </div>
                     </div>
                     <br>
                     <!-- START  Speeches Panel -->
-                    <div class="jumbotron" id="draggable-events">
-                        <ul class="nav nav-list nav-menu-list-style">
+                    <div class="jumbotron" id="draggable-events" style="padding: 0;">
+                        <ul class="nav nav-list nav-menu-list-style" style="width: 100%; padding: 0;">
                             {% for topic in topics %}
                                 <li>
                                     <label class="tree-toggle glyphicon-icon-rpad">
                                         {{topic}}
                                         <span class="menu-collapsible-icon glyphicon glyphicon-chevron-down"></span>
                                     </label>
-                                    <ul id="speeches" class="connectedSortable droppable tree" hora="7:00:00">
+                                    <ul id="speeches" class="connectedSortable droppable tree" hora="7:00:00" style="width: 100%; padding: 0;">
                                     {% for speech in speeches %}
                                         {% if speech.topic.id == topic.id %}
-                                        <li class="ui-state-default activity" style="background-color: {{ speech.topic.color }};">
-                                            <div class="row">
-                                                <div class="col-sm-8 speech-text" id="speech_{{ speech.pk }}"
+                                        <li class="ui-state-default activity" style="border-style: solid; width: 100%; padding: 0; margin-top: 5px;">
+                                            <div class="row" style="margin: 5px 0px 5px 0px;">
+                                                <div class="col-sm-6 speech-text" id="speech_{{ speech.pk }}"
                                                 data-speech="{{ speech.pk }}" data-color="{{ speech.topic.color }}"
-                                                data-duration="{{ speech.speech_type.time }}">
+                                                data-duration="{{ speech.speech_type.time }}" style="text-overflow: ellipsis;overflow: hidden;">
                                                     {{ speech }}
                                                 </div>
-                                                <div class="col-sm-4 container_type_time_{{ speech.pk }}">
-                                                    <select selected="{{ speech.speech_type.id }}" style="width: 100%"
-                                                            class="btn btn-primary selectType" id="type_time"
-                                                            onchange="update_times({{ speech.pk }},this, {{ speech.speech_type.time }}, 0)">
-
-                                                        <option disabled> Asked Time {{ speech.speech_time_asked }} min</option>
-                                                        {% for type in types %}
-                                                            {% if  type.id == speech.speech_type.id %}
-                                                                <option selected
-                                                                        value="{{ type.time }}-{{ type.id }}">{{ type }}</option>
-
-                                                            {% else %}
-                                                                <option value="{{ type.time }}-{{ type.id }}">{{ type }}</option>
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    </select>
+                                                <div class="col-sm-6 speech-text">
+                                                    {{ speech.speech_type.time }} min - {{ speech.speech_type.name }}
                                                 </div>
                                             </div>
                                         </li>
@@ -170,8 +134,8 @@
                                         <div class="jumbotron" style="display: inline-grid; overflow: hidden">
                                             {{ typeForm }}
                                             <label for="eventTime">Duración del evento:</label>
-                                            <input id ="eventTime" name="eventTime" type="range" step="10" min="10" max="1440" value="60">
-                                            <output id="eventTimeValue" name="eventTimeValue" for="eventTime" >60 minutos</output>
+                                            <input id ="eventTime" name="eventTime" type="range" step="10" min="10" max="480" value="60">
+                                            <output id="eventTimeValue" name="eventTimeValue" for="eventTime" >60 min</output>
                                             <hr>
                                             <input class="btn btn-info" type="submit" value="{% trans 'Save' %}">
                                         </div>
@@ -259,5 +223,6 @@
     <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/rrule@5.5.0/main.global.min.js'></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/combine/npm/fullcalendar@5.10.1/main.min.css,npm/fullcalendar@5.10.1/main.min.css">
-    <script src="{% static 'js/Blockschedule_list.js' %}"></script>z
+    <script src="{% static 'js/Blockschedule_list.js' %}"></script>
+    <script src="{% static 'js/speeches_panel.js' %}"></script>
 {% endblock %}

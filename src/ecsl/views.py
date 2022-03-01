@@ -92,6 +92,7 @@ class Index(TemplateView):
         context['event_dates'] = date
         context['event_location'] = current_event.location
         context['event_description'] = current_event.description
+        context['event_id'] = current_event.pk
 
         return context
 
