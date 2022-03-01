@@ -33,9 +33,8 @@
                                 </span>
                             </div>
                             <div class="col-9">
-                                <select class="btn sidebar-select btn-primary" style="height: 40px" name="type"
-                                        id="type">
-                                    <option selected value="None">{% trans 'Type' %}</option>
+                                <select id="filterSpeechesType" class="btn sidebar-select btn-primary" style="height: 40px" name="type">
+                                    <option selected value="all">{% trans 'Type' %}</option>
                                     {% for type in types %}
                                         <option time={{ type.time }} value={{ type.id }}>{{ type }}</option>
                                     {% endfor %}
@@ -56,7 +55,7 @@
                                     <ul id="speeches" class="connectedSortable droppable tree" hora="7:00:00" style="width: 100%; padding: 0;">
                                     {% for speech in speeches %}
                                         {% if speech.topic.id == topic.id %}
-                                        <li class="ui-state-default activity" style="border-style: solid; width: 100%; padding: 0; margin-top: 5px;">
+                                        <li id={{ speech.speech_type.id }} class="ui-state-default activity" style="border-style: solid; width: 100%; padding: 0; margin-top: 5px;">
                                             <div class="row" style="margin: 5px 0px 5px 0px;">
                                                 <div class="col-sm-6 speech-text" id="speech_{{ speech.pk }}"
                                                 data-speech="{{ speech.pk }}" data-color="{{ speech.topic.color }}"
