@@ -85,12 +85,6 @@ class Calendar {
         return events;
     }
 
-    getEventByHtmlId(id){
-        this.calendar.getEvents().forEach(function(event, index) {
-            event.setProp('html_id', events)
-        });
-    }
-
     setEventsID(events){
         this.calendar.getEvents().forEach(function(event, index) {
             for (let i = 0; i < events.length; i++) {
@@ -123,15 +117,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             };
         }
-    });
-
-    // Treeview Initialization
-    $('.tree-toggle').click(function () {
-        $(this).parent().children('ul.tree').toggle(200);
-    });
-
-    $(function(){
-        $('.tree-toggle').parent().children('ul.tree').toggle(200);
     });
 
     function changeTimeValue(val) {
