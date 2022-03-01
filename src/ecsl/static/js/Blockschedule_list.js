@@ -39,6 +39,7 @@ class Calendar {
             forceEventDuration: true,
             slotDuration: { minutes:10 },
             slotLabelInterval: { hours:1 },
+            eventOverlap: false,
             headerToolbar: {
               right: 'timeGridDay,timeGridEventDates'
             },
