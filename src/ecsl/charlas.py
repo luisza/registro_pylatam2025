@@ -5,6 +5,7 @@ Created on 5 jun. 2017
 '''
 import datetime
 import json
+from itertools import chain
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -83,6 +84,7 @@ class CharlaContext:
             sala = 1
 
         speeches = Speech.objects.filter(event=current_event, is_scheduled=False)
+        scheduled_speeches = SpeechSchedule.objects.filter(speech__event=current_event)
         special = SpecialActivity.objects.filter(event=current_event, is_scheduled=False)
         context['dayList'] = days
         context['start_date'] = str(days[0])
@@ -95,6 +97,7 @@ class CharlaContext:
         context['diaActual'] = days[dia - 1]
         context['form'] = scheduleForm()
         context['speeches'] = speeches
+        context['scheduled_speeches'] = scheduled_speeches
         context['topicForm'] = TopicForm()
         context['typeForm'] = TypeForm()
         context['specialForm'] = SpecialActivityForm()

@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.core import serializers
+from django.db.models import Q
 from django.http import JsonResponse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect
@@ -11,7 +12,7 @@ from rest_framework import viewsets, status
 from rest_framework.generics import ListCreateAPIView
 
 from ecsl.models import EventECSL
-from proposal.models import Speech, SpeechSchedule
+from proposal.models import Speech, SpeechSchedule, SpecialActivity
 from .forms import SpeechForm
 from .models import SpeechType
 
@@ -197,6 +198,10 @@ class EventScheduleViewSet(viewsets.ModelViewSet):
                         'room': speech['room']
                     },
                 )
+                if created and obj.speech:
+                    Speech.objects.filter(pk=obj.speech.pk).update(is_scheduled=Q(is_scheduled=False))
+                if created and obj.special:
+                    SpecialActivity.objects.filter(pk=obj.special.pk).update(is_scheduled=Q(is_scheduled=False))
                 serializer.data[index].update({'id': obj.id, 'html_id': obj.html_id})
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         else:
