@@ -4,6 +4,7 @@ from proposal.models import SpeechSchedule
 
 
 class SpeechScheduleSerializer(serializers.ModelSerializer):
+    html_id = serializers.CharField(validators=[])
 
     class Meta:
         model = SpeechSchedule

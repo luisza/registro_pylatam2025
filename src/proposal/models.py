@@ -1,3 +1,5 @@
+import uuid
+
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -125,6 +127,7 @@ class Register_Speech(models.Model):
 
 
 class SpeechSchedule(models.Model):
+    html_id = models.UUIDField(default=uuid.uuid4, unique=True)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     speech = models.ForeignKey(Speech, on_delete=models.CASCADE, null=True, blank=True)

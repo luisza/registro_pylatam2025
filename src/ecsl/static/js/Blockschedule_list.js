@@ -1,3 +1,5 @@
+var calendars = [];
+
 function saveEvents(events){
     fetch(save_url, {
         method: 'POST',
@@ -8,8 +10,12 @@ function saveEvents(events){
         },
         mode: 'same-origin',
         body: JSON.stringify(events)
-    }).then(res => res.json())
-      .then(res => console.log(res));
+    }).then(response => response.json())
+    .then(events => {
+        for (let i = 0; i < calendars.length; i++) {
+            calendars[i].setEventsID(events);
+        }
+    });
 }
 
 function getRandomUUID() {
@@ -44,9 +50,12 @@ class Calendar {
             },
             // Remove the dragged event from the panel and located into the calendar obj
             drop: function(info) {
-                $(info.draggedEl).closest('.activity').remove();
                 // Remove the element from the "Draggable Events" list
-                //info.draggedEl.parentNode.parentNode.parentNode.removeChild(info.draggedEl.parentNode.parentNode);
+                $(info.draggedEl).closest('.activity').remove();
+            },
+            eventReceive: function(info) {
+                // Remove the element from the "Draggable Events" list
+                info.event.setExtendedProp('html_id', getRandomUUID());
             }
         });
     }
@@ -59,9 +68,9 @@ class Calendar {
         let events = [];
         let room_id = $(`#calendar-${this.room+1}-tab`).attr('data-room-id');
         this.calendar.getEvents().forEach(function(event, index) {
-            let uuid = getRandomUUID();
             events.push({
-                'id': uuid,
+                'id': event.id,
+                'html_id': event.extendedProps.html_id,
                 'start_time': event.start,
                 'end_time': event.end,
                 'room': room_id,
@@ -72,14 +81,29 @@ class Calendar {
         return events;
     }
 
+    getEventByHtmlId(id){
+        this.calendar.getEvents().forEach(function(event, index) {
+            event.setProp('html_id', events)
+        });
+    }
+
+    setEventsID(events){
+        this.calendar.getEvents().forEach(function(event, index) {
+            for (let i = 0; i < events.length; i++) {
+                if(events[i].html_id == event.extendedProps.html_id){
+                    event.setProp('id', events[i].id);
+                    continue;
+                }
+            }
+        });
+    }
+
     render(){
         this.calendar.render();
     }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    let calendars = [];
-
     // Initialize external events
     let containerEl = document.getElementById('draggable-events');
     new FullCalendar.Draggable(containerEl, {
@@ -132,7 +156,6 @@ document.addEventListener('DOMContentLoaded', function() {
         for (let i = 0; i < calendars.length; i++) {
             events.push(...calendars[i].getEvents());
         }
-        console.log(events);
         saveEvents(events);
     });
 });

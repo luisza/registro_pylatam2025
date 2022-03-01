@@ -6,7 +6,8 @@ from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
-from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework import viewsets, status
 from rest_framework.generics import ListCreateAPIView
 
 from ecsl.models import EventECSL
@@ -181,3 +182,22 @@ class EventScheduleViewSet(viewsets.ModelViewSet):
 
     def get_serializer(self, *args, **kwargs):
         return self.serializer_class(data=self.request.data, many=True)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            for index, speech in enumerate(serializer.validated_data):
+                obj, created = self.model.objects.update_or_create(
+                    html_id=speech['html_id'],
+                    defaults={
+                        'start_time': speech['start_time'],
+                        'end_time': speech['end_time'],
+                        'speech': speech['speech'],
+                        'special': speech['special'],
+                        'room': speech['room']
+                    },
+                )
+                serializer.data[index].update({'id': obj.id, 'html_id': obj.html_id})
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
