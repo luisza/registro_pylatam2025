@@ -107,11 +107,10 @@
                                 <div class="modal-body" style="text-align: center">
                                     <form method="post" id="createTopic-form">
                                         {% csrf_token %}
+                                        <div class="alert alert-danger" id="wrongTopicFormAlert" role="alert" style="display: none; opacity: 70%">
+                                        </div>
                                         <div class="jumbotron" style="display: inline-grid; overflow: hidden">
                                             {{ topicForm }}
-                                           <!-- <label for="topicColorInput" class="form-label">Color:</label>
-                                            <input name="colorPicker" type="color" class="form-control form-control-color " id="topicColorInput" value="#563d7c" title="Choose your color">
-                                           -->
                                             <hr>
                                             <input class="btn btn-info" type="submit" value="{% trans 'Save' %}">
                                         </div>
@@ -231,7 +230,6 @@
             });
         {% endfor %}
         const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        var event_id = "{{ event_id }}";
         var create_topic_url = "{% url 'proposal:create-topic' %}";
     </script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>

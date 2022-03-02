@@ -35,6 +35,7 @@ def dayAmout(date1, date2):
     difference = date1 - date2
     return int(difference.days) + 1
 
+
 def get_random_color():
     color = "%06x" % random.randint(0, 0xFFFFFF)
     return "#"+color
@@ -103,7 +104,6 @@ class CharlaContext:
         context['form'] = scheduleForm()
         context['speeches'] = speeches
         context['scheduled_speeches'] = scheduled_speeches
-        context['topicForm'] = TopicForm(initial={'event': current_event, 'color': get_random_color()})
         context['typeForm'] = TypeForm()
         context['specialForm'] = SpecialActivityForm()
         context['specialActivity'] = special
@@ -227,7 +227,7 @@ class EditCharlas(PermissionRequiredMixin, CharlaContext, ListView):
     permission_required = 'proposal.add_blockschedule'
 
     def dispatch(self, request, *args, **kwargs):
-        current_event = EventECSL.objects.filter(current=True).first()
+        current_event = EventECSL.objects.filter(pk=self.kwargs['pk'])
         if not current_event:
             messages.success(
                 self.request, _("Sorry, we need an event to display the schedule"))
@@ -237,7 +237,7 @@ class EditCharlas(PermissionRequiredMixin, CharlaContext, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['view'] = 'edit'
-        context['event_id'] = self.kwargs['pk']
+        context['topicForm'] = TopicForm(initial={'event': self.kwargs['pk'], 'color': get_random_color()})
         return context
 
     def post(self, request, *args, **kwargs):

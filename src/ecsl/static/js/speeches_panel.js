@@ -50,8 +50,18 @@ $("#createTopic-form").submit(function (submitEl) {
             //data: serializedData,
             data: $("#createTopic-form").serialize(),
             error: function (response) {
-                // alert the error if any error occured
-                alert(response["responseJSON"]["error"]);
+                // alert the error if any error occurred
+                if (response.status == 400) {
+                    alertEl = document.getElementById("wrongTopicFormAlert")
+                    alertEl.style.setProperty("display", "block");
+                    alertEl.innerText = "Los datos ingresados son érroneos, corríjalos e intente de nuevo.";
+                }
+                else if (response.status == 500) {
+                    $("#createTopic-form").trigger('reset');
+                    alertEl = document.getElementById("wrongTopicFormAlert")
+                    alertEl.style.setProperty("display", "block");
+                    alertEl.innerText = "Hubo un error procesando sus datos, inténtelo más tarde.";
+                }
             },
             success: function (response) {
                 // on successfull creating object
@@ -71,9 +81,9 @@ $("#createTopic-form").submit(function (submitEl) {
                                     })
 
                 Toast.fire({
-                                    icon: 'success',
-                                    title: 'Element saved successfully.'
-                                    });
+                            icon: 'success',
+                            title: 'Tema guardado correctamente'
+                            });
 
 
             }
