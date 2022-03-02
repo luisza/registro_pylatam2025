@@ -61,6 +61,17 @@ class Calendar {
             eventReceive: function(info) {
                 // Remove the element from the "Draggable Events" list
                 info.event.setExtendedProp('html_id', getRandomUUID());
+            },
+            eventDidMount: function(info) {
+                let icon = document.createElement("i");
+                icon.setAttribute("id", info.event._instance.instanceId);
+                icon.classList.add('far', 'fa-times-circle');
+                icon.style.cssText = "position: absolute; top: 2px; right: 2px;font-size: 16px; z-index: 10000"
+                info.el.prepend(icon);
+
+                $(icon).on('click', function() {
+                    info.event.remove();
+                })
             }
         });
     }
