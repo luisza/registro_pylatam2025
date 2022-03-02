@@ -95,8 +95,8 @@ class Calendar {
             end: event.end_time,
             backgroundColor: event.color,
             extendedProps: {
-                speech_id: event.speech,
-                special_activity_id: event.special,
+                speech_id: event.speech_id,
+                special_activity_id: event.special_id,
                 html_id: event.html_id,
             }
         })

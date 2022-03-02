@@ -9,6 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 from rest_framework.response import Response
 from rest_framework import viewsets, status
+from django.db.models import Case, Value, When
 from rest_framework.generics import ListCreateAPIView
 
 from ecsl.models import EventECSL
@@ -198,10 +199,25 @@ class EventScheduleViewSet(viewsets.ModelViewSet):
                         'room': speech['room']
                     },
                 )
-                if created and obj.speech:
-                    Speech.objects.filter(pk=obj.speech.pk).update(is_scheduled=Q(is_scheduled=False))
-                if created and obj.special:
-                    SpecialActivity.objects.filter(pk=obj.special.pk).update(is_scheduled=Q(is_scheduled=False))
+                if created:
+                    if obj.speech:
+                        Speech.objects.filter(
+                            pk=obj.speech.pk
+                        ).update(
+                            is_scheduled=Case(
+                                When(is_scheduled=True, then=Value(False)),
+                                default=Value(True)
+                            )
+                        )
+                    if obj.special:
+                        Speech.objects.filter(
+                            pk=obj.speech.pk
+                        ).update(
+                            is_scheduled=Case(
+                                When(is_scheduled=True, then=Value(False)),
+                                default=Value(True)
+                            )
+                        )
                 serializer.data[index].update({'id': obj.id, 'html_id': obj.html_id})
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         else:
