@@ -54,7 +54,7 @@
                                     </label>
                                     <ul id="speeches" class="connectedSortable droppable tree" hora="7:00:00" style="width: 100%; padding: 0;">
                                     {% for speech in speeches %}
-                                        {% if speech.topic.id == topic.id %}
+                                        {% if speech.topic.id == topic.id and speech.is_scheduled == False %}
                                         <li id={{ speech.speech_type.id }} class="ui-state-default activity" style="border-style: solid; width: 100%; padding: 0; margin-top: 5px;">
                                             <div class="row" style="margin: 5px 0px 5px 0px;">
                                                 <div class="col-sm-6 speech-text" id="speech_{{ speech.pk }}"
@@ -214,7 +214,21 @@
 
 {% block js %}
     <script>
-        var save_url = "{% url 'proposal:events-list' %}"
+        var save_url = "{% url 'proposal:events-list' %}";
+        var scheduled_events = [];
+        {% for event in scheduled_speeches %}
+            scheduled_events.push({
+                id: "{{event.pk}}",
+                html_id: "{{event.html_id}}",
+                title: "{{event.speech.title}}",
+                color: "{{event.speech.topic.color}}",
+                room: "{{event.room.pk}}",
+                start_time: "{{event.start_time|date:"c"}}",
+                end_time: "{{event.end_time|date:"c"}}",
+                speech_id: "{{event.speech.pk}}",
+                special_id: "{{event.special.pk}}",
+            });
+        {% endfor %}
         const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     </script>
     <script src="https://cdn.jsdelivr.net/combine/npm/fullcalendar@5.10.1,npm/fullcalendar@5.10.1/locales-all.min.js,npm/fullcalendar@5.10.1/locales-all.min.js,npm/fullcalendar@5.10.1/main.min.js"></script>
