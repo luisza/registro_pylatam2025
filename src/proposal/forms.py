@@ -13,9 +13,18 @@ class SpeechForm(forms.ModelForm):
 
 
 class TopicForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['color'].widget.input_type='color'
+
     class Meta:
         model = Topic
-        exclude = ('event', 'color')
+        fields = '__all__'
+        widgets = {
+            'event': forms.HiddenInput,
+            'color': forms.TextInput(attrs={'class': "form-control form-control-color"})
+        }
 
 
 class TypeForm(forms.ModelForm):

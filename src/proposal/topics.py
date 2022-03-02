@@ -15,22 +15,19 @@ class CreateTopic(generic.CreateView):
     model = Topic
     form_class = TopicForm
 
-    def get_form(self):
-        return self.form_class(self.request.POST)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        event_id = self.request.POST.get('event_id')
-        new_topic = Topic.objects.create(
-            name=form.cleaned_data['name'],
-            color=form.data['colorPicker'],
-            event=EventECSL.objects.filter(pk=event_id),
-        )
-        instance = {
-            "topic_name": new_topic.name,
-            "topic_color": new_topic.color,
-            "topic_event": new_topic.event,
+        instance = form.save()
+
+        data = {
+            "pk": instance.pk,
+            "name": instance.name,
+            "color": instance.color,
+            "event": instance.event_id,
         }
-        return JsonResponse(instance)
+        return JsonResponse(data)
 
     def form_invalid(self, form):
-        return JsonResponse("Ocurrio un error al guardar su tema, intentelo de nuevo", status=400)
+        return JsonResponse(form.errors, status=400)

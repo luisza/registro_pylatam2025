@@ -26,6 +26,7 @@ from proposal.forms import TopicForm, TypeForm, SpecialActivityForm, RoomsCreate
 from proposal.models import Room
 from proposal.models import SpeechSchedule, Topic, Speech, Register_Speech, \
     BlockSchedule, SpeechType, SpecialActivity
+import random
 
 SPECIAL_ACTIVITY_COLOR = "#cccccc"
 
@@ -34,8 +35,12 @@ def dayAmout(date1, date2):
     difference = date1 - date2
     return int(difference.days) + 1
 
+def get_random_color():
+    color = "%06x" % random.randint(0, 0xFFFFFF)
+    return "#"+color
 
 class CharlaContext:
+
     def get_context_data(self, **kwargs):
         context = ListView.get_context_data(self, **kwargs)
         current_event = EventECSL.objects.filter(current=True).first()
@@ -96,7 +101,7 @@ class CharlaContext:
         context['diaActual'] = days[dia - 1]
         context['form'] = scheduleForm()
         context['speeches'] = speeches
-        context['topicForm'] = TopicForm()
+        context['topicForm'] = TopicForm(initial={'event': current_event, 'color': get_random_color()})
         context['typeForm'] = TypeForm()
         context['specialForm'] = SpecialActivityForm()
         context['specialActivity'] = special
