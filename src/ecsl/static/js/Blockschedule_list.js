@@ -71,7 +71,7 @@ class Calendar {
 
     getEvents(){
         let events = [];
-        let room_id = $(`#calendar-${this.room+1}-tab`).attr('data-room-id');
+        let room_id = this.room;
         this.calendar.getEvents().forEach(function(event, index) {
             events.push({
                 'id': event.id,
@@ -84,6 +84,22 @@ class Calendar {
             });
         });
         return events;
+    }
+
+    addEvent(event){
+        console.log(event);
+        this.calendar.addEvent({
+            id: event.id,
+            title: event.title,
+            start: event.start_time,
+            end: event.end_time,
+            backgroundColor: event.color,
+            extendedProps: {
+                speech_id: event.speech_id,
+                special_activity_id: event.special_id,
+                html_id: event.html_id,
+            }
+        })
     }
 
     setEventsID(events){
@@ -129,9 +145,18 @@ document.addEventListener('DOMContentLoaded', function() {
         start_date_parsed = Date.parse(cal.getAttribute('data-start_date'))
         end_date_parsed = Date.parse(cal.getAttribute('data-end_date'))
         end_date_plus_one = end_date_parsed + (3600*1000*24)
+        let room_id = $(`#calendar-${i+1}-tab`).attr('data-room-id');
 
         // Initialize the calendar
-        let calendar = new Calendar(cal, i);
+        let calendar = new Calendar(cal, room_id);
+
+        // Add events
+        for (let i = 0; i < scheduled_events.length; i++) {
+            if(scheduled_events[i].room == room_id){
+                calendar.addEvent(scheduled_events[i]);
+            }
+        }
+
         calendars.push(calendar);
         calendar.render();
     });
