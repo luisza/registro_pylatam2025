@@ -52,17 +52,17 @@
                                         {{topic}}
                                         <span class="menu-collapsible-icon glyphicon glyphicon-chevron-down"></span>
                                     </label>
-                                    <ul id="speeches" class="connectedSortable droppable tree" hora="7:00:00" style="width: 100%; padding: 0;">
+                                    <ul id="topic_speeches_{{topic.pk}}" class="connectedSortable droppable tree" style="width: 100%; padding: 0;">
                                     {% for speech in speeches %}
                                         {% if speech.topic.id == topic.id and speech.is_scheduled == False %}
-                                        <li id={{ speech.speech_type.id }} class="ui-state-default activity" style="border-style: solid; width: 100%; padding: 0; margin-top: 5px;">
-                                            <div class="row" style="margin: 5px 0px 5px 0px;">
-                                                <div class="col-sm-6 speech-text" id="speech_{{ speech.pk }}"
-                                                data-speech="{{ speech.pk }}" data-color="{{ speech.topic.color }}"
+                                        <li id="speech_{{ speech.pk }}" class="ui-state-default activity" style="border-style: solid; width: 100%; padding: 0; margin-top: 5px;">
+                                            <div class="row speech-text" style="margin: 5px 0px 5px 0px;"
+                                                data-speech="{{ speech.pk }}" data-topic="{{topic.pk}}" data-color="{{ speech.topic.color }}"
                                                 data-duration="{{ speech.speech_type.time }}" style="text-overflow: ellipsis;overflow: hidden;">
+                                                <div class="col-sm-6">
                                                     {{ speech }}
                                                 </div>
-                                                <div class="col-sm-6 speech-text">
+                                                <div class="col-sm-6">
                                                     {{ speech.speech_type.time }} min - {{ speech.speech_type.name }}
                                                 </div>
                                             </div>
@@ -227,6 +227,7 @@
                 end_time: "{{event.end_time|date:"c"}}",
                 speech_id: "{{event.speech.pk}}",
                 special_id: "{{event.special.pk}}",
+                topic_id: "{{event.speech.topic.pk}}"
             });
         {% endfor %}
         const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
