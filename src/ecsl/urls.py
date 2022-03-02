@@ -12,7 +12,7 @@ urlpatterns = [
     path('', views.Index.as_view(), name="index"),
     path('api/agenda.json', get_calendar_json, name="api_json"),
     path('agenda', speechviews.Charlas.as_view(), name="list_charlas"),
-    path('edit-agenda', speechviews.EditCharlas.as_view(), name="edit_charlas"),
+    path('edit-agenda/<int:pk>', speechviews.EditCharlas.as_view(), name="edit_charlas"),
     path('miagenda', speechviews.MyAgenda.as_view(), name="mi_agenda"),
 
     path('charla/<int:pk>', speechviews.CharlaDetail.as_view(), name="detail_charla"),

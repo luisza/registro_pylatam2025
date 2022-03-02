@@ -105,12 +105,12 @@
                                     <h4 class="modal-title"> {% trans 'New Speech Topic' %} </h4>
                                 </div>
                                 <div class="modal-body" style="text-align: center">
-                                    <form action="proposal/createTopic/" method="post">
+                                    <form method="post" id="createTopic-form">
                                         {% csrf_token %}
+                                        <div class="alert alert-danger" id="wrongTopicFormAlert" role="alert" style="display: none; opacity: 70%">
+                                        </div>
                                         <div class="jumbotron" style="display: inline-grid; overflow: hidden">
                                             {{ topicForm }}
-                                            <label for="topicColorInput" class="form-label">Color:</label>
-                                            <input name="colorPicker" type="color" class="form-control form-control-color " id="topicColorInput" value="#563d7c" title="Choose your color">
                                             <hr>
                                             <input class="btn btn-info" type="submit" value="{% trans 'Save' %}">
                                         </div>
@@ -128,7 +128,7 @@
                                     <h4 class="modal-title"> {% trans 'New Speech Type' %}</h4>
                                 </div>
                                 <div class="modal-body" style="text-align: center">
-                                    <form action="proposal/createType/" method="post" oninput="changeTimeValue(eventTime.valueAsNumber)">
+                                    <form action="proposal/createType/" method="post" oninput="changeTimeValue(eventTime.valueAsNumber)" id="createType-form">
                                         {% csrf_token %}
                                         <div class="jumbotron" style="display: inline-grid; overflow: hidden">
                                             {{ typeForm }}
@@ -230,7 +230,9 @@
             });
         {% endfor %}
         const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        var create_topic_url = "{% url 'proposal:create-topic' %}";
     </script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/combine/npm/fullcalendar@5.10.1,npm/fullcalendar@5.10.1/locales-all.min.js,npm/fullcalendar@5.10.1/locales-all.min.js,npm/fullcalendar@5.10.1/main.min.js"></script>
     <script src='https://cdn.jsdelivr.net/npm/rrule@2.6.4/dist/es5/rrule.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/rrule@5.5.0/main.global.min.js'></script>
