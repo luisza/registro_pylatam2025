@@ -5,6 +5,7 @@ Created on 5 jun. 2017
 '''
 import datetime
 import json
+from itertools import chain
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -12,7 +13,6 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core import serializers
 from django.db.models.query_utils import Q
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse_lazy
 from django.urls.base import reverse
 from django.utils import timezone
 from django.utils.decorators import method_decorator
@@ -39,8 +39,8 @@ def get_random_color():
     color = "%06x" % random.randint(0, 0xFFFFFF)
     return "#"+color
 
-class CharlaContext:
 
+class CharlaContext:
     def get_context_data(self, **kwargs):
         context = ListView.get_context_data(self, **kwargs)
         current_event = EventECSL.objects.filter(current=True).first()
@@ -89,6 +89,7 @@ class CharlaContext:
             sala = 1
 
         speeches = Speech.objects.filter(event=current_event, is_scheduled=False)
+        scheduled_speeches = SpeechSchedule.objects.filter(speech__event=current_event)
         special = SpecialActivity.objects.filter(event=current_event, is_scheduled=False)
         context['dayList'] = days
         context['start_date'] = str(days[0])
@@ -101,6 +102,7 @@ class CharlaContext:
         context['diaActual'] = days[dia - 1]
         context['form'] = scheduleForm()
         context['speeches'] = speeches
+        context['scheduled_speeches'] = scheduled_speeches
         context['topicForm'] = TopicForm(initial={'event': current_event, 'color': get_random_color()})
         context['typeForm'] = TypeForm()
         context['specialForm'] = SpecialActivityForm()

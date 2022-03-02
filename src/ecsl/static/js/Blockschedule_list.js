@@ -1,37 +1,37 @@
-document.addEventListener('DOMContentLoaded', function() {
-    let Calendar = FullCalendar.Calendar;
-    let Draggable = FullCalendar.Draggable;
-    var calendars = [];
-    var containerEl = document.getElementById('draggable-events');
+var calendars = [];
 
-    function changeTimeValue(val) {
-        document.getElementById("eventTimeValue").innerHTML = val + " minutos";
-    }
+function saveEvents(events){
+    fetch(save_url, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        mode: 'same-origin',
+        body: JSON.stringify(events)
+    }).then(response => response.json())
+    .then(events => {
+        for (let i = 0; i < calendars.length; i++) {
+            calendars[i].setEventsID(events);
+        }
+    });
+}
 
-    $('#calendar-1-tab').tab('show');
-    $('.full-calendar').each(function(i, cal) {
-        start_date_parsed = Date.parse(cal.getAttribute('data-start_date'))
-        end_date_parsed = Date.parse(cal.getAttribute('data-end_date'))
-        end_date_plus_one = end_date_parsed + (3600*1000*24)
+function changeTimeValue(val) {
+    document.getElementById("eventTimeValue").innerHTML = val + " minutos";
+}
 
-        // Initialize external events
-        new Draggable(containerEl, {
-            itemSelector: '.speech-text',
-            eventData: function(eventEl) {
-                return {
-                    title: eventEl.innerText,
-                    backgroundColor: eventEl.getAttribute('data-color'),
-                    duration: {minutes:eventEl.getAttribute('data-duration')},
-                    extendedProps: {
-                        speech_id: eventEl.getAttribute('data-speech'),
-                        special_activity_id: eventEl.getAttribute('data-special')
-                    }
-                };
-            }
-        });
+function getRandomUUID() {
+    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    );
+}
 
-        // Initialize the calendar
-        let calendar = new Calendar(cal, {
+class Calendar {
+    constructor(cal_html, room){
+        this.room = room;
+        this.calendar = new FullCalendar.Calendar(cal_html, {
             editable: true,
             droppable: true,
             initialView: 'timeGridEventDates',
@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
             forceEventDuration: true,
             slotDuration: { minutes:10 },
             slotLabelInterval: { hours:1 },
+            eventOverlap: false,
             headerToolbar: {
               right: 'timeGridDay,timeGridEventDates'
             },
@@ -55,9 +56,118 @@ document.addEventListener('DOMContentLoaded', function() {
             // Remove the dragged event from the panel and located into the calendar obj
             drop: function(info) {
                 // Remove the element from the "Draggable Events" list
-                info.draggedEl.parentNode.parentNode.parentNode.removeChild(info.draggedEl.parentNode.parentNode);
+                $(info.draggedEl).closest('.activity').remove();
+            },
+            eventReceive: function(info) {
+                // Remove the element from the "Draggable Events" list
+                info.event.setExtendedProp('html_id', getRandomUUID());
+            },
+            eventDidMount: function(info) {
+                let icon = document.createElement("i");
+                icon.setAttribute("id", info.event._instance.instanceId);
+                icon.classList.add('far', 'fa-times-circle');
+                icon.style.cssText = "position: absolute; top: 2px; right: 2px;font-size: 16px; z-index: 10000"
+                info.el.prepend(icon);
+
+                $(icon).on('click', function() {
+                    info.event.remove();
+                })
             }
         });
+    }
+
+    getCalendar(){
+        return this.calendar;
+    }
+
+    getEvents(){
+        let events = [];
+        let room_id = this.room;
+        this.calendar.getEvents().forEach(function(event, index) {
+            events.push({
+                'id': event.id,
+                'html_id': event.extendedProps.html_id,
+                'start_time': event.start,
+                'end_time': event.end,
+                'room': room_id,
+                'speech': event.extendedProps.speech_id != undefined ? event.extendedProps.speech_id : null,
+                'special': event.extendedProps.special_activity_id != undefined ? event.extendedProps.special_activity_id : null
+            });
+        });
+        return events;
+    }
+
+    addEvent(event){
+        console.log(event);
+        this.calendar.addEvent({
+            id: event.id,
+            title: event.title,
+            start: event.start_time,
+            end: event.end_time,
+            backgroundColor: event.color,
+            extendedProps: {
+                speech_id: event.speech_id,
+                special_activity_id: event.special_id,
+                html_id: event.html_id,
+            }
+        })
+    }
+
+    setEventsID(events){
+        this.calendar.getEvents().forEach(function(event, index) {
+            for (let i = 0; i < events.length; i++) {
+                if(events[i].html_id == event.extendedProps.html_id){
+                    event.setProp('id', events[i].id);
+                    continue;
+                }
+            }
+        });
+    }
+
+    render(){
+        this.calendar.render();
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize external events
+    let containerEl = document.getElementById('draggable-events');
+    new FullCalendar.Draggable(containerEl, {
+        itemSelector: '.speech-text',
+        eventData: function(eventEl) {
+            return {
+                title: eventEl.innerText,
+                backgroundColor: eventEl.getAttribute('data-color'),
+                duration: {minutes:eventEl.getAttribute('data-duration')},
+                extendedProps: {
+                    speech_id: eventEl.getAttribute('data-speech'),
+                    special_activity_id: eventEl.getAttribute('data-special')
+                }
+            };
+        }
+    });
+
+    function changeTimeValue(val) {
+        document.getElementById("eventTimeValue").innerHTML = val + " minutos";
+    }
+
+    $('#calendar-1-tab').tab('show');
+    $('.full-calendar').each(function(i, cal) {
+        start_date_parsed = Date.parse(cal.getAttribute('data-start_date'))
+        end_date_parsed = Date.parse(cal.getAttribute('data-end_date'))
+        end_date_plus_one = end_date_parsed + (3600*1000*24)
+        let room_id = $(`#calendar-${i+1}-tab`).attr('data-room-id');
+
+        // Initialize the calendar
+        let calendar = new Calendar(cal, room_id);
+
+        // Add events
+        for (let i = 0; i < scheduled_events.length; i++) {
+            if(scheduled_events[i].room == room_id){
+                calendar.addEvent(scheduled_events[i]);
+            }
+        }
+
         calendars.push(calendar);
         calendar.render();
     });
@@ -67,32 +177,12 @@ document.addEventListener('DOMContentLoaded', function() {
         calendars[calendar_index-1].render();
     });
 
-    $('#save').on('click', function(e) {
+    $('#save-btn').on('click', function(e) {
         events = []
         for (let i = 0; i < calendars.length; i++) {
-            calendars[i].getEvents().forEach(function(event, index) {
-                let room_id = $(`#calendar-${i+1}-tab`).attr('data-room-id');
-                events.push({
-                    'start_time': event.start,
-                    'end_time': event.end,
-                    'room': room_id,
-                    'speech': event.extendedProps.speech_id != undefined ? event.extendedProps.speech_id : null,
-                    'special': event.extendedProps.special_activity_id != undefined ? event.extendedProps.special_activity_id : null
-                });
-            });
+            events.push(...calendars[i].getEvents());
         }
-
-        fetch(save_url, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json, text/plain, */*',
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken
-            },
-            mode: 'same-origin',
-            body: JSON.stringify(events)
-        }).then(res => res.json())
-          .then(res => console.log(res));
+        saveEvents(events);
     });
 });
 
