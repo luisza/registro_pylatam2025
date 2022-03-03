@@ -187,9 +187,10 @@ def removeSpeechScheduleFromCalendarView(request):
         data = json.loads(request.body)
 
         for i in range(len(data)):
-            speech_result = SpeechSchedule.objects.filter(pk=data[str(i)])
-            if speech_result.exists():
-                speech_result.delete()
+            if data[str(i)]:
+                speech_result = SpeechSchedule.objects.filter(html_id=data[str(i)])
+                if speech_result.exists():
+                    speech_result.delete()
 
         return HttpResponse('Events deleted', status=200)
 

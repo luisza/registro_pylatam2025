@@ -28,6 +28,10 @@ function deleteEventsFromCalendar(events_id) {
         },
         mode: 'same-origin',
         body: JSON.stringify(Object.assign({}, removed_events))
+    }).then(function(response){
+        if(response.status == 200){
+            removed_events = [];
+        }
     });
 }
 
@@ -62,27 +66,21 @@ class Calendar {
                     buttonText: 'whole event',
                 },
             },
-            // Remove the dragged event from the panel and located into the calendar obj
-            drop: function(info) {
-                // Remove the element from the "Draggable Events" list
-                $(info.draggedEl).closest('.activity').remove();
-            },
             eventReceive: function(info) {
-                // Set event UUID
-                info.event.setExtendedProp('html_id', getRandomUUID());
                 // Remove element from
                 $(info.draggedEl).closest('.activity').remove();
             },
             eventDidMount: function(info){
+                // Set event UUID
+                let uuid = info.event.extendedProps.html_id ? info.event.extendedProps.html_id : getRandomUUID();
+                info.event.setExtendedProp('html_id', uuid);
                 // Append x icon to delete
                 let icon = document.createElement("i");
-                icon.setAttribute("id", info.event._def.publicId);
                 icon.classList.add('far', 'fa-times-circle');
                 icon.style.cssText = "position: absolute; top: 2px; right: 2px;font-size: 16px; z-index: 10000"
                 info.el.prepend(icon);
-
                 $(icon).on('click', function() {
-                    removed_events.push(info.event._def.publicId);
+                    removed_events.push(uuid);
                     info.event.remove();
                     $(`#topic_speeches_${info.event.extendedProps.topic_id}`).append(info.event.extendedProps.html_panel_el);
                 })
@@ -193,8 +191,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 calendars[calendar_index].setOption('droppable', false);
             }
         }
-
-
     });
 
     $('#save-btn').on('click', function(e) {
