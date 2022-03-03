@@ -214,6 +214,7 @@
 {% block js %}
     <script>
         var save_url = "{% url 'proposal:events-list' %}";
+        var delete_url = "{% url 'proposal:delete-events' %}";
         var scheduled_events = [];
         {% for event in scheduled_speeches %}
             scheduled_events.push({
