@@ -1,12 +1,16 @@
+import json
+
 from django.contrib import messages
 from django.core import serializers
 from django.db.models import Q
 from django.http import JsonResponse
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
+from django.views.decorators.http import require_http_methods
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import viewsets, status
 from django.db.models import Case, Value, When
@@ -177,6 +181,41 @@ def createUpdateview(request, speech_id=None):
         return render(request, "proposal/speech_form.html", context)
 
 
+@require_http_methods(["POST"])
+def removeSpeechScheduleFromCalendarView(request):
+    try:
+        data = json.loads(request.body)
+
+        for i in range(len(data)):
+            if data[str(i)]:
+                speech_result = SpeechSchedule.objects.filter(html_id=data[str(i)]).first()
+                if speech_result:
+                    if speech_result.speech:
+                        Speech.objects.filter(
+                            pk=speech_result.speech.pk
+                        ).update(
+                            is_scheduled=Case(
+                                When(is_scheduled=True, then=Value(False)),
+                                default=Value(True)
+                            )
+                        )
+                    if speech_result.special:
+                        SpecialActivity.objects.filter(
+                            pk=speech_result.special.pk
+                        ).update(
+                            is_scheduled=Case(
+                                When(is_scheduled=True, then=Value(False)),
+                                default=Value(True)
+                            )
+                        )
+                    speech_result.delete()
+
+        return HttpResponse('Events deleted', status=200)
+
+    except Exception as e:
+        return HttpResponse('Something went wrong', status=400)
+
+
 class EventScheduleViewSet(viewsets.ModelViewSet):
     queryset = SpeechSchedule.objects.all()
     model = SpeechSchedule
@@ -210,8 +249,8 @@ class EventScheduleViewSet(viewsets.ModelViewSet):
                             )
                         )
                     if obj.special:
-                        Speech.objects.filter(
-                            pk=obj.speech.pk
+                        SpecialActivity.objects.filter(
+                            pk=obj.special.pk
                         ).update(
                             is_scheduled=Case(
                                 When(is_scheduled=True, then=Value(False)),
@@ -222,3 +261,4 @@ class EventScheduleViewSet(viewsets.ModelViewSet):
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

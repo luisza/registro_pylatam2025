@@ -29,6 +29,7 @@ urlpatterns = [
     path('createRoom/', rooms.CreateRoom.as_view(), name='create-room'),
     path('filterSpeeches/', views.get_all_speeches, name='filter-speeches'),
     path('createSpecial/', special_activities.CreateSpecialActivity.as_view(), name='create-special'),
+    path('schedule/events/delete-events/', views.removeSpeechScheduleFromCalendarView, name='delete-events'),
 ]
 
 urlpatterns += router.urls

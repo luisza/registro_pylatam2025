@@ -1,4 +1,5 @@
 var calendars = [];
+var removed_events = [];
 
 function saveEvents(events){
     fetch(save_url, {
@@ -14,6 +15,22 @@ function saveEvents(events){
     .then(events => {
         for (let i = 0; i < calendars.length; i++) {
             calendars[i].setEventsID(events);
+        }
+    });
+}
+
+function deleteEventsFromCalendar(events_id) {
+    fetch(delete_url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        mode: 'same-origin',
+        body: JSON.stringify(Object.assign({}, removed_events))
+    }).then(function(response){
+        if(response.status == 200){
+            removed_events = [];
         }
     });
 }
@@ -50,21 +67,22 @@ class Calendar {
                 },
             },
             eventReceive: function(info) {
-                // Set event UUID
-                info.event.setExtendedProp('html_id', getRandomUUID());
                 // Remove element from
-                $(info.draggedEl).closest('.activity').remove();
+                if(info.event.extendedProps.speech_id != undefined){
+                    $(info.draggedEl).closest('.activity').remove();
+                }
             },
             eventDidMount: function(info){
+                // Set event UUID
+                let uuid = info.event.extendedProps.html_id ? info.event.extendedProps.html_id : getRandomUUID();
+                info.event.setExtendedProp('html_id', uuid);
                 // Append x icon to delete
                 let icon = document.createElement("i");
-                icon.setAttribute("id", info.event._instance.instanceId);
                 icon.classList.add('far', 'fa-times-circle');
                 icon.style.cssText = "position: absolute; top: 2px; right: 2px;font-size: 16px; z-index: 10000"
                 info.el.prepend(icon);
-
                 $(icon).on('click', function() {
-                    console.log(info.event.extendedProps);
+                    removed_events.push(uuid);
                     info.event.remove();
                     $(`#topic_speeches_${info.event.extendedProps.topic_id}`).append(info.event.extendedProps.html_panel_el);
                 })
@@ -127,9 +145,27 @@ class Calendar {
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize external events
-    let containerEl = document.getElementById('draggable-events');
-    new FullCalendar.Draggable(containerEl, {
+    let speech_containerEl = document.getElementById('draggable-events');
+    let special_activity_containerEl = document.getElementById('draggable-special-activities');
+    new FullCalendar.Draggable(speech_containerEl, {
         itemSelector: '.speech-text',
+        eventData: function(eventEl) {
+            return {
+                title: eventEl.innerText,
+                backgroundColor: eventEl.getAttribute('data-color'),
+                duration: {minutes:eventEl.getAttribute('data-duration')},
+                extendedProps: {
+                    speech_id: eventEl.getAttribute('data-speech'),
+                    special_activity_id: eventEl.getAttribute('data-special'),
+                    topic_id: eventEl.getAttribute('data-topic'),
+                    html_panel_el: eventEl.parentNode,
+                }
+            };
+        }
+    });
+
+    new FullCalendar.Draggable(special_activity_containerEl, {
+        itemSelector: '.special-activity',
         eventData: function(eventEl) {
             console.log(eventEl);
             return {
@@ -176,8 +212,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 calendars[calendar_index].setOption('droppable', false);
             }
         }
-
-
     });
 
     $('#save-btn').on('click', function(e) {
@@ -185,6 +219,9 @@ document.addEventListener('DOMContentLoaded', function() {
         for (let i = 0; i < calendars.length; i++) {
             events.push(...calendars[i].getEvents());
         }
+        // Remove events from calendar
+        deleteEventsFromCalendar(removed_events);
+        // Save events that are currently in the calendar
         saveEvents(events);
     });
 });
