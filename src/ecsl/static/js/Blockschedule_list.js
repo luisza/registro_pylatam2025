@@ -49,16 +49,14 @@ class Calendar {
                     buttonText: 'whole event',
                 },
             },
-            // Remove the dragged event from the panel and located into the calendar obj
-            drop: function(info) {
-                // Remove the element from the "Draggable Events" list
+            eventReceive: function(info) {
+                // Set event UUID
+                info.event.setExtendedProp('html_id', getRandomUUID());
+                // Remove element from
                 $(info.draggedEl).closest('.activity').remove();
             },
-            eventReceive: function(info) {
-                // Remove the element from the "Draggable Events" list
-                info.event.setExtendedProp('html_id', getRandomUUID());
-            },
-            eventDidMount: function(info) {
+            eventDidMount: function(info){
+                // Append x icon to delete
                 let icon = document.createElement("i");
                 icon.setAttribute("id", info.event._instance.instanceId);
                 icon.classList.add('far', 'fa-times-circle');
@@ -66,7 +64,9 @@ class Calendar {
                 info.el.prepend(icon);
 
                 $(icon).on('click', function() {
+                    console.log(info.event.extendedProps);
                     info.event.remove();
+                    $(`#topic_speeches_${info.event.extendedProps.topic_id}`).append(info.event.extendedProps.html_panel_el);
                 })
             }
         });
@@ -94,7 +94,6 @@ class Calendar {
     }
 
     addEvent(event){
-        console.log(event);
         this.calendar.addEvent({
             id: event.id,
             title: event.title,
@@ -105,6 +104,7 @@ class Calendar {
                 speech_id: event.speech_id,
                 special_activity_id: event.special_id,
                 html_id: event.html_id,
+                topic_id: event.topic_id,
             }
         })
     }
@@ -131,13 +131,16 @@ document.addEventListener('DOMContentLoaded', function() {
     new FullCalendar.Draggable(containerEl, {
         itemSelector: '.speech-text',
         eventData: function(eventEl) {
+            console.log(eventEl);
             return {
                 title: eventEl.innerText,
                 backgroundColor: eventEl.getAttribute('data-color'),
                 duration: {minutes:eventEl.getAttribute('data-duration')},
                 extendedProps: {
                     speech_id: eventEl.getAttribute('data-speech'),
-                    special_activity_id: eventEl.getAttribute('data-special')
+                    special_activity_id: eventEl.getAttribute('data-special'),
+                    topic_id: eventEl.getAttribute('data-topic'),
+                    html_panel_el: eventEl.parentNode,
                 }
             };
         }
@@ -167,6 +170,14 @@ document.addEventListener('DOMContentLoaded', function() {
     $('.room-tab').on('shown.bs.tab', function(e) {
         calendar_index = e.target.getAttribute('data-num');
         calendars[calendar_index-1].render();
+        calendars[calendar_index-1].setOption('droppable', true);
+        for (let i = 0; i < calendars.length; i++) {
+            if(calendar_index-1 != i){
+                calendars[calendar_index].setOption('droppable', false);
+            }
+        }
+
+
     });
 
     $('#save-btn').on('click', function(e) {
