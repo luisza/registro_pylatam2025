@@ -87,7 +87,9 @@ $("#createTopic-form").submit(function (submitEl) {
                             title: 'Tema guardado correctamente'
                             });
 
-
+                // Add the new topic into the speeches panel
+                var topics_obj = `<li><label class="tree-toggle glyphicon-icon-rpad">${response.name} <span class="menu-collapsible-icon glyphicon glyphicon-chevron-down"></span></label></li>`;
+                $("#ul-topics-panel").append(topics_obj);
             }
         })
     });
