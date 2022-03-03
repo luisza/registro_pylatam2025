@@ -126,6 +126,7 @@ $("#createType-form").submit(function (submitEl) {
                 // 1. clear the form.
                 $("#createType-form").trigger('reset');
                 $("#type-modal").modal('hide');
+                $("#filterSpeechesType").append(`<option time={{ ${response.time} }} value={{ ${response.event} }}>${response.name} (${response.time} minutos)</option>`)
                 const Toast = Swal.mixin({
                                     toast: true,
                                     position: 'top-end',
