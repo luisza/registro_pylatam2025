@@ -188,8 +188,26 @@ def removeSpeechScheduleFromCalendarView(request):
 
         for i in range(len(data)):
             if data[str(i)]:
-                speech_result = SpeechSchedule.objects.filter(html_id=data[str(i)])
-                if speech_result.exists():
+                speech_result = SpeechSchedule.objects.filter(html_id=data[str(i)]).first()
+                if speech_result:
+                    if speech_result.speech:
+                        Speech.objects.filter(
+                            pk=speech_result.speech.pk
+                        ).update(
+                            is_scheduled=Case(
+                                When(is_scheduled=True, then=Value(False)),
+                                default=Value(True)
+                            )
+                        )
+                    if speech_result.special:
+                        SpecialActivity.objects.filter(
+                            pk=speech_result.special.pk
+                        ).update(
+                            is_scheduled=Case(
+                                When(is_scheduled=True, then=Value(False)),
+                                default=Value(True)
+                            )
+                        )
                     speech_result.delete()
 
         return HttpResponse('Events deleted', status=200)
