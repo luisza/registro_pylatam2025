@@ -1,3 +1,16 @@
+$("#topic-modal").on('hidden.bs.modal', function(){
+    $("#createTopic-form").trigger('reset');
+});
+
+$("#type-modal").on('hidden.bs.modal', function(){
+    $("#createType-form").trigger('reset');
+    changeTimeValue(60);
+});
+
+function changeTimeValue(val) {
+    document.getElementById("eventTimeValue").innerHTML = val + " min";
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Treeview Initialization
     $('.tree-toggle').click(function () {
@@ -29,15 +42,6 @@ $("#createTopic-form").submit(function (submitEl) {
         // preventing from page reload and default actions
         submitEl.preventDefault();
         url = create_topic_url;
-        // serialize the data for sending the form data.
-       /** var formData = document.forms['createTopic-form'];
-        var serializedData = {
-            "name": formData['id_name'].value,
-            "color": formData['topicColorInput'].value,
-            "csrfmiddlewaretoken": formData['csrfmiddlewaretoken'].value,
-            "event": formData['event'].value
-        }
-        */
         // make POST ajax call
         $.ajax({
             type: 'POST',
@@ -46,8 +50,6 @@ $("#createTopic-form").submit(function (submitEl) {
                 'Accept': 'application/json',
                 'X-CSRFToken': csrftoken
             },
-           // dataType: "json",
-            //data: serializedData,
             data: $("#createTopic-form").serialize(),
             error: function (response) {
                 // alert the error if any error occurred
@@ -88,4 +90,58 @@ $("#createTopic-form").submit(function (submitEl) {
 
             }
         })
-    })
+    });
+
+$("#createType-form").submit(function (submitEl) {
+        // preventing from page reload and default actions
+        submitEl.preventDefault();
+        url = create_type_url;
+        // make POST ajax call
+        $.ajax({
+            type: 'POST',
+            url: url,
+            headers: {
+                'Accept': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            data: $("#createType-form").serialize(),
+            error: function (response) {
+                // alert the error if any error occurred
+                if (response.status == 400) {
+                    alertEl = document.getElementById("wrongTypeFormAlert")
+                    alertEl.style.setProperty("display", "block");
+                    alertEl.innerText = "Los datos ingresados son érroneos, corríjalos e intente de nuevo.";
+                }
+                else if (response.status == 500) {
+                    $("#createType-form").trigger('reset');
+                    alertEl = document.getElementById("wrongTypeFormAlert")
+                    alertEl.style.setProperty("display", "block");
+                    alertEl.innerText = "Hubo un error procesando sus datos, inténtelo más tarde.";
+                }
+            },
+            success: function (response) {
+                // on successfull creating object
+                // 1. clear the form.
+                $("#createType-form").trigger('reset');
+                $("#type-modal").modal('hide');
+                const Toast = Swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                    }
+                                    })
+
+                Toast.fire({
+                            icon: 'success',
+                            title: 'Tipo de actividad guardado correctamente'
+                            });
+
+
+            }
+        })
+    });

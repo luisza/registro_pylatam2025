@@ -38,7 +38,7 @@ def dayAmout(date1, date2):
 
 def get_random_color():
     color = "%06x" % random.randint(0, 0xFFFFFF)
-    return "#"+color
+    return "#" + color
 
 
 class CharlaContext:
@@ -238,6 +238,7 @@ class EditCharlas(PermissionRequiredMixin, CharlaContext, ListView):
         context = super().get_context_data(**kwargs)
         context['view'] = 'edit'
         context['topicForm'] = TopicForm(initial={'event': self.kwargs['pk'], 'color': get_random_color()})
+        context['typeForm'] = TypeForm(initial={'event': self.kwargs['pk'], 'time': 60})
         return context
 
     def post(self, request, *args, **kwargs):
@@ -348,7 +349,7 @@ class EditCharlas(PermissionRequiredMixin, CharlaContext, ListView):
                         special.is_scheduled = True
                         special.save()
 
-            return redirect(reverse('edit_charlas'))
+            return redirect(reverse('edit_charlas'))  # REVISAR: este url ahora lleva PK
 
 
 @method_decorator(login_required, name='dispatch')
