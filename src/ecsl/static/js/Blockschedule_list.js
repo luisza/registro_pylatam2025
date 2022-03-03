@@ -72,10 +72,13 @@ class Calendar {
                 $(info.draggedEl).closest('.activity').remove();
             },
             eventReceive: function(info) {
-                // Remove the element from the "Draggable Events" list
+                // Set event UUID
                 info.event.setExtendedProp('html_id', getRandomUUID());
+                // Remove element from
+                $(info.draggedEl).closest('.activity').remove();
             },
-            eventDidMount: function(info) {
+            eventDidMount: function(info){
+                // Append x icon to delete
                 let icon = document.createElement("i");
                 icon.setAttribute("id", info.event._def.publicId);
                 icon.classList.add('far', 'fa-times-circle');
@@ -85,6 +88,7 @@ class Calendar {
                 $(icon).on('click', function() {
                     removed_events.push(info.event._def.publicId);
                     info.event.remove();
+                    $(`#topic_speeches_${info.event.extendedProps.topic_id}`).append(info.event.extendedProps.html_panel_el);
                 })
             }
         });
@@ -112,7 +116,6 @@ class Calendar {
     }
 
     addEvent(event){
-        console.log(event);
         this.calendar.addEvent({
             id: event.id,
             title: event.title,
@@ -123,6 +126,7 @@ class Calendar {
                 speech_id: event.speech_id,
                 special_activity_id: event.special_id,
                 html_id: event.html_id,
+                topic_id: event.topic_id,
             }
         })
     }
@@ -155,7 +159,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 duration: {minutes:eventEl.getAttribute('data-duration')},
                 extendedProps: {
                     speech_id: eventEl.getAttribute('data-speech'),
-                    special_activity_id: eventEl.getAttribute('data-special')
+                    special_activity_id: eventEl.getAttribute('data-special'),
+                    topic_id: eventEl.getAttribute('data-topic'),
+                    html_panel_el: eventEl.parentNode,
                 }
             };
         }
@@ -189,6 +195,14 @@ document.addEventListener('DOMContentLoaded', function() {
     $('.room-tab').on('shown.bs.tab', function(e) {
         calendar_index = e.target.getAttribute('data-num');
         calendars[calendar_index-1].render();
+        calendars[calendar_index-1].setOption('droppable', true);
+        for (let i = 0; i < calendars.length; i++) {
+            if(calendar_index-1 != i){
+                calendars[calendar_index].setOption('droppable', false);
+            }
+        }
+
+
     });
 
     $('#save-btn').on('click', function(e) {

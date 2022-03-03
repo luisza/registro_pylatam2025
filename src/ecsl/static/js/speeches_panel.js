@@ -20,3 +20,72 @@ document.addEventListener('DOMContentLoaded', function() {
           });
     });
 });
+
+(function(){
+    $('input[name="color"]').val($('input[name="color"]').attr('value'));
+})();
+
+$("#createTopic-form").submit(function (submitEl) {
+        // preventing from page reload and default actions
+        submitEl.preventDefault();
+        url = create_topic_url;
+        // serialize the data for sending the form data.
+       /** var formData = document.forms['createTopic-form'];
+        var serializedData = {
+            "name": formData['id_name'].value,
+            "color": formData['topicColorInput'].value,
+            "csrfmiddlewaretoken": formData['csrfmiddlewaretoken'].value,
+            "event": formData['event'].value
+        }
+        */
+        // make POST ajax call
+        $.ajax({
+            type: 'POST',
+            url: url,
+            headers: {
+                'Accept': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+           // dataType: "json",
+            //data: serializedData,
+            data: $("#createTopic-form").serialize(),
+            error: function (response) {
+                // alert the error if any error occurred
+                if (response.status == 400) {
+                    alertEl = document.getElementById("wrongTopicFormAlert")
+                    alertEl.style.setProperty("display", "block");
+                    alertEl.innerText = "Los datos ingresados son érroneos, corríjalos e intente de nuevo.";
+                }
+                else if (response.status == 500) {
+                    $("#createTopic-form").trigger('reset');
+                    alertEl = document.getElementById("wrongTopicFormAlert")
+                    alertEl.style.setProperty("display", "block");
+                    alertEl.innerText = "Hubo un error procesando sus datos, inténtelo más tarde.";
+                }
+            },
+            success: function (response) {
+                // on successfull creating object
+                // 1. clear the form.
+                $("#createTopic-form").trigger('reset');
+                $("#topic-modal").modal('hide');
+                const Toast = Swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                    }
+                                    })
+
+                Toast.fire({
+                            icon: 'success',
+                            title: 'Tema guardado correctamente'
+                            });
+
+
+            }
+        })
+    })
