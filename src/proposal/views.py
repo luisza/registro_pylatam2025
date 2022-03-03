@@ -210,8 +210,8 @@ class EventScheduleViewSet(viewsets.ModelViewSet):
                             )
                         )
                     if obj.special:
-                        Speech.objects.filter(
-                            pk=obj.speech.pk
+                        SpecialActivity.objects.filter(
+                            pk=obj.special.pk
                         ).update(
                             is_scheduled=Case(
                                 When(is_scheduled=True, then=Value(False)),
