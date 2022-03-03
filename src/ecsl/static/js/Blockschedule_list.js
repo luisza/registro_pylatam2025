@@ -1,4 +1,5 @@
 var calendars = [];
+var removed_events = [];
 
 function saveEvents(events){
     fetch(save_url, {
@@ -15,6 +16,18 @@ function saveEvents(events){
         for (let i = 0; i < calendars.length; i++) {
             calendars[i].setEventsID(events);
         }
+    });
+}
+
+function deleteEventsFromCalendar(events_id) {
+    fetch(delete_url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        mode: 'same-origin',
+        body: JSON.stringify(Object.assign({}, removed_events))
     });
 }
 
@@ -64,12 +77,13 @@ class Calendar {
             },
             eventDidMount: function(info) {
                 let icon = document.createElement("i");
-                icon.setAttribute("id", info.event._instance.instanceId);
+                icon.setAttribute("id", info.event._def.publicId);
                 icon.classList.add('far', 'fa-times-circle');
                 icon.style.cssText = "position: absolute; top: 2px; right: 2px;font-size: 16px; z-index: 10000"
                 info.el.prepend(icon);
 
                 $(icon).on('click', function() {
+                    removed_events.push(info.event._def.publicId);
                     info.event.remove();
                 })
             }
@@ -182,6 +196,9 @@ document.addEventListener('DOMContentLoaded', function() {
         for (let i = 0; i < calendars.length; i++) {
             events.push(...calendars[i].getEvents());
         }
+        // Remove events from calendar
+        deleteEventsFromCalendar(removed_events);
+        // Save events that are currently in the calendar
         saveEvents(events);
     });
 });
