@@ -16,19 +16,17 @@ class CreateType(generic.CreateView):
     form_class = TypeForm
     # permission_required = 'proposal.add_speechtype'
 
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
-        event_id = self.request.POST.get('event_id')
-        new_type = SpeechType.objects.create(
-            name=form.cleaned_data['name'],
-            time=form.data['eventTime'],
-            event=EventECSL.objects.filter(pk=event_id),
-        )
+        instance = form.save()
         instance = {
-            "type_name": new_type.name,
-            "type_time": new_type.time,
-            "type_event": new_type.event,
+            "name": instance.name,
+            "time": instance.time,
+            "event": instance.event_id,
         }
         return JsonResponse(instance)
 
     def form_invalid(self, form):
-        return JsonResponse("Ocurrio un error al guardar su tipo, intentelo de nuevo", status=400)
+        return JsonResponse(form.errors, status=400)
