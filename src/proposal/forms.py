@@ -28,9 +28,18 @@ class TopicForm(forms.ModelForm):
 
 
 class TypeForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['time'].widget.input_type = 'range'
+
     class Meta:
         model = SpeechType
-        exclude = ('event','time',)
+        fields = '__all__'
+        widgets = {
+            'event': forms.HiddenInput,
+            'time': forms.TextInput(attrs={'step': "10", 'min': "10", 'max': "480"})
+        }
 
 
 class SpecialActivityForm(forms.ModelForm):

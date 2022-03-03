@@ -107,8 +107,7 @@
                                 <div class="modal-body" style="text-align: center">
                                     <form method="post" id="createTopic-form">
                                         {% csrf_token %}
-                                        <div class="alert alert-danger" id="wrongTopicFormAlert" role="alert" style="display: none; opacity: 70%">
-                                        </div>
+                                        <div class="alert alert-danger" id="wrongTopicFormAlert" role="alert" style="display: none; opacity: 75%"></div>
                                         <div class="jumbotron" style="display: inline-grid; overflow: hidden">
                                             {{ topicForm }}
                                             <hr>
@@ -128,13 +127,12 @@
                                     <h4 class="modal-title"> {% trans 'New Speech Type' %}</h4>
                                 </div>
                                 <div class="modal-body" style="text-align: center">
-                                    <form action="proposal/createType/" method="post" oninput="changeTimeValue(eventTime.valueAsNumber)" id="createType-form">
+                                    <form method="post" oninput="changeTimeValue(id_time.valueAsNumber)" id="createType-form">
                                         {% csrf_token %}
+                                        <div class="alert alert-danger" id="wrongTypeFormAlert" role="alert" style="display: none; opacity: 75%"></div>
                                         <div class="jumbotron" style="display: inline-grid; overflow: hidden">
                                             {{ typeForm }}
-                                            <label for="eventTime">Duración del evento:</label>
-                                            <input id ="eventTime" name="eventTime" type="range" step="10" min="10" max="480" value="60">
-                                            <output id="eventTimeValue" name="eventTimeValue" for="eventTime" >60 min</output>
+                                            <output id="eventTimeValue" name="eventTimeValue" for="id_time" >60 min</output>
                                             <hr>
                                             <input class="btn btn-info" type="submit" value="{% trans 'Save' %}">
                                         </div>
@@ -232,6 +230,7 @@
         {% endfor %}
         const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         var create_topic_url = "{% url 'proposal:create-topic' %}";
+        var create_type_url = "{% url 'proposal:create-type' %}";
     </script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/combine/npm/fullcalendar@5.10.1,npm/fullcalendar@5.10.1/locales-all.min.js,npm/fullcalendar@5.10.1/locales-all.min.js,npm/fullcalendar@5.10.1/main.min.js"></script>
