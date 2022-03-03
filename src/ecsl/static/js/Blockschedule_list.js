@@ -68,7 +68,9 @@ class Calendar {
             },
             eventReceive: function(info) {
                 // Remove element from
-                $(info.draggedEl).closest('.activity').remove();
+                if(info.event.extendedProps.speech_id != undefined){
+                    $(info.draggedEl).closest('.activity').remove();
+                }
             },
             eventDidMount: function(info){
                 // Set event UUID
@@ -143,10 +145,29 @@ class Calendar {
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize external events
-    let containerEl = document.getElementById('draggable-events');
-    new FullCalendar.Draggable(containerEl, {
+    let speech_containerEl = document.getElementById('draggable-events');
+    let special_activity_containerEl = document.getElementById('draggable-special-activities');
+    new FullCalendar.Draggable(speech_containerEl, {
         itemSelector: '.speech-text',
         eventData: function(eventEl) {
+            return {
+                title: eventEl.innerText,
+                backgroundColor: eventEl.getAttribute('data-color'),
+                duration: {minutes:eventEl.getAttribute('data-duration')},
+                extendedProps: {
+                    speech_id: eventEl.getAttribute('data-speech'),
+                    special_activity_id: eventEl.getAttribute('data-special'),
+                    topic_id: eventEl.getAttribute('data-topic'),
+                    html_panel_el: eventEl.parentNode,
+                }
+            };
+        }
+    });
+
+    new FullCalendar.Draggable(special_activity_containerEl, {
+        itemSelector: '.special-activity',
+        eventData: function(eventEl) {
+            console.log(eventEl);
             return {
                 title: eventEl.innerText,
                 backgroundColor: eventEl.getAttribute('data-color'),

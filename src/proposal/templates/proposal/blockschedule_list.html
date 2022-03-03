@@ -84,14 +84,15 @@
                         </div>
                     </div>
                     <hr>
-                    <div class="jumbotron">
+                    <div id="draggable-special-activities" class="jumbotron">
                         <ul id="specials" class="connectedSortable droppable" hora="7:00:00">
                             {% for special in specialActivity %}
-                                <li class="ui-state-default activity" style="background-color: #cccccc;" color="#cccccc"
-                                    time="{{ special.type.time }}" is_speech=""
-                                    desc="{{ special.message }}"
-                                    special="special_{{ special.pk }}">
-                                    {{ special }} / {{ special.type.time }} min
+                                <li class="ui-state-default activity" style="background-color: #cccccc;">
+                                    <div class="special-activity" data-color="#cccccc"
+                                    data-duration="{{ special.type.time }}"
+                                    data-special="{{ special.pk }}">
+                                        {{ special }} / {{ special.type.time }} min
+                                    </div>
                                 </li>
                             {% endfor %}
                         </ul>
