@@ -84,13 +84,14 @@
                         </div>
                     </div>
                     <hr>
-                    <div id="draggable-special-activities" class="jumbotron">
-                        <ul id="specials" class="connectedSortable droppable" hora="7:00:00">
+                    <div id="draggable-special-activities" class="jumbotron" style="padding: 0;">
+                        <ul id="specials" class="connectedSortable droppable" style="width: 100%; padding: 0;">
                             {% for special in specialActivity %}
-                                <li class="ui-state-default activity" style="background-color: #cccccc;">
-                                    <div class="special-activity" data-color="#cccccc"
-                                    data-duration="{{ special.type.time }}"
-                                    data-special="{{ special.pk }}">
+                                <li class="ui-state-default activity speech-type-filter" style="border-style: solid; width: 100%; padding: 0; margin-top: 5px;">
+                                    <div class="special-activity" style="margin: 5px 0px 5px 0px; text-overflow: ellipsis; overflow: hidden;"
+                                         data-color="{{ speech.topic.color }}"
+                                         data-duration="{{ special.type.time }}"
+                                         data-special="{{ special.pk }}">
                                         {{ special }} / {{ special.type.time }} min
                                     </div>
                                 </li>

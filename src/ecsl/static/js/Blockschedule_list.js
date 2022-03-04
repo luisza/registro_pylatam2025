@@ -11,8 +11,27 @@ function saveEvents(events){
         },
         mode: 'same-origin',
         body: JSON.stringify(events)
-    }).then(response => response.json())
-    .then(events => {
+    }).then(response => {
+        if(response.status == 201){
+            const toast = Swal.mixin({
+                toast: true,
+                position: 'top',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            toast.fire({
+                icon: 'success',
+                title: '¡Horario guardado correctamente!'
+            });
+        }
+        return response.json()
+    }).then(events => {
         for (let i = 0; i < calendars.length; i++) {
             calendars[i].setEventsID(events);
         }
@@ -204,12 +223,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     $('.room-tab').on('shown.bs.tab', function(e) {
-        calendar_index = e.target.getAttribute('data-num');
+        let calendar_index = e.target.getAttribute('data-num');
         calendars[calendar_index-1].render();
-        calendars[calendar_index-1].setOption('droppable', true);
+        calendars[calendar_index-1].getCalendar().setOption('droppable', true);
         for (let i = 0; i < calendars.length; i++) {
-            if(calendar_index-1 != i){
-                calendars[calendar_index].setOption('droppable', false);
+            if (calendar_index-1 != i){
+                calendars[calendar_index-1].getCalendar().setOption('droppable', false);
             }
         }
     });
