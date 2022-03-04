@@ -177,7 +177,6 @@
                     <a id="addroom" href="#" data-toggle="modal" data-target="#room_modal">{% trans 'Add' %}</a>
                 </li>
             </ul>
-            <button type="button" id="save-btn" class="btn btn-success">{% trans 'Save' %}</button>
             <div class="tab-content" id="calendarContent">
                 {% for room in rooms_list %}
                     <div class="full-calendar tab-pane fade" id="calendar-{{forloop.counter}}" role="tabpanel" aria-labelledby="calendar-{{forloop.counter}}-tab" data-start_date="{{start_date}}" data-end_date="{{ end_date }}"></div>
@@ -234,6 +233,9 @@
         const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         var create_topic_url = "{% url 'proposal:create-topic' %}";
         var create_type_url = "{% url 'proposal:create-type' %}";
+        var save_name = "{% trans 'Save' %}";
+        var whole_event_name = "{% trans 'whole event' %}";
+        var day_name = "{% trans 'day' %}";
     </script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/combine/npm/fullcalendar@5.10.1,npm/fullcalendar@5.10.1/locales-all.min.js,npm/fullcalendar@5.10.1/locales-all.min.js,npm/fullcalendar@5.10.1/main.min.js"></script>
