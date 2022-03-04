@@ -25,13 +25,17 @@ document.addEventListener('DOMContentLoaded', function() {
     $(function() {
         $("#filterSpeechesType").change(function() {
             var rex = $('#filterSpeechesType').val();
+            console.log(rex);
             if (rex != "all") {
-                $(".ui-state-default").show().not('#' + rex).hide();
+                $(".speech-type-filter").show().not('#speech_' + rex).hide();
             } else {
-                $(".ui-state-default").show();
+                $(".speech-type-filter").show();
             }
           });
     });
+    // When reloading page, always start with 'all' filter
+    $('select[id^="filterSpeechesType"] option:selected').attr("selected",null);
+    $('select[id^="filterSpeechesType"] option[value="all"]').attr("selected","selected");
 });
 
 (function(){
@@ -72,7 +76,7 @@ $("#createTopic-form").submit(function (submitEl) {
                 $("#topic-modal").modal('hide');
                 const Toast = Swal.mixin({
                                     toast: true,
-                                    position: 'top-end',
+                                    position: 'top',
                                     showConfirmButton: false,
                                     timer: 3000,
                                     timerProgressBar: true,
