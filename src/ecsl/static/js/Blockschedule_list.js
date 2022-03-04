@@ -171,13 +171,13 @@ document.addEventListener('DOMContentLoaded', function() {
         eventData: function(eventEl) {
             return {
                 title: eventEl.innerText,
-                backgroundColor: eventEl.getAttribute('data-color'),
-                duration: {minutes:eventEl.getAttribute('data-duration')},
+                backgroundColor: eventEl.parentNode.getAttribute('data-color'),
+                duration: {minutes:eventEl.parentNode.getAttribute('data-duration')},
                 extendedProps: {
-                    speech_id: eventEl.getAttribute('data-speech'),
-                    special_activity_id: eventEl.getAttribute('data-special'),
-                    topic_id: eventEl.getAttribute('data-topic'),
-                    html_panel_el: eventEl.parentNode,
+                    speech_id: eventEl.parentNode.getAttribute('data-speech'),
+                    special_activity_id: eventEl.parentNode.getAttribute('data-special'),
+                    topic_id: eventEl.parentNode.getAttribute('data-topic'),
+                    html_panel_el: eventEl.parentNode.parentNode,
                 }
             };
         }
