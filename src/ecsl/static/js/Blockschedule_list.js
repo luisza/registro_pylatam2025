@@ -53,8 +53,29 @@ class Calendar {
             slotDuration: { minutes:10 },
             slotLabelInterval: { hours:1 },
             eventOverlap: false,
+            customButtons: {
+                saveButton: {
+                  text: 'Guardar',
+                  click: function() {
+                    let events = []
+                    for (let i = 0; i < calendars.length; i++) {
+                        events.push(...calendars[i].getEvents());
+                    }
+                    // Remove events from calendar
+                    deleteEventsFromCalendar(removed_events);
+                    // Save events that are currently in the calendar
+                    saveEvents(events);
+                  }
+                }
+              },
+            validRange: {
+                        start: start_date_parsed,
+                        end: end_date_plus_one,
+                    },
             headerToolbar: {
-              right: 'timeGridDay,timeGridEventDates'
+              left: 'saveButton',
+              center: 'title',
+              right: 'prev,next timeGridDay,timeGridEventDates'
             },
             views: {
                 timeGridEventDates: {
@@ -212,17 +233,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 calendars[calendar_index].setOption('droppable', false);
             }
         }
-    });
-
-    $('#save-btn').on('click', function(e) {
-        events = []
-        for (let i = 0; i < calendars.length; i++) {
-            events.push(...calendars[i].getEvents());
-        }
-        // Remove events from calendar
-        deleteEventsFromCalendar(removed_events);
-        // Save events that are currently in the calendar
-        saveEvents(events);
     });
 });
 

@@ -176,7 +176,6 @@
                     <a id="addroom" href="#" data-toggle="modal" data-target="#room_modal">{% trans 'Add' %}</a>
                 </li>
             </ul>
-            <button type="button" id="save-btn" class="btn btn-success">{% trans 'Save' %}</button>
             <div class="tab-content" id="calendarContent">
                 {% for room in rooms_list %}
                     <div class="full-calendar tab-pane fade" id="calendar-{{forloop.counter}}" role="tabpanel" aria-labelledby="calendar-{{forloop.counter}}-tab" data-start_date="{{start_date}}" data-end_date="{{ end_date }}"></div>

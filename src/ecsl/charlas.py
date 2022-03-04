@@ -241,6 +241,10 @@ class EditCharlas(PermissionRequiredMixin, CharlaContext, ListView):
         context['typeForm'] = TypeForm(initial={'event': self.kwargs['pk'], 'time': 60})
         return context
 
+
+    #TODO: Refactor to eliminate the following post view, it doesn't longer exist the
+    #   'edit-agenda' view without a pk in the url... nobody is using this post.
+
     def post(self, request, *args, **kwargs):
         if request.method == 'POST':
             if request.POST.get('form_id'):
