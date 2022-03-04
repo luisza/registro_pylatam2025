@@ -56,10 +56,10 @@
                                     {% for speech in speeches %}
                                         {% if speech.topic.id == topic.id and speech.is_scheduled == False %}
                                         <li id="speech_{{ speech.speech_type.id }}" class="ui-state-default activity speech-type-filter" style="border-style: solid; width: 100%; padding: 0; margin-top: 5px;">
-                                            <div class="row speech-text" style="margin: 5px 0px 5px 0px;"
+                                            <div class="row" style="margin: 5px 0px 5px 0px;"
                                                 data-speech="{{ speech.pk }}" data-topic="{{topic.pk}}" data-color="{{ speech.topic.color }}"
                                                 data-duration="{{ speech.speech_type.time }}" style="text-overflow: ellipsis;overflow: hidden;">
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-6 speech-text">
                                                     {{ speech }}
                                                 </div>
                                                 <div class="col-sm-6">
@@ -78,16 +78,16 @@
                     <br>
                     <div class="inline-flex">
                         <h4> {% trans 'Special Activities' %}</h4>
-                        <div class="add-activity">
+                        <!--<div class="add-activity">
                             <a data-toggle="modal" data-target="#special-modal"
                                class="btn btn-info add-button pl-2"><i class="fas fa-plus"></i></a>
-                        </div>
+                        </div>-->
                     </div>
                     <hr>
                     <div id="draggable-special-activities" class="jumbotron" style="padding: 0;">
                         <ul id="specials" class="connectedSortable droppable" style="width: 100%; padding: 0;">
                             {% for special in specialActivity %}
-                                <li class="ui-state-default activity speech-type-filter" style="border-style: solid; width: 100%; padding: 0; margin-top: 5px;">
+                                <li class="ui-state-default activity" style="border-style: solid; width: 100%; padding: 0; margin-top: 5px;">
                                     <div class="special-activity" style="margin: 5px 0px 5px 0px; text-overflow: ellipsis; overflow: hidden;"
                                          data-color="{{ speech.topic.color }}"
                                          data-duration="{{ special.type.time }}"
