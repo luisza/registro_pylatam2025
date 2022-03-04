@@ -55,7 +55,7 @@
                                     <ul id="topic_speeches_{{topic.pk}}" class="connectedSortable droppable tree" style="width: 100%; padding: 0;">
                                     {% for speech in speeches %}
                                         {% if speech.topic.id == topic.id and speech.is_scheduled == False %}
-                                        <li id="speech_{{ speech.pk }}" class="ui-state-default activity" style="border-style: solid; width: 100%; padding: 0; margin-top: 5px;">
+                                        <li id="speech_{{ speech.speech_type.id }}" class="ui-state-default activity speech-type-filter" style="border-style: solid; width: 100%; padding: 0; margin-top: 5px;">
                                             <div class="row speech-text" style="margin: 5px 0px 5px 0px;"
                                                 data-speech="{{ speech.pk }}" data-topic="{{topic.pk}}" data-color="{{ speech.topic.color }}"
                                                 data-duration="{{ speech.speech_type.time }}" style="text-overflow: ellipsis;overflow: hidden;">

@@ -25,10 +25,11 @@ document.addEventListener('DOMContentLoaded', function() {
     $(function() {
         $("#filterSpeechesType").change(function() {
             var rex = $('#filterSpeechesType').val();
+            console.log(rex);
             if (rex != "all") {
-                $(".ui-state-default").show().not('#' + rex).hide();
+                $(".speech-type-filter").show().not('#speech_' + rex).hide();
             } else {
-                $(".ui-state-default").show();
+                $(".speech-type-filter").show();
             }
           });
     });
