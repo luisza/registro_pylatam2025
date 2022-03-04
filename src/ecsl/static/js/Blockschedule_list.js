@@ -1,6 +1,14 @@
 var calendars = [];
 var removed_events = [];
 
+window.addEventListener("load", function(){
+    var saveButton = document.getElementsByClassName("fc-saveButton-button");
+    for (let i=0;i<saveButton.length;i++){
+        saveButton[i].style.setProperty("background-color", "green");
+        saveButton[i].style.setProperty("border-color", "green");
+    };
+});
+
 function saveEvents(events){
     fetch(save_url, {
         method: 'POST',
@@ -74,7 +82,7 @@ class Calendar {
             eventOverlap: false,
             customButtons: {
                 saveButton: {
-                  text: 'Guardar',
+                  text: save_name,
                   click: function() {
                     let events = []
                     for (let i = 0; i < calendars.length; i++) {
@@ -94,16 +102,20 @@ class Calendar {
             headerToolbar: {
               left: 'saveButton',
               center: 'title',
-              right: 'prev,next timeGridDay,timeGridEventDates'
+              right: 'prev,next timeGridOneDay,timeGridEventDates'
             },
             views: {
+                timeGridOneDay: {
+                        type: 'timeGridDay',
+                        buttonText: day_name,
+                    },
                 timeGridEventDates: {
                     type: 'timeGrid',
                     visibleRange: {
                         start: start_date_parsed,
                         end: end_date_plus_one,
                     },
-                    buttonText: 'whole event',
+                    buttonText: whole_event_name,
                 },
             },
             eventReceive: function(info) {
