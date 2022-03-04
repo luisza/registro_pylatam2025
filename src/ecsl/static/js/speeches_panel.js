@@ -33,6 +33,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
           });
     });
+    // When reloading page, always start with 'all' filter
+    $('select[id^="filterSpeechesType"] option:selected').attr("selected",null);
+    $('select[id^="filterSpeechesType"] option[value="all"]').attr("selected","selected");
 });
 
 (function(){
