@@ -136,6 +136,7 @@ class Calendar {
                 $(icon).on('click', function() {
                     removed_events.push(uuid);
                     info.event.remove();
+                    console.log(info.event.extendedProps.html_panel_el);
                     $(`#topic_speeches_${info.event.extendedProps.topic_id}`).append(info.event.extendedProps.html_panel_el);
                 })
             }
@@ -166,7 +167,7 @@ class Calendar {
     addEvent(event){
         this.calendar.addEvent({
             id: event.id,
-            title: event.title,
+            title: (event.title).toUpperCase(),
             start: event.start_time,
             end: event.end_time,
             backgroundColor: event.color,
