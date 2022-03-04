@@ -79,6 +79,8 @@ class Calendar {
             forceEventDuration: true,
             slotDuration: { minutes:10 },
             slotLabelInterval: { hours:1 },
+            slotMinTime: '07:00:00',
+            slotMaxTime: '23:00:00',
             eventOverlap: false,
             customButtons: {
                 saveButton: {
