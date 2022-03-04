@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load bootstrap %}
+{% load registro_charla %}
+{% load static %}
+{% block css %}
+    <link href="{% static 'css/proposal.css' %}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+    <div id="calendar-container">
+        <ul class="nav nav-tabs" id="roomTabs" role="tablist" style="padding: 10px;">
+            {% for room in rooms_list %}
+                <li class="nav-item">
+                    <a class="nav-item nav-link room-tab" id="calendar-{{forloop.counter}}-tab" data-toggle="tab" data-room-id="{{room.id}}" data-num="{{forloop.counter}}" href="#calendar-{{forloop.counter}}" role="tab" aria-controls="calendar-{{forloop.counter}}" aria-selected="false">{{ room }}</a>
+                </li>
+            {% endfor %}
+            <li class="nav-item">
+                <a id="addroom" href="#" data-toggle="modal" data-target="#room_modal">{% trans 'Add' %}</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="calendarContent">
+            {% for room in rooms_list %}
+                <div class="full-calendar tab-pane fade" id="calendar-{{forloop.counter}}" role="tabpanel" aria-labelledby="calendar-{{forloop.counter}}-tab" data-start_date="{{start_date}}" data-end_date="{{ end_date }}"></div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" id="room_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h2 class="modal-title text-center">{% trans 'Create Room' %}</h2>
+                </div>
+                <div class="modal-body">
+                    <form name="roomForm" action="proposal/createRoom/" method="post">
+                        {% csrf_token %}
+                        {{ room_form|bootstrap }}
+                        <input name="form_id" value="roomForm" hidden>
+                        <br>
+                        <div class="form-group text-center">
+                            <input type="submit" name="action" class="btn btn-primary" value="{% trans 'Save Room' %}">
+                            <button type="button" class="btn btn-secondary"
+                                    data-dismiss="modal">{% trans 'Close' %}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        var save_url = "{% url 'proposal:events-list' %}";
+        var delete_url = "{% url 'proposal:delete-events' %}";
+        var scheduled_events = [];
+        {% for event in scheduled_speeches %}
+            scheduled_events.push({
+                id: "{{event.pk}}",
+                html_id: "{{event.html_id}}",
+                title: "{{event.speech.title}}",
+                color: "{{event.speech.topic.color}}",
+                room: "{{event.room.pk}}",
+                start_time: "{{event.start_time|date:"c"}}",
+                end_time: "{{event.end_time|date:"c"}}",
+                speech_id: "{{event.speech.pk}}",
+                special_id: "{{event.special.pk}}",
+                topic_id: "{{event.speech.topic.pk}}"
+            });
+        {% endfor %}
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        var create_topic_url = "{% url 'proposal:create-topic' %}";
+        var create_type_url = "{% url 'proposal:create-type' %}";
+        var save_name = "{% trans 'Save' %}";
+        var whole_event_name = "{% trans 'whole event' %}";
+        var day_name = "{% trans 'day' %}";
+    </script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/combine/npm/fullcalendar@5.10.1,npm/fullcalendar@5.10.1/locales-all.min.js,npm/fullcalendar@5.10.1/locales-all.min.js,npm/fullcalendar@5.10.1/main.min.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/rrule@2.6.4/dist/es5/rrule.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/rrule@5.5.0/main.global.min.js'></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/combine/npm/fullcalendar@5.10.1/main.min.css,npm/fullcalendar@5.10.1/main.min.css">
+    <script src="{% static 'js/agenda.js' %}"></script>
+{% endblock %}

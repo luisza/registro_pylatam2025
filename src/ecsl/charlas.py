@@ -201,6 +201,7 @@ def build_stored_activities_dic(object_list, room):
 class Charlas(CharlaContext, ListView):
     model = BlockSchedule
     order_by = "start_time"
+    template_name = "proposal/agenda.html"
 
     def dispatch(self, request, *args, **kwargs):
         current_event = EventECSL.objects.filter(current=True).first()
