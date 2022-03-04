@@ -72,8 +72,9 @@ class Calendar {
     constructor(cal_html, room){
         this.room = room;
         this.calendar = new FullCalendar.Calendar(cal_html, {
-            editable: true,
-            droppable: true,
+            height: 'auto',
+            editable: false,
+            droppable: false,
             initialView: 'timeGridEventDates',
             allDaySlot: false,
             forceEventDuration: true,
@@ -81,30 +82,12 @@ class Calendar {
             slotLabelInterval: { hours:1 },
             slotMinTime: '07:00:00',
             slotMaxTime: '23:00:00',
-            eventOverlap: false,
-            customButtons: {
-                saveButton: {
-                  text: save_name,
-                  click: function() {
-                    let events = []
-                    for (let i = 0; i < calendars.length; i++) {
-                        events.push(...calendars[i].getEvents());
-                    }
-                    // Remove events from calendar
-                    deleteEventsFromCalendar(removed_events);
-                    // Save events that are currently in the calendar
-                    saveEvents(events);
-                  }
-                }
-              },
             validRange: {
-                        start: start_date_parsed,
-                        end: end_date_plus_one,
-                    },
+                start: start_date_parsed,
+                end: end_date_plus_one,
+            },
             headerToolbar: {
-              left: 'saveButton',
-              center: 'title',
-              right: 'prev,next timeGridOneDay,timeGridEventDates'
+                right: 'prev,next timeGridOneDay,timeGridEventDates'
             },
             views: {
                 timeGridOneDay: {
@@ -120,28 +103,6 @@ class Calendar {
                     buttonText: whole_event_name,
                 },
             },
-            eventReceive: function(info) {
-                // Remove element from
-                if(info.event.extendedProps.speech_id != undefined){
-                    $(info.draggedEl).closest('.activity').remove();
-                }
-            },
-            eventDidMount: function(info){
-                // Set event UUID
-                let uuid = info.event.extendedProps.html_id ? info.event.extendedProps.html_id : getRandomUUID();
-                info.event.setExtendedProp('html_id', uuid);
-                // Append x icon to delete
-                let icon = document.createElement("i");
-                icon.classList.add('far', 'fa-times-circle');
-                icon.style.cssText = "position: absolute; top: 2px; right: 2px;font-size: 16px; z-index: 10000"
-                info.el.prepend(icon);
-                $(icon).on('click', function() {
-                    removed_events.push(uuid);
-                    info.event.remove();
-                    console.log(info.event.extendedProps.html_panel_el);
-                    $(`#topic_speeches_${info.event.extendedProps.topic_id}`).append(info.event.extendedProps.html_panel_el);
-                })
-            }
         });
     }
 
@@ -167,7 +128,6 @@ class Calendar {
     }
 
     addEvent(event){
-        let panel_event_element = `<li id="speech_${event.id}" class="ui-state-default activity speech-type-filter speech_${event.speech_type_id}" style="border-style: solid; width: 100%; padding: 0; margin-top: 5px;"><div class="row" style="margin: 5px 0px 5px 0px;" data-speech="${event.id}" data-topic="${event.topic_id}" data-color="${event.color}" data-duration="${event.speech_type_time}" style="text-overflow: ellipsis;overflow: hidden;"><div class="col-sm-6 speech-text">${event.title}</div><div class="col-sm-6">${event.speech_type_time} min - ${event.speech_type_name}</div></div></li>`;
         this.calendar.addEvent({
             id: event.id,
             title: (event.title).toUpperCase(),
@@ -179,7 +139,6 @@ class Calendar {
                 special_activity_id: event.special_id,
                 html_id: event.html_id,
                 topic_id: event.topic_id,
-                html_panel_el: panel_event_element
             }
         })
     }
@@ -201,44 +160,6 @@ class Calendar {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize external events
-    let speech_containerEl = document.getElementById('draggable-events');
-    let special_activity_containerEl = document.getElementById('draggable-special-activities');
-    new FullCalendar.Draggable(speech_containerEl, {
-        itemSelector: '.speech-text',
-        eventData: function(eventEl) {
-            return {
-                title: eventEl.innerText,
-                backgroundColor: eventEl.parentNode.getAttribute('data-color'),
-                duration: {minutes:eventEl.parentNode.getAttribute('data-duration')},
-                extendedProps: {
-                    speech_id: eventEl.parentNode.getAttribute('data-speech'),
-                    special_activity_id: eventEl.parentNode.getAttribute('data-special'),
-                    topic_id: eventEl.parentNode.getAttribute('data-topic'),
-                    html_panel_el: eventEl.parentNode.parentNode,
-                }
-            };
-        }
-    });
-
-    new FullCalendar.Draggable(special_activity_containerEl, {
-        itemSelector: '.special-activity',
-        eventData: function(eventEl) {
-            console.log(eventEl);
-            return {
-                title: eventEl.innerText,
-                backgroundColor: eventEl.getAttribute('data-color'),
-                duration: {minutes:eventEl.getAttribute('data-duration')},
-                extendedProps: {
-                    speech_id: eventEl.getAttribute('data-speech'),
-                    special_activity_id: eventEl.getAttribute('data-special'),
-                    topic_id: eventEl.getAttribute('data-topic'),
-                    html_panel_el: eventEl.parentNode,
-                }
-            };
-        }
-    });
-
     $('#calendar-1-tab').tab('show');
     $('.full-calendar').each(function(i, cal) {
         start_date_parsed = Date.parse(cal.getAttribute('data-start_date'))
@@ -255,7 +176,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 calendar.addEvent(scheduled_events[i]);
             }
         }
-
         calendars.push(calendar);
         calendar.render();
     });
@@ -263,12 +183,6 @@ document.addEventListener('DOMContentLoaded', function() {
     $('.room-tab').on('shown.bs.tab', function(e) {
         let calendar_index = e.target.getAttribute('data-num');
         calendars[calendar_index-1].render();
-        calendars[calendar_index-1].getCalendar().setOption('droppable', true);
-        for (let i = 0; i < calendars.length; i++) {
-            if (calendar_index-1 != i){
-                calendars[calendar_index-1].getCalendar().setOption('droppable', false);
-            }
-        }
     });
 });
 

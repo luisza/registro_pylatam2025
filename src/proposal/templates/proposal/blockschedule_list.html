@@ -7,12 +7,12 @@
     <link href="{% static 'css/proposal.css' %}" rel="stylesheet">
 {% endblock %}
 {% block content %}
-    <div id="info-page">
-        <h2> Temáticas </h2>
-    </div>
-    <br>
     <div class="row">
-        <div class="col-md-4" id="filterPanel">
+        {% if user %}
+        <div class="col-md-3" id="filterPanel">
+            <div id="info-page">
+                <h2> Panel de eventos </h2>
+            </div>
             <div class="card">
                 <div class="card-body">
                     <div class="inline-flex">
@@ -23,6 +23,9 @@
                         </div>
                     </div>
                     <hr>
+                    <div class="inline-flex">
+                        <h4> Actividades </h4>
+                    </div>
                     <div class="row flex">
                         <div class="col-md-6 inline-flex">
                             <div class="col-2">
@@ -52,12 +55,13 @@
                                 <li>
                                     <label class="tree-toggle glyphicon-icon-rpad">
                                         {{topic}}
-                                        <span class="menu-collapsible-icon glyphicon glyphicon-chevron-down"></span>
+                                        <a class="menu-collapsible-icon glyphicon glyphicon-chevron-down"></a>
                                     </label>
                                     <ul id="topic_speeches_{{topic.pk}}" class="connectedSortable droppable tree" style="width: 100%; padding: 0;">
                                     {% for speech in speeches %}
                                         {% if speech.topic.id == topic.id and speech.is_scheduled == False %}
-                                        <li id="speech_{{ speech.speech_type.id }}" class="ui-state-default activity speech-type-filter" style="border-style: solid; width: 100%; padding: 0; margin-top: 5px;">
+                                        <li id="speech_{{ speech.pk }}" class="ui-state-default activity speech-type-filter speech_{{ speech.speech_type.id }}"
+                                            style="border-style: solid; width: 100%; padding: 0; margin-top: 5px;">
                                             <div class="row" style="margin: 5px 0px 5px 0px;"
                                                 data-speech="{{ speech.pk }}" data-topic="{{topic.pk}}" data-color="{{ speech.topic.color }}"
                                                 data-duration="{{ speech.speech_type.time }}" style="text-overflow: ellipsis;overflow: hidden;">
@@ -168,8 +172,9 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-8" id="calendar-container" >
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
+        {% endif %}
+        <div class="col-md-9    " id="calendar-container">
+            <ul class="nav nav-tabs" id="myTab" role="tablist" style="padding: 10px;">
                 {% for room in rooms_list %}
                     <li class="nav-item">
                         <a class="nav-item nav-link room-tab" id="calendar-{{forloop.counter}}-tab" data-toggle="tab" data-room-id="{{room.id}}" data-num="{{forloop.counter}}" href="#calendar-{{forloop.counter}}" role="tab" aria-controls="calendar-{{forloop.counter}}" aria-selected="false">{{ room }}</a>
@@ -229,7 +234,10 @@
                 end_time: "{{event.end_time|date:"c"}}",
                 speech_id: "{{event.speech.pk}}",
                 special_id: "{{event.special.pk}}",
-                topic_id: "{{event.speech.topic.pk}}"
+                topic_id: "{{event.speech.topic.pk}}",
+                speech_type_id: "{{event.speech.speech_type.pk}}",
+                speech_type_time: "{{event.speech.speech_type.time}}",
+                speech_type_name: "{{event.speech.speech_type.name}}",
             });
         {% endfor %}
         const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;

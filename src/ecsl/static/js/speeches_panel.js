@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var rex = $('#filterSpeechesType').val();
             console.log(rex);
             if (rex != "all") {
-                $(".speech-type-filter").show().not('#speech_' + rex).hide();
+                $(".speech-type-filter").show().not('.speech_' + rex).hide();
             } else {
                 $(".speech-type-filter").show();
             }

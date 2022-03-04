@@ -91,6 +91,7 @@ hr {
     cursor: pointer;
     text-align: center;
     list-style: none;
+    cursor: move;
 }
 td ul {
     margin: 0;
