@@ -242,6 +242,7 @@
         const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         var create_topic_url = "{% url 'proposal:create-topic' %}";
         var create_type_url = "{% url 'proposal:create-type' %}";
+        var create_special_url = "{% url 'proposal:create-special' %}";
         var save_name = "{% trans 'Save' %}";
         var whole_event_name = "{% trans 'whole event' %}";
         var day_name = "{% trans 'day' %}";
