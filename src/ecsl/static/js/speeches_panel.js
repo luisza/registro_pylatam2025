@@ -83,23 +83,8 @@ $("#createTopic-form").submit(function (submitEl) {
                 // 1. clear the form.
                 $("#createTopic-form").trigger('reset');
                 $("#topic-modal").modal('hide');
-                const Toast = Swal.mixin({
-                                    toast: true,
-                                    position: 'top',
-                                    showConfirmButton: false,
-                                    timer: 3000,
-                                    timerProgressBar: true,
-                                    didOpen: (toast) => {
-                                        toast.addEventListener('mouseenter', Swal.stopTimer)
-                                        toast.addEventListener('mouseleave', Swal.resumeTimer)
-                                    }
-                                    })
-
-                Toast.fire({
-                            icon: 'success',
-                            title: 'Tema guardado correctamente'
-                            });
-
+                // Manage response status code
+                handleResponseErrors(response.status, '¡Tema guardado correctamente!');
                 // Add the new topic into the speeches panel
                 var topics_obj = `<li><label class="tree-toggle glyphicon-icon-rpad">${response.name} <span class="menu-collapsible-icon glyphicon glyphicon-chevron-down"></span></label></li>`;
                 $("#ul-topics-panel").append(topics_obj);
@@ -140,24 +125,8 @@ $("#createType-form").submit(function (submitEl) {
                 $("#createType-form").trigger('reset');
                 $("#type-modal").modal('hide');
                 $("#filterSpeechesType").append(`<option time={{ ${response.time} }} value={{ ${response.event} }}>${response.name} (${response.time} minutos)</option>`)
-                const Toast = Swal.mixin({
-                                    toast: true,
-                                    position: 'top-end',
-                                    showConfirmButton: false,
-                                    timer: 3000,
-                                    timerProgressBar: true,
-                                    didOpen: (toast) => {
-                                        toast.addEventListener('mouseenter', Swal.stopTimer)
-                                        toast.addEventListener('mouseleave', Swal.resumeTimer)
-                                    }
-                                    })
-
-                Toast.fire({
-                            icon: 'success',
-                            title: 'Tipo de actividad guardado correctamente'
-                            });
-
-
+                // Manage response status code
+                handleResponseErrors(response.status, '¡Tipo de actividad guardado correctamente!');
             }
         })
     });

@@ -20,24 +20,7 @@ function saveEvents(events){
         mode: 'same-origin',
         body: JSON.stringify(events)
     }).then(response => {
-        if(response.status == 201){
-            const toast = Swal.mixin({
-                toast: true,
-                position: 'top',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-            });
-
-            toast.fire({
-                icon: 'success',
-                title: '¡Horario guardado correctamente!'
-            });
-        }
+        handleResponseErrors(response.status, '¡Horario guardado correctamente!');
         return response.json()
     }).then(events => {
         for (let i = 0; i < calendars.length; i++) {
