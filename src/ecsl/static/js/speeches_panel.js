@@ -7,6 +7,15 @@ $("#type-modal").on('hidden.bs.modal', function(){
     changeTimeValue(60);
 });
 
+// Change icon value dinamically for every topic in the speeches panel
+$('.tree_toggle_icon').click(function() {
+    if ($(this).hasClass('glyphicon-chevron-down') == true) {
+        $(this).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+    } else {
+        $(this).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+    }
+});
+
 function changeTimeValue(val) {
     document.getElementById("eventTimeValue").innerHTML = val + " min";
 }
