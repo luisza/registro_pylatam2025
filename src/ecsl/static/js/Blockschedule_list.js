@@ -205,17 +205,17 @@ document.addEventListener('DOMContentLoaded', function() {
     let speech_containerEl = document.getElementById('draggable-events');
     let special_activity_containerEl = document.getElementById('draggable-special-activities');
     new FullCalendar.Draggable(speech_containerEl, {
-        itemSelector: '.speech-text',
+        itemSelector: '.speech-type-filter',
         eventData: function(eventEl) {
             return {
-                title: eventEl.innerText,
-                backgroundColor: eventEl.parentNode.getAttribute('data-color'),
-                duration: {minutes:eventEl.parentNode.getAttribute('data-duration')},
+                title: eventEl.children[0].children[0].innerText,
+                backgroundColor: eventEl.children[0].getAttribute('data-color'),
+                duration: {minutes:eventEl.children[0].getAttribute('data-duration')},
                 extendedProps: {
-                    speech_id: eventEl.parentNode.getAttribute('data-speech'),
-                    special_activity_id: eventEl.parentNode.getAttribute('data-special'),
-                    topic_id: eventEl.parentNode.getAttribute('data-topic'),
-                    html_panel_el: eventEl.parentNode.parentNode,
+                    speech_id: eventEl.children[0].getAttribute('data-speech'),
+                    special_activity_id: eventEl.children[0].getAttribute('data-special'),
+                    topic_id: eventEl.children[0].getAttribute('data-topic'),
+                    html_panel_el: eventEl,
                 }
             };
         }
