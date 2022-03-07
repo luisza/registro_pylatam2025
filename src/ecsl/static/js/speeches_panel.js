@@ -7,6 +7,10 @@ $("#type-modal").on('hidden.bs.modal', function(){
     changeTimeValue(60);
 });
 
+$("#special-modal").on('hidden.bs.modal', function(){
+    $("#specialActivity-form").trigger('reset');
+});
+
 function changeTimeValue(val) {
     document.getElementById("eventTimeValue").innerHTML = val + " min";
 }
@@ -147,8 +151,63 @@ $("#createType-form").submit(function (submitEl) {
                             icon: 'success',
                             title: 'Tipo de actividad guardado correctamente'
                             });
+                if(response.is_special){
+                     new_option = `<option value={{ ${response.pk} }}>${response.name} (${response.time} minutos)</option>`;
+                     $("#specialActivity-form")[0][2].append(new_option);
+                }
+            }
+        })
+    });
 
 
+$("#specialActivity-form").submit(function (submitEl) {
+        // preventing from page reload and default actions
+        submitEl.preventDefault();
+        url = create_special_url;
+        // make POST ajax call
+        $.ajax({
+            type: 'POST',
+            url: url,
+            headers: {
+                'Accept': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            data: $("#specialActivity-form").serialize(),
+            error: function (response) {
+                // alert the error if any error occurred
+                if (response.status == 400) {
+                    alertEl = document.getElementById("wrongSpecialFormAlert")
+                    alertEl.style.setProperty("display", "block");
+                    alertEl.innerText = "Los datos ingresados son érroneos, corríjalos e intente de nuevo.";
+                }
+                else if (response.status == 500) {
+                    $("#specialActivity-form").trigger('reset');
+                    alertEl = document.getElementById("wrongSpecialFormAlert")
+                    alertEl.style.setProperty("display", "block");
+                    alertEl.innerText = "Hubo un error procesando sus datos, inténtelo más tarde.";
+                }
+            },
+            success: function (response) {
+                // on successfull creating object
+                // 1. clear the form.
+                $("#specialActivity-form").trigger('reset');
+                $("#special-modal").modal('hide');
+                const Toast = Swal.mixin({
+                                    toast: true,
+                                    position: 'top',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                    }
+                                    })
+
+                Toast.fire({
+                            icon: 'success',
+                            title: 'Actividad especial guardada correctamente'
+                            });
             }
         })
     });
