@@ -155,8 +155,9 @@
                                     <h4 class="modal-title">{% trans 'New Special Activity' %}</h4>
                                 </div>
                                 <div class="modal-body" style="text-align: center">
-                                    <form action="proposal/createSpecial/" method="post">
+                                    <form method="post" id="specialActivity-form">
                                         {% csrf_token %}
+                                        <div class="alert alert-danger" id="wrongSpecialFormAlert" role="alert" style="display: none; opacity: 75%"></div>
                                         <div class="jumbotron" style="display: inline-grid;">
                                             {{ specialForm }}
                                             <hr>
