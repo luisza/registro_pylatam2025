@@ -13,10 +13,10 @@ from proposal.models import Room
 class CreateRoom(PermissionRequiredMixin, generic.CreateView):
     model = Room
     form_class = RoomsCreateForm
-    success_url = reverse_lazy('edit_charlas')
     permission_required = 'proposal.add_room'
 
     def form_valid(self, form):
         form.instance.event = EventECSL.objects.filter(current=True).first()
+        self.success_url = reverse_lazy('edit_charlas', kwargs={'pk': form.instance.event.pk})
         response = super(CreateRoom, self).form_valid(form)
         return response
