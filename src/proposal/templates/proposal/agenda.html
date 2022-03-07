@@ -14,9 +14,6 @@
                     <a class="nav-item nav-link room-tab" id="calendar-{{forloop.counter}}-tab" data-toggle="tab" data-room-id="{{room.id}}" data-num="{{forloop.counter}}" href="#calendar-{{forloop.counter}}" role="tab" aria-controls="calendar-{{forloop.counter}}" aria-selected="false">{{ room }}</a>
                 </li>
             {% endfor %}
-            <li class="nav-item">
-                <a id="addroom" href="#" data-toggle="modal" data-target="#room_modal">{% trans 'Add' %}</a>
-            </li>
         </ul>
         <div class="tab-content" id="calendarContent">
             {% for room in rooms_list %}
