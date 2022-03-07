@@ -26,6 +26,7 @@
                     <div class="inline-flex">
                         <h4> {% trans 'Activities' %} </h4>
                     </div>
+                    <hr>
                     <div class="row flex">
                         <div class="col-md-6 inline-flex">
                             <div class="col-2">
@@ -51,9 +52,9 @@
                         <ul id="ul-topics-panel" class="nav nav-list nav-menu-list-style" style="width: 100%; padding: 0;">
                             {% for topic in topics %}
                                 <li>
-                                    <label class="tree-toggle glyphicon-icon-rpad">
+                                    <label class="tree-toggle">
                                         {{topic}}
-                                        <a class="menu-collapsible-icon glyphicon glyphicon-chevron-down"></a>
+                                        <a class="tree_toggle_icon glyphicon glyphicon-chevron-down"></a>
                                     </label>
                                     <ul id="topic_speeches_{{topic.pk}}" class="connectedSortable droppable tree" style="width: 100%; padding: 0;">
                                     {% for speech in speeches %}
@@ -253,6 +254,7 @@
     <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/rrule@5.5.0/main.global.min.js'></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/combine/npm/fullcalendar@5.10.1/main.min.css,npm/fullcalendar@5.10.1/main.min.css">
+    <script src="{% static 'js/utils.js' %}"></script>
     <script src="{% static 'js/Blockschedule_list.js' %}"></script>
     <script src="{% static 'js/speeches_panel.js' %}"></script>
 {% endblock %}
