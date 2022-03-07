@@ -138,7 +138,6 @@ class Calendar {
                 $(icon).on('click', function() {
                     removed_events.push(uuid);
                     info.event.remove();
-                    console.log(info.event.extendedProps.html_panel_el);
                     $(`#topic_speeches_${info.event.extendedProps.topic_id}`).append(info.event.extendedProps.html_panel_el);
                 })
             }
