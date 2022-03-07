@@ -172,22 +172,7 @@ $("#specialActivity-form").submit(function (submitEl) {
                 // 1. clear the form.
                 $("#specialActivity-form").trigger('reset');
                 $("#special-modal").modal('hide');
-                const Toast = Swal.mixin({
-                                    toast: true,
-                                    position: 'top',
-                                    showConfirmButton: false,
-                                    timer: 3000,
-                                    timerProgressBar: true,
-                                    didOpen: (toast) => {
-                                        toast.addEventListener('mouseenter', Swal.stopTimer)
-                                        toast.addEventListener('mouseleave', Swal.resumeTimer)
-                                    }
-                                    })
-
-                Toast.fire({
-                            icon: 'success',
-                            title: 'Actividad especial guardada correctamente'
-                            });
+                handleResponseErrors(response.status, '¡Actividad especial guardada correctamente!');
             }
         })
     });
