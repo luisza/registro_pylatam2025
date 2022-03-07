@@ -171,7 +171,7 @@
             </div>
         </div>
         {% endif %}
-        <div class="col-md-9    " id="calendar-container">
+        <div class="col-md-9" id="calendar-container">
             <ul class="nav nav-tabs" id="myTab" role="tablist" style="padding: 10px;">
                 {% for room in rooms_list %}
                     <li class="nav-item">
@@ -198,7 +198,7 @@
                         <h2 class="modal-title text-center">{% trans 'Create Room' %}</h2>
                     </div>
                     <div class="modal-body">
-                        <form name="roomForm" action="proposal/createRoom/" method="post">
+                        <form name="roomForm" action="{% url 'proposal:create-room' %}" method="post">
                             {% csrf_token %}
                             {{ room_form|bootstrap }}
                             <input name="form_id" value="roomForm" hidden>
