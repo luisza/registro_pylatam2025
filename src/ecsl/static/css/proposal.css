@@ -82,6 +82,10 @@ hr {
     overflow:scroll;
 }
 
+#specialActivity-form .jumbotron {
+    max-height: 375px;
+}
+
 .activity {
     border: none;
     border-radius: 1rem;
@@ -157,4 +161,10 @@ th{
   color: black;
 }
 
+#specialActivity-form .modal-dialog {
+height: 90%; /* = 90% of the .modal-backdrop block = %90 of the screen */
+}
+#specialActivity-form .modal-content {
+height: 100%; /* = 100% of the .modal-dialog block */
+}
 

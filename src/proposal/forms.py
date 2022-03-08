@@ -50,7 +50,7 @@ class SpecialActivityForm(forms.ModelForm):
         exclude = ('is_scheduled', 'room')
         widgets = {
             'event': forms.HiddenInput,
-            'message': forms.Textarea(attrs={'rows': 2}),
+            'message': forms.Textarea(attrs={'rows': 4}),
         }
 
 
