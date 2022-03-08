@@ -1,10 +1,14 @@
 body {
+    height: 100%;
     margin: 0;
-    margin-bottom: 40px;
+}
+
+.container{
+    padding-bottom: 40px;
 }
 
 footer {
-    position: fixed;
+    position: relative;
     left: 0;
     bottom: 0;
     width: 100%;
@@ -12,6 +16,12 @@ footer {
     color: white;
     text-align: center;
     height: 40px;
+    margin-top: 5px;
+}
+
+footer ul{
+    padding: 0px;
+    margin-bottom: 0px;
 }
 
 i {

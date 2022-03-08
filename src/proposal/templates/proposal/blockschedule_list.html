@@ -40,7 +40,7 @@
                                 <select id="filterSpeechesType" class="btn sidebar-select btn-primary" style="height: 40px" name="type">
                                     <option selected value="all">{% trans 'Type' %}</option>
                                     {% for type in types %}
-                                        <option time={{ type.time }} value={{ type.id }}>{{ type }}</option>
+                                        <option value={{type.id}}>{{ type }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
