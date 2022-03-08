@@ -75,11 +75,9 @@ $("#createTopic-form").submit(function (submitEl) {
                     alertEl.style.setProperty("display", "block");
                     alertEl.innerText = "Los datos ingresados son érroneos, corríjalos e intente de nuevo.";
                 }
-                else if (response.status == 500) {
+                else {
                     $("#createTopic-form").trigger('reset');
-                    alertEl = document.getElementById("wrongTopicFormAlert")
-                    alertEl.style.setProperty("display", "block");
-                    alertEl.innerText = "Hubo un error procesando sus datos, inténtelo más tarde.";
+                    handleResponseErrors(response.status, '');
                 }
             },
             success: function (response) {
@@ -88,7 +86,7 @@ $("#createTopic-form").submit(function (submitEl) {
                 $("#createTopic-form").trigger('reset');
                 $("#topic-modal").modal('hide');
                 // Manage response status code
-                handleResponseErrors(response.status, '¡Tema guardado correctamente!');
+                handleResponseErrors(200, '¡Tema guardado correctamente!');
                 // Add the new topic into the speeches panel
                 var topics_obj = `<li><label class="tree-toggle glyphicon-icon-rpad">${response.name} <span class="menu-collapsible-icon glyphicon glyphicon-chevron-down"></span></label></li>`;
                 $("#ul-topics-panel").append(topics_obj);
@@ -116,11 +114,9 @@ $("#createType-form").submit(function (submitEl) {
                     alertEl.style.setProperty("display", "block");
                     alertEl.innerText = "Los datos ingresados son érroneos, corríjalos e intente de nuevo.";
                 }
-                else if (response.status == 500) {
+                else {
                     $("#createType-form").trigger('reset');
-                    alertEl = document.getElementById("wrongTypeFormAlert")
-                    alertEl.style.setProperty("display", "block");
-                    alertEl.innerText = "Hubo un error procesando sus datos, inténtelo más tarde.";
+                    handleResponseErrors(response.status, '');
                 }
             },
             success: function (response) {
@@ -130,7 +126,7 @@ $("#createType-form").submit(function (submitEl) {
                 $("#type-modal").modal('hide');
                 $("#filterSpeechesType").append(`<option time={{ ${response.time} }} value={{ ${response.event} }}>${response.name} (${response.time} minutos)</option>`)
                 // Manage response status code
-                handleResponseErrors(response.status, '¡Tipo de actividad guardado correctamente!');
+                handleResponseErrors(200, '¡Tipo de actividad guardado correctamente!');
                 if(response.is_special){
                      new_option = `<option value={{ ${response.pk} }}>${response.name} (${response.time} minutos)</option>`;
                      $("#specialActivity-form")[0][2].append(new_option);
@@ -172,7 +168,7 @@ $("#specialActivity-form").submit(function (submitEl) {
                 // 1. clear the form.
                 $("#specialActivity-form").trigger('reset');
                 $("#special-modal").modal('hide');
-                handleResponseErrors(response.status, '¡Actividad especial guardada correctamente!');
+                handleResponseErrors(200, '¡Actividad especial guardada correctamente!');
             }
         })
     });
