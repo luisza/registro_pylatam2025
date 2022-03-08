@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -11,7 +12,8 @@ from proposal.models import Topic
 
 
 @method_decorator(login_required, name='dispatch')
-class CreateTopic(generic.CreateView):
+class CreateTopic(PermissionRequiredMixin, generic.CreateView):
+    permission_required = 'proposal.add_topicform'
     model = Topic
     form_class = TopicForm
 

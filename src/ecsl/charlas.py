@@ -237,10 +237,12 @@ class EditCharlas(PermissionRequiredMixin, CharlaContext, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        special = SpecialActivity.objects.filter(event__pk=self.kwargs['pk'])
         context['view'] = 'edit'
         context['topicForm'] = TopicForm(initial={'event': self.kwargs['pk'], 'color': get_random_color()})
         context['typeForm'] = TypeForm(initial={'event': self.kwargs['pk'], 'time': 60})
         context['specialForm'] = SpecialActivityForm(initial={'event': self.kwargs['pk']})
+        context['specialActivity'] = special
         return context
 
 

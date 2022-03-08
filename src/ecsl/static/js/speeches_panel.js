@@ -159,11 +159,9 @@ $("#specialActivity-form").submit(function (submitEl) {
                     alertEl.style.setProperty("display", "block");
                     alertEl.innerText = "Los datos ingresados son érroneos, corríjalos e intente de nuevo.";
                 }
-                else if (response.status == 500) {
+                else {
                     $("#specialActivity-form").trigger('reset');
-                    alertEl = document.getElementById("wrongSpecialFormAlert")
-                    alertEl.style.setProperty("display", "block");
-                    alertEl.innerText = "Hubo un error procesando sus datos, inténtelo más tarde.";
+                    handleResponseErrors(response.status, '');
                 }
             },
             success: function (response) {
