@@ -200,8 +200,9 @@
                         <h2 class="modal-title text-center">{% trans 'Create Room' %}</h2>
                     </div>
                     <div class="modal-body">
-                        <form name="roomForm" action="{% url 'proposal:create-room' %}" method="post">
+                        <form id="create_room_form" name="roomForm" method="post">
                             {% csrf_token %}
+                            <div class="alert alert-danger" id="wrongRoomFormAlert" role="alert" style="display: none; opacity: 75%"></div>
                             {{ room_form|bootstrap }}
                             <input name="form_id" value="roomForm" hidden>
                             <br>
@@ -244,6 +245,7 @@
         var create_topic_url = "{% url 'proposal:create-topic' %}";
         var create_type_url = "{% url 'proposal:create-type' %}";
         var create_special_url = "{% url 'proposal:create-special' %}";
+        var create_room_url = "{% url 'proposal:create-room' %}";
         var save_name = "{% trans 'Save' %}";
         var whole_event_name = "{% trans 'whole event' %}";
         var day_name = "{% trans 'day' %}";
