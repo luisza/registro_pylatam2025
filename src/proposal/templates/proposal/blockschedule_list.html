@@ -28,7 +28,7 @@
                     </div>
                     <hr>
                     <div class="row flex">
-                        <div class="col-md-6 inline-flex">
+                        <div class="col-md-12 inline-flex">
                             <div class="col-2">
                                 <span class="input-group-btn">
                                     <a style="height: 40px" data-toggle="modal" data-target="#type-modal"
@@ -37,8 +37,8 @@
                                 </span>
                             </div>
                             <div class="col-9">
-                                <select id="filterSpeechesType" class="btn sidebar-select btn-primary" style="height: 40px" name="type">
-                                    <option selected value="all">{% trans 'Type' %}</option>
+                                <select id="filterSpeechesType" class="btn sidebar-select btn-primary" style="height: 40px; width: 100%" name="type">
+                                    <option selected value="all">Todos los filtros</option>
                                     {% for type in types %}
                                         <option value={{type.id}}>{{ type }}</option>
                                     {% endfor %}
@@ -51,7 +51,7 @@
                     <div class="jumbotron" id="draggable-events" style="padding: 0;">
                         <ul id="ul-topics-panel" class="nav nav-list nav-menu-list-style" style="width: 100%; padding: 0;">
                             {% for topic in topics %}
-                                <li>
+                                <li class="topic-type-filter">
                                     <label class="tree-toggle">
                                         {{topic}}
                                         <a class="tree_toggle_icon glyphicon glyphicon-chevron-down"></a>
