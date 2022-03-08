@@ -254,4 +254,46 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// Show message when create new room
+$('#create_room_form').submit(function(submitEl){
+    submitEl.preventDefault();
+    $.ajax({
+        url: create_room_url,
+        headers: {
+            'Accept': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        type: 'POST',
+        data : $('#create_room_form').serialize(),
+        error: function (response) {
+            // alert the error if any error occurred
+            if (response.status == 400) {
+                alertEl = document.getElementById("wrongRoomFormAlert")
+                alertEl.style.setProperty("display", "block");
+                alertEl.innerText = "Los datos ingresados son érroneos, corríjalos e intente de nuevo.";
+            }
+            else {
+                $("#create_room_form").trigger('reset');
+                handleResponseErrors(response.status, '');
+            }
+        },
+        success: function(response){
+            handleResponseErrors(200, '¡Sala guardada correctamente!');
 
+            $("#room_modal").modal('hide');
+
+            let events = []
+            for (let i = 0; i < calendars.length; i++) {
+                events.push(...calendars[i].getEvents());
+            }
+            // Remove events from calendar
+            deleteEventsFromCalendar(removed_events);
+            // Save events that are currently in the calendar
+            saveEvents(events);
+
+            location.reload();
+
+        }
+    });
+    return false;
+});
