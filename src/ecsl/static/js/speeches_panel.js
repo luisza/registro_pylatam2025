@@ -38,12 +38,20 @@ document.addEventListener('DOMContentLoaded', function() {
     $(function() {
         $("#filterSpeechesType").change(function() {
             var rex = $('#filterSpeechesType').val();
-            console.log(rex);
             if (rex != "all") {
                 $(".speech-type-filter").show().not('.speech_' + rex).hide();
             } else {
                 $(".speech-type-filter").show();
             }
+
+            // Hide topics with no speeches associated with the filter
+            $('.topic-type-filter').each(function(i) {
+                if($($(this).children('ul').children('li')).hasClass('speech_' + rex) == false && rex != 'all') {
+                    $(this).hide();
+                } else {
+                    $(this).show();
+                }
+            });
           });
     });
     // When reloading page, always start with 'all' filter
