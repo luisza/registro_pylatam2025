@@ -7,6 +7,10 @@ $("#type-modal").on('hidden.bs.modal', function(){
     changeTimeValue(60);
 });
 
+$("#special-modal").on('hidden.bs.modal', function(){
+    $("#specialActivity-form").trigger('reset');
+});
+
 // Change icon value dinamically for every topic in the speeches panel
 $('.tree_toggle_icon').click(function() {
     if ($(this).hasClass('glyphicon-chevron-down') == true) {
@@ -14,10 +18,6 @@ $('.tree_toggle_icon').click(function() {
     } else {
         $(this).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
     }
-});
-
-$("#special-modal").on('hidden.bs.modal', function(){
-    $("#specialActivity-form").trigger('reset');
 });
 
 function changeTimeValue(val) {
@@ -128,17 +128,20 @@ $("#createType-form").submit(function (submitEl) {
                 // 1. clear the form.
                 $("#createType-form").trigger('reset');
                 $("#type-modal").modal('hide');
-                $("#filterSpeechesType").append(`<option time={{ ${response.time} }} value={{ ${response.event} }}>${response.name} (${response.time} minutos)</option>`)
                 // Manage response status code
                 handleResponseErrors(response.status, '¡Tipo de actividad guardado correctamente!');
                 if(response.is_special){
-                     new_option = `<option value={{ ${response.pk} }}>${response.name} (${response.time} minutos)</option>`;
-                     $("#specialActivity-form")[0][2].append(new_option);
+
+                     $("#specialActivity-form #id_type").append($('<option>', {
+                            value: response.pk,
+                            text: `${response.name} (${response.time} minutos)`,
+                        }));
+                }else{
+                    $("#filterSpeechesType").append(`<option time={{ ${response.time} }} value={{ ${response.event} }}>${response.name} (${response.time} minutos)</option>`);
                 }
             }
         })
     });
-
 
 $("#specialActivity-form").submit(function (submitEl) {
         // preventing from page reload and default actions
@@ -172,7 +175,8 @@ $("#specialActivity-form").submit(function (submitEl) {
                 // 1. clear the form.
                 $("#specialActivity-form").trigger('reset');
                 $("#special-modal").modal('hide');
-                handleResponseErrors(response.status, '¡Actividad especial guardada correctamente!');
+                handleResponseErrors(200, '¡Actividad especial guardada correctamente!');
+                $("#specials").load(location.href + " #specials");
             }
         })
     });

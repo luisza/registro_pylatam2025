@@ -21,14 +21,14 @@ class CreateType(generic.CreateView):
 
     def form_valid(self, form):
         instance = form.save()
-        instance = {
+        data = {
             "pk": instance.pk,
             "name": instance.name,
             "time": instance.time,
             "is_special": instance.is_special,
             "event": instance.event_id,
         }
-        return JsonResponse(instance)
+        return JsonResponse(data)
 
     def form_invalid(self, form):
         return JsonResponse(form.errors, status=400)
