@@ -90,8 +90,8 @@ class CharlaContext:
             sala = 1
 
         speeches = Speech.objects.filter(event=current_event, is_scheduled=False)
-        scheduled_speeches = SpeechSchedule.objects.filter(speech__event=current_event)
-        special = SpecialActivity.objects.filter(event=current_event, is_scheduled=False)
+        scheduled_speeches = SpeechSchedule.objects.filter(Q(speech__event=current_event) | Q(special__event=current_event))
+        special = SpecialActivity.objects.filter(event=current_event)
         context['dayList'] = days
         context['start_date'] = str(days[0])
         context['end_date'] = str(days[-1])
