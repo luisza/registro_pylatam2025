@@ -11,7 +11,8 @@ from proposal.models import SpecialActivity, SpeechType
 
 
 @method_decorator(login_required, name='dispatch')
-class CreateSpecialActivity(generic.CreateView):
+class CreateSpecialActivity(PermissionRequiredMixin, generic.CreateView):
+    permission_required = 'proposal.add_specialactivity'
     model = SpecialActivity
     form_class = SpecialActivityForm
 
