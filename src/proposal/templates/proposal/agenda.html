@@ -54,18 +54,35 @@
         var delete_url = "{% url 'proposal:delete-events' %}";
         var scheduled_events = [];
         {% for event in scheduled_speeches %}
-            scheduled_events.push({
-                id: "{{event.pk}}",
-                html_id: "{{event.html_id}}",
-                title: "{{event.speech.title}}",
-                color: "{{event.speech.topic.color}}",
-                room: "{{event.room.pk}}",
-                start_time: "{{event.start_time|date:"c"}}",
-                end_time: "{{event.end_time|date:"c"}}",
-                speech_id: "{{event.speech.pk}}",
-                special_id: "{{event.special.pk}}",
-                topic_id: "{{event.speech.topic.pk}}"
-            });
+            {% if event.speech %}
+                scheduled_events.push({
+                    id: "{{event.pk}}",
+                    html_id: "{{event.html_id}}",
+                    title: "{{event.speech.title}}",
+                    color: "{{event.speech.topic.color}}",
+                    room: "{{event.room.pk}}",
+                    start_time: "{{event.start_time|date:"c"}}",
+                    end_time: "{{event.end_time|date:"c"}}",
+                    speech_id: "{{event.speech.pk}}",
+                    topic_id: "{{event.speech.topic.pk}}",
+                    speech_type_id: "{{event.speech.speech_type.pk}}",
+                    speech_type_time: "{{event.speech.speech_type.time}}",
+                    speech_type_name: "{{event.speech.speech_type.name}}",
+                });
+            {% else %}
+                scheduled_events.push({
+                    id: "{{event.pk}}",
+                    html_id: "{{event.html_id}}",
+                    title: "{{event.special.name}}",
+                    room: "{{event.room.pk}}",
+                    start_time: "{{event.start_time|date:"c"}}",
+                    end_time: "{{event.end_time|date:"c"}}",
+                    special_id: "{{event.special.pk}}",
+                    speech_type_id: "{{event.special.speech_type.pk}}",
+                    speech_type_time: "{{event.special.speech_type.time}}",
+                    speech_type_name: "{{event.special.speech_type.name}}",
+                });
+            {% endif %}
         {% endfor %}
         const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         var create_topic_url = "{% url 'proposal:create-topic' %}";
