@@ -195,7 +195,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 duration: {minutes:eventEl.children[0].getAttribute('data-duration')},
                 extendedProps: {
                     speech_id: eventEl.children[0].getAttribute('data-speech'),
-                    special_activity_id: eventEl.children[0].getAttribute('data-special'),
                     topic_id: eventEl.children[0].getAttribute('data-topic'),
                     html_panel_el: eventEl,
                 }
@@ -206,15 +205,11 @@ document.addEventListener('DOMContentLoaded', function() {
     new FullCalendar.Draggable(special_activity_containerEl, {
         itemSelector: '.special-draggable',
         eventData: function(eventEl) {
-            console.log(eventEl);
             return {
-                title: eventEl.children[0].innerText,
-                backgroundColor: eventEl.children[0].getAttribute('data-color'),
+                title: eventEl.children[0].children[0].innerText,
                 duration: {minutes:eventEl.children[0].getAttribute('data-duration')},
                 extendedProps: {
-                    speech_id: eventEl.children[0].getAttribute('data-speech'),
                     special_activity_id: eventEl.children[0].getAttribute('data-special'),
-                    topic_id: eventEl.children[0].getAttribute('data-topic'),
                     html_panel_el: eventEl,
                 }
             };
