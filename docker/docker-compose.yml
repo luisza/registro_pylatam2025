@@ -42,6 +42,7 @@ services:
     container_name: "demoemail"
     ports:
       - 8025:8025
+      - 1025:1025
     networks:
       - ecslapps
 
