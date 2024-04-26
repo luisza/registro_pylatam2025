@@ -13,24 +13,24 @@ Se requiere tener instalado un servidor Mysql.
 Cree un entorno virtual (apt install virtualenv):
 
 ```   
-virtualenv -p python3 venv
+python3 -m venv venv
 source venv/bin/activate
 ```
 
 Clone el repositorio 
 
-`git clone https://gitlab.com/slca/ecsl-registro.git`
+`git clone https://github.com/luisza/registro_pylatam2025.git`
 
 Cambie de directorio al proyecto
 
-`cd ecsl`
+`cd registro_pylatam2025`
 
 Instale las dependencias 
 
 `pip install -r requirements.txt`
 
 Ejecute las migraciones, para crear las tablas necesarias en la base de datos.
-Importante puede modificar el archivo `ECSL/settings.py` o configurar las variables de entorno `export DB_NAME=ecsl`
+Importante puede modificar el archivo `ecsl_proj/settings.py` o configurar las variables de entorno `export DB_NAME=ecsl`
 
 `python manage.py migrate`
 
