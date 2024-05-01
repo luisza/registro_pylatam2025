@@ -1,0 +1,22 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "start-docker-compose",
+            "type": "shell",
+            "command": "docker",
+            "args": [
+              "compose","-f",  "${cwd}/docker/docker-compose.yml", "up", "-d"
+            ],
+          },
+          {
+            "label": "stop-docker-compose",
+            "type": "shell",
+            "command": "docker",
+            "args": [
+                "compose", "-f", "${cwd}/docker/docker-compose.yml", "down"
+            ],
+          }
+
+    ]
+}

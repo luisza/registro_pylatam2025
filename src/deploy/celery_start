@@ -3,10 +3,10 @@
 NAME="ecslCelery" # Name of the application 
 DJANGODIR=/ecsl # Django project directory 
 NUM_WORKERS=2 # how many worker processes should Gunicorn spawn 
-DJANGO_SETTINGS_MODULE=ECSL.settings # which settings file should Django use 
-DJANGO_WSGI_MODULE=ECSL.wsgi  # WSGI module name 
+DJANGO_SETTINGS_MODULE=ecsl_proj.settings # which settings file should Django use 
+DJANGO_WSGI_MODULE=ecsl_proj.wsgi  # WSGI module name 
 
 cd $DJANGODIR 
 
-exec celery -A ECSL worker  -l INFO  -c $NUM_WORKERS --pidfile="/run/worker_`date  +"%Y%m%d%H%M%S"`.pid"
+exec celery -A ecsl_proj worker  -l INFO  -c $NUM_WORKERS --pidfile="/run/worker_`date  +"%Y%m%d%H%M%S"`.pid"
 

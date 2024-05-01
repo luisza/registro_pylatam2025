@@ -1,4 +1,7 @@
 # .coveragerc to control coverage.py
+from src import ecsl_proj
+
+
 [run]
 branch = True
 include = src/*
@@ -22,7 +25,7 @@ exclude_lines =
     if __name__ == .__main__.:
 
 omit =
-    src/ECSL/settings/*
+    src/ecsl_projs/settings/*
     src/*/migrations/*
 
 show_missing = True

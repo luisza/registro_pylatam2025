@@ -1,4 +1,9 @@
-version: '2'
+version: '3'
+volumes:
+  rabbitmq-vol:
+  db-data:
+  db-files:
+
 services:
   rabbitmq:
     image: rabbitmq:3
@@ -11,19 +16,24 @@ services:
       RABBITMQ_DEFAULT_USER: ecsl
       RABBITMQ_DEFAULT_PASS: ecsl
       RABBITMQ_DEFAULT_VHOST: ecslvhost
+    volumes:
+      - rabbitmq-vol:/var/lib/rabbitmq
 
   db:
-    image: mariadb
-    ports:
-      - '3306:3306'
-    container_name: "ecsl_db"
+    image: postgres:latest
+    restart: always
+    container_name: "db"
     environment:
-      MYSQL_ROOT_PASSWORD: ecslpassword
-      MYSQL_DATABASE: ecsl
-      MYSQL_USER: ecsl
-      MYSQL_PASSWORD: ecsl
+      POSTGRES_PASSWORD: ecsl
+      POSTGRES_USER: ecsl
+      POSTGRES_DB: ecsl
     networks:
       - ecslapps
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - db-files:/files
+    ports:
+      - 5431:5432
 
   #registro:
     #image: registroecsl

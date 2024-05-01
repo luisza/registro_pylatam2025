@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 from __future__ import absolute_import
 import os
+from celery.schedules import crontab
 from django.urls.base import reverse_lazy
 import sys
 
@@ -105,12 +106,12 @@ WSGI_APPLICATION = 'ecsl_proj.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.mysql'),
+        'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.postgresql'),
         'NAME': os.getenv('DB_NAME', 'ecsl'),
         'USER': os.getenv('DB_USER', 'ecsl'),
         'PASSWORD': os.getenv('DB_PASSWORD', 'ecsl'),
         'HOST': os.getenv('DB_HOST', '127.0.0.1'),
-        'PORT':  int(os.getenv('DB_PORT', '3306'))
+        'PORT':  int(os.getenv('DB_PORT', '5431'))
     }
 }
 
@@ -186,7 +187,6 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
-from celery.schedules import crontab
 
 CELERYBEAT_SCHEDULE = {
     # execute 12:30 pm
@@ -207,7 +207,7 @@ CELERYBEAT_SCHEDULE = {
 ASYNC_NOTIFICATION_TEXT_AREA_WIDGET = 'ckeditor.widgets.CKEditorWidget'
 ASYNC_NOTIFICATION_MAX_PER_MAIL = 5
 
-CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'db+mysql://guest:guest@localhost:5672/ecsl')
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'amqp://ecsl:ecsl@127.0.0.1:5672/ecslvhost')
 CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', 'django-db')
 DJANGO_CELERY_RESULTS_TASK_ID_MAX_LENGTH=191
 

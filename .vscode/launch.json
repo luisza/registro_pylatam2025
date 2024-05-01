@@ -1,0 +1,57 @@
+{
+    "version": "0.2.0",
+      "configurations": [
+        {
+            "name": "Django",
+            "type": "debugpy",
+            "request": "launch",
+            "stopOnEntry": false,
+            "django": true,
+            "python": "${workspaceRoot}/.venv/bin/python",
+            "program": "${workspaceRoot}/src/manage.py",
+              "args": [
+                  "runserver"
+              ],
+              "preLaunchTask": "start-docker-compose",
+              "postDebugTask": "stop-docker-compose"
+        },
+        {
+            "name": "Celery",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "celery",
+            "cwd": "${workspaceFolder}/src",
+            "console": "integratedTerminal",
+            "args": [
+                "-A",
+                "ecsl_proj",
+                "worker",
+                "--scheduler", "django_celery_beat.schedulers:DatabaseScheduler",
+                "--loglevel",
+                "DEBUG",
+                "--pool",
+                "solo",
+            ]
+        },
+        {
+            "name": "Celery Beat",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "celery",
+            "cwd": "${workspaceFolder}/src",
+            "console": "integratedTerminal",
+            "args": [
+                "-A",
+                "ecsl_proj",
+                "beat",
+                "--scheduler", "django_celery_beat.schedulers:DatabaseScheduler"
+                
+            ]
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Django, Celery, Celery Beat",
+            "configurations": ["Django", "Celery", "Celery Beat"]
+        }
+    ]}

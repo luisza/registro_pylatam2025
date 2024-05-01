@@ -37,7 +37,7 @@ COPY docker/supervisor-app.conf /etc/supervisor/conf.d/
 
 ADD src /ecsl
 
-RUN python manage.py collectstatic  --noinput --settings=ECSL.settings
+RUN python manage.py collectstatic  --noinput --settings=ecsl_proj.settings
 
 ADD docker/entrypoint.sh /run/
 RUN chown -R ecsl:ecsl /run/
