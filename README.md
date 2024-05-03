@@ -8,14 +8,7 @@ El sistema es un sistema modular, capaz de incorporar nuevas funciones sin tener
 
 ## Instalación
 
-Se requiere tener instalado un servidor Mysql.
-
-Cree un entorno virtual (apt install virtualenv):
-
-```   
-python3 -m venv venv
-source venv/bin/activate
-```
+Se requiere tener instalado un servidor Postgresql.
 
 Clone el repositorio 
 
@@ -24,6 +17,13 @@ Clone el repositorio
 Cambie de directorio al proyecto
 
 `cd registro_pylatam2025`
+
+Cree un entorno virtual (apt install virtualenv):
+
+```   
+python3 -m venv .venv
+source .venv/bin/activate
+```
 
 Instale las dependencias 
 
