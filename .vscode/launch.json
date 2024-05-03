@@ -8,9 +8,13 @@
             "stopOnEntry": false,
             "django": true,
             "python": "${workspaceRoot}/.venv/bin/python",
+            "windows": {
+                "python": "${workspaceRoot}/.venv/Scripts/python",
+            },
             "program": "${workspaceRoot}/src/manage.py",
               "args": [
-                  "runserver"
+                  "runserver",
+                  "--noreload"
               ],
               "preLaunchTask": "start-docker-compose",
               "postDebugTask": "stop-docker-compose"
