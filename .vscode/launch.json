@@ -16,8 +16,7 @@
                   "runserver",
                   "--noreload"
               ],
-              "preLaunchTask": "start-docker-compose",
-              "postDebugTask": "stop-docker-compose"
+
         },
         {
             "name": "Celery",
@@ -50,7 +49,9 @@
                 "beat",
                 "--scheduler", "django_celery_beat.schedulers:DatabaseScheduler"
                 
-            ]
+            ],
+            "preLaunchTask": "start-docker-compose",
+            "postDebugTask": "stop-docker-compose"
         }
     ],
     "compounds": [
