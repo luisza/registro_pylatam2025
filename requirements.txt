@@ -1,19 +1,2 @@
-django==3.2.12
-django-registration==3.1.1
-django-crispy-forms==1.10.0
-Pillow
-django-bootstrap-form==3.4
-mysqlclient
-bcrypt==3.2.0
-async_notifications==0.1.24
-django-ckeditor == 6.0.0
-celery==5.0.5
-django-celery-beat==2.1.0
-django-celery-results==2.0.0
-xhtml2pdf==0.2.15
-django-markitup==4.0.0
-django-paypal==1.0.0
-django-simple-captcha==0.5.13
-djangorestframework==3.13.1
-coverage==5.4
-psycopg2-binary
+django==5.0.6
+psycopg2-binary==2.9.9
