@@ -1,0 +1,33 @@
+{% load static %}
+<!doctype html>
+
+<html>
+<head>
+
+{% block pre_head %}{% endblock %}
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
+<title>{% block title %}Plataforma para la Organización y Gestión de Eventos (POGE) 
+{% endblock %}</title>
+{% block stylesheets %}
+{% include 'stylesheets.html' %}
+{% endblock stylesheets %}
+
+{% block post_head %}{% endblock %}
+</head>
+<body>
+    {% block top_navigation %} 
+    {% include 'partial/top_navigation.html' %}
+    {% endblock %}
+    {% include 'partial/messages.html' %}
+    {% block left_sidebar %}  {% endblock %}
+    {% block content %}  {% endblock %}
+    {% block right_sidebar %} {% endblock %}
+    {% block javascript %}
+    {% include 'javascript.html' %}
+    {% endblock %}
+</body>
+</html>
