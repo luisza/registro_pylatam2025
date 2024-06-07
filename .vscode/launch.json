@@ -13,8 +13,7 @@
             },
             "program": "${workspaceRoot}/src/manage.py",
               "args": [
-                  "runserver",
-                  "--noreload"
+                  "runserver", 
               ],
 
         },
